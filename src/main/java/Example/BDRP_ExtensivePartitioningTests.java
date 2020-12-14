@@ -30,10 +30,10 @@ import java.util.concurrent.TimeUnit;
  * we run 10 execution and for each we export the partition to the local disk
  * 
  * @author adnan
- *
+ *	
  */
 @SuppressWarnings("unused")
-public class BDRP_ExtensivePartitioningTests extends setting.PersonalizedGiraphJob {
+public class BDRP_ExtensivePartitioningTests extends PersonalizedGiraphJob {
 	private String giraphOutputRep = getHdfsNode() + "/bdrp/data",
 			// giraphVertexInputRep = hdfsNode+"/giraph_data/input/VertexFormat", // doesn't
 			// work : Giraph bug 904 : https://issues.apache.org/jira/browse/GIRAPH-904
