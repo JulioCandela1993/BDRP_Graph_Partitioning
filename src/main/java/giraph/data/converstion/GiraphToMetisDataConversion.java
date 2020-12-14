@@ -8,7 +8,6 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 import giraph.format.personalized.VertexNeighboorListOutputFormat;
 import giraph.ml.grafos.okapi.spinner.Spinner;
-import main.MyGiraphJob;
 import giraph.ml.grafos.okapi.spinner.SpinnerEdgeInputFormat;
 import java.io.IOException;
 
@@ -18,7 +17,7 @@ import java.io.IOException;
  * @author adnan
  *
  */
-public class GiraphToMetisDataConversion extends MyGiraphJob {
+public class GiraphToMetisDataConversion extends PersonalizedGiraphJob {
 
 	//private String hdfsNode = "hdfs://129.175.25.75:50001";
 	private String giraphVertexInputRep = getHdfsNode()+"/giraph_data/input/vertex_format";

@@ -221,7 +221,7 @@ public class PartitionQualityComputation extends LPGPartitionner {
 			}
 		}
 		
-		@Override
+
 		protected void savePartitionStats() {
 			int k = numberOfPartitions + repartition;
 			String str1="",
@@ -259,7 +259,7 @@ public class PartitionQualityComputation extends LPGPartitionner {
 		
 
 
-		@Override
+
 		protected void saveRealStats() {
 			long totalRealEdges = ((LongWritable) getAggregatedValue(TOTAL_DIRECTED_OUT_EDGES)).get();
 
@@ -333,7 +333,7 @@ public class PartitionQualityComputation extends LPGPartitionner {
 			;
 		}
 
-		@Override
+
 		protected void saveVirtualStats() {
 			long totalRealEdges = ((LongWritable) getAggregatedValue(TOTAL_DIRECTED_OUT_EDGES)).get();
 

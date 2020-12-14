@@ -379,7 +379,7 @@ public class Spinner_BGRAP_init extends LPGPartitionner {
 			extends LPGPartitionner.PotentialVerticesInitializer {
 		
 
-		@Override
+/*
 		public void compute(Vertex<LongWritable, VertexValue, EdgeValue> vertex, Iterable<PartitionMessage> messages)
 				throws IOException {
 			short partition = vertex.getValue().getCurrentPartition();
@@ -406,7 +406,7 @@ public class Spinner_BGRAP_init extends LPGPartitionner {
 			aggregate(AGG_UPPER_TOTAL_COMM_VOLUME, new LongWritable(
 					Math.min(numberOfPartitions, vertex.getNumEdges())
 					));
-		}
+		}*/
 	}
 
 	public static class Repartitioner

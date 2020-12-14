@@ -1,21 +1,22 @@
-package setting;
+package Example;
 
+import giraph.format.personalized.BGRAPVertexInputFormat;
+import giraph.format.personalized.BGRAP_IdWithPartitionOuputFormat;
+import giraph.lri.aelmoussawi.partitioning.BGRAP_eb;
+import giraph.lri.aelmoussawi.partitioning.BGRAP_vb;
+import giraph.lri.aelmoussawi.partitioning.LPGPartitionner;
+import giraph.ml.grafos.okapi.spinner.EdgeValue;
+import giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut;
+import giraph.ml.grafos.okapi.spinner.VertexValue;
 import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.io.formats.*;
+import org.apache.giraph.io.formats.GiraphFileInputFormat;
+import org.apache.giraph.io.formats.InMemoryVertexOutputFormat;
 import org.apache.giraph.job.GiraphJob;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
-import giraph.ml.grafos.okapi.spinner.EdgeValue;
-import giraph.ml.grafos.okapi.spinner.OpenHashMapEdgesInOut;
-import giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut;
-import giraph.ml.grafos.okapi.spinner.VertexValue;
-import giraph.ml.grafos.okapi.spinner.Spinner;
-import giraph.format.personalized.BGRAP_IdWithPartitionOuputFormat;
-import giraph.format.personalized.BGRAPVertexInputFormat;
-import giraph.lri.aelmoussawi.partitioning.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 @SuppressWarnings("unused")
-public class ExtensivePartitioningTests extends PersonalizedGiraphJob {
+public class BDRP_ExtensivePartitioningTests extends setting.PersonalizedGiraphJob {
 	private String giraphOutputRep = getHdfsNode() + "/giraph_data/input/vertex_format",
 			// giraphVertexInputRep = hdfsNode+"/giraph_data/input/VertexFormat", // doesn't
 			// work : Giraph bug 904 : https://issues.apache.org/jira/browse/GIRAPH-904
@@ -40,7 +41,7 @@ public class ExtensivePartitioningTests extends PersonalizedGiraphJob {
 	// giraphEdgeInputRep = hdfsNode+"/giraph_data/input/edge_format";
 
 	public static void main(String[] args) throws Exception {
-		ToolRunner.run(new ExtensivePartitioningTests(), data);		
+		ToolRunner.run(new BDRP_ExtensivePartitioningTests(), data);
 	}
 	
 	/* A loal folder to save the results of partitioning */
@@ -180,14 +181,14 @@ public class ExtensivePartitioningTests extends PersonalizedGiraphJob {
 					if(j<algo.length) {
 						k=0;
 						d=0;
-						continue nextDataSet;
+						continue nextAlgorithm;
 					}
 					else
 						return 0;
 				}
 				else {
 					k=0;
-					continue nextDataSet;
+					continue nextAlgorithm;//nextDataSet;
 				}
 			}
 			
