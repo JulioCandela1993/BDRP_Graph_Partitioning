@@ -34,10 +34,10 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("unused")
 public class BDRP_ExtensivePartitioningTests extends setting.PersonalizedGiraphJob {
-	private String giraphOutputRep = getHdfsNode() + "/giraph_data/input/vertex_format",
+	private String giraphOutputRep = getHdfsNode() + "/bdrp/data",
 			// giraphVertexInputRep = hdfsNode+"/giraph_data/input/VertexFormat", // doesn't
 			// work : Giraph bug 904 : https://issues.apache.org/jira/browse/GIRAPH-904
-			giraphVertexInputRep = getHdfsNode() + "/giraph_data/input/vertex_format";
+			giraphVertexInputRep = getHdfsNode() + "/bdrp/data";
 	// giraphEdgeInputRep = hdfsNode+"/giraph_data/input/edge_format";
 
 	public static void main(String[] args) throws Exception {
@@ -46,7 +46,7 @@ public class BDRP_ExtensivePartitioningTests extends setting.PersonalizedGiraphJ
 	
 	/* A loal folder to save the results of partitioning */
 	String hdfsOutputDirectory = "",
-			localOutputDirectory = "/users/lahdak/adnanmoe/extensive test";
+			localOutputDirectory = "C:\\Users\\Julio\\Documents\\MasterDegree\\BDMA\\Classes\\CentraleSupelec\\BDRP\\Project\\Code";
 			
 	/* the number of worker (the optimal configuration is to set it to the total number of cores on the used cluster) */
 	private int nbWorker=64,
@@ -70,10 +70,10 @@ public class BDRP_ExtensivePartitioningTests extends setting.PersonalizedGiraphJ
 //			"Flixster",
 //			"DelaunaySC",
 //			"Pokec",
-			"LiveJournal",
+//			"LiveJournal",
 //			"Orkut",
 //			"Graph500",
-			"Twitter"
+//			"Twitter"
 			};
 	
 	
@@ -258,7 +258,7 @@ public class BDRP_ExtensivePartitioningTests extends setting.PersonalizedGiraphJ
 	
 		InMemoryVertexOutputFormat.initializeOutputGraph(giraphConf);
 		
-		hdfsOutputDirectory = getHdfsNode() + "/giraph_data/extensive_test/"+filename;
+		hdfsOutputDirectory = getHdfsNode() + "/bdrp/data"+filename;
 		
 		if (getHadoopDataFileSystem().exists(new Path(hdfsOutputDirectory))) {
 			getHadoopDataFileSystem().delete(new Path(hdfsOutputDirectory), true);

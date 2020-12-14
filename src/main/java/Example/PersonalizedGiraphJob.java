@@ -1,4 +1,4 @@
-package setting;
+package Example;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -24,7 +24,7 @@ public class PersonalizedGiraphJob implements Tool {
 	/**
 	 * HDFS Node address
 	 */
-	private String hdfsNode = "hdfs://master:50001";
+	private String hdfsNode = "hdfs://master:9000";
 	/**
 	 * Hadoop master address
 	 */
@@ -43,22 +43,22 @@ public class PersonalizedGiraphJob implements Tool {
 		System.out.println(System.getenv("HADOOP_HOME"));
 
 		// Or configure manually
-		getConf().set("hadoop.job.ugi", "adnanmoe");
-		getConf().set("dfs.web.ugi", "adnanmoe");
+		//getConf().set("hadoop.job.ugi", "adnanmoe");
+		//getConf().set("dfs.web.ugi", "adnanmoe");
 		// let Hadoop create its own tmp directories
 		// getConf().set("hadoop.tmp.dir", System.getenv("HOME") +
 		// "/AppHadoop/tmp/"
 		// +System.getenv("USER") + "_" + System.getenv("HOSTNAME"));
 		getConf().set("dfs.permissions", "false");
-		getConf().set("dfs.namenode.name.dir", System.getenv("HOME") + "/AppHadoop/data/namenode");
-		getConf().set("dfs.datanode.data.dir", System.getenv("HOME") + "/AppHadoop/data/datanode");
+		//getConf().set("dfs.namenode.name.dir", System.getenv("HOME") + "/AppHadoop/data/namenode");
+		//getConf().set("dfs.datanode.data.dir", System.getenv("HOME") + "/AppHadoop/data/datanode");
 		getConf().set("fs.default.name", hdfsNode);// for hadoop 2
 
 		int mem = 4 * memoryFraction;
 		double pct1 = 1;
 		double pct2 = 0.8;
 		// mapred.xml
-		getConf().set("mapred.job.tracker", masterIp + ":50003");
+		getConf().set("mapred.job.tracker", masterIp + ":54311");
 		// to avoid java.lang.OutOfMemoryError exception (Java heap space)
 		// -Xms256m -Xmx8g
 		// getConf().set("mapred.child.java.opts", "-Xmx12288m");
@@ -132,7 +132,7 @@ public class PersonalizedGiraphJob implements Tool {
 			}
 			// conf.set("hadoop.job.history.location",
 			// "${hadoop.tmp.dir}/history/${user.name}");
-			conf.set("dfs.web.ugi", "adnanmoe");
+			//conf.set("dfs.web.ugi", "adnanmoe");
 		}
 	}
 
