@@ -1,4 +1,4 @@
-package Example;
+package giraph.test;
 
 import java.io.File;
 import java.io.FilenameFilter;

@@ -1,4 +1,4 @@
-package Example;
+package giraph.test;
 
 import giraph.format.personalized.BGRAPVertexInputFormat;
 import giraph.format.personalized.BGRAP_IdWithPartitionOuputFormat;
