@@ -113,5 +113,23 @@
     <orderEntry type="library" name="Maven: org.objenesis:objenesis:2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.6" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.12.1" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: jdk.tools:jdk.tools:1.7.0">
+        <CLASSES>
+          <root url="jar:///usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: jdk.tools:jdk.tools:1.7.0_80">
+        <CLASSES>
+          <root url="jar:///usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
