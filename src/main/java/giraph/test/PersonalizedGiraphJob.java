@@ -24,7 +24,7 @@ public class PersonalizedGiraphJob implements Tool {
 	/**
 	 * HDFS Node address
 	 */
-	private String hdfsNode = "hdfs://master:9000";
+	private String hdfsNode = "hdfs://52.214.31.3:9000";
 	/**
 	 * Hadoop master address
 	 */
