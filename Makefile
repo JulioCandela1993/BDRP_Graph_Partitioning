@@ -44,7 +44,7 @@ rm_data:
 	hadoop fs -rm /rrojas/inputdata/$(graph)
 get_results:
 	sudo rm -fR ~/Results/*
-	sudo $HADOOP_HOME/bin/hadoop fs -get /bdrp/output/ ~/Results
+	sudo $(HADOOP_HOME)/bin/hadoop fs -get /bdrp/output/ ~/Results
 rm_logs:
 	rm -fR $(HADOOP_LOGS)/*
 rm_results:
