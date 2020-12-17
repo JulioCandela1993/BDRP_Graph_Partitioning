@@ -28,23 +28,23 @@ tau := 5
 save_dd := true
 
 create_dirs:
-	hadoop fs -mkdir /rrojas/
-	hadoop fs -mkdir /rrojas/inputdata/
-	hadoop fs -mkdir /rrojas/outputdata/
+	hadoop dfs -mkdir /rrojas/
+	hadoop dfs -mkdir /rrojas/inputdata/
+	hadoop dfs -mkdir /rrojas/outputdata/
 
 ls_code:
 	ls -l $(HADOOP_HOME)/lib/R*
 hls:
-	hadoop fs -lsr /
+	hadoop dfs -lsr /
 put_data:
-	hadoop fs -put ~/testdata/$(graph) /bdrp/data/.
+	hadoop dfs -put ~/testdata/$(graph) /bdrp/data/.
 put_all_data:
 	hadoop fs -put ~/testdata/* /bdrp/data/.
 rm_data:
 	hadoop fs -rm /rrojas/inputdata/$(graph)
 get_results:
 	rm -fR ~/Results/*
-	hadoop fs -get /bdrp/output/* ~/Results
+	sudo $HADOOP_HOME/bin/hadoop fs -get /bdrp/output/ ~/Results
 rm_logs:
 	rm -fR $(HADOOP_LOGS)/*
 rm_results:
