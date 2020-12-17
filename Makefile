@@ -28,43 +28,43 @@ tau := 5
 save_dd := true
 
 create_dirs:
-        hadoop fs -mkdir /rrojas/
-        hadoop fs -mkdir /rrojas/inputdata/
-        hadoop fs -mkdir /rrojas/outputdata/
+	hadoop fs -mkdir /rrojas/
+	hadoop fs -mkdir /rrojas/inputdata/
+	hadoop fs -mkdir /rrojas/outputdata/
 
 ls_code:
-        ls -l $(HADOOP_HOME)/lib/R*
+	ls -l $(HADOOP_HOME)/lib/R*
 hls:
-        hadoop fs -lsr /
+	hadoop fs -lsr /
 put_data:
-        hadoop fs -put ~/testdata/$(graph) /bdrp/data/.
+	hadoop fs -put ~/testdata/$(graph) /bdrp/data/.
 put_all_data:
-        hadoop fs -put ~/testdata/* /bdrp/data/.
+	hadoop fs -put ~/testdata/* /bdrp/data/.
 rm_data:
-        hadoop fs -rm /bdrp/data/$(graph)
+	hadoop fs -rm /rrojas/inputdata/$(graph)
 get_results:
-        rm -fR ~/Results/*
-        hadoop fs -get /bdrp/output/* ~/Results
+	rm -fR ~/Results/*
+	hadoop fs -get /bdrp/output/* ~/Results
 rm_logs:
-        rm -fR $(HADOOP_LOGS)/*
+	rm -fR $(HADOOP_LOGS)/*
 rm_results:
-        rm -fR ~/Results/*
-        rm -fR ~/PaperResult/*
+	rm -fR ~/Results/*
+	rm -fR ~/PaperResult/*
 hrm_results:
-        hadoop fs -rmr  /bdrp/output/*
+	hadoop fs -rmr  /bdrp/output/*
 clean_container:
-        hadoop fs -rmr /user
-        hadoop fs -rmr /tmp
+	hadoop fs -rmr /user
+	hadoop fs -rmr /tmp
 
 clean_all:
-        make rm_logs
-        make rm_results
-        make hrm_results
-        make clean_container
+	make rm_logs
+	make rm_results
+	make hrm_results
+	make clean_container
 
 run:
-        giraph $(HADOOP_HOME)/lib/$(code) $(main) -w $(w) -vif $(vif) -vip $(ip) -vof $(vof) -op $(op) -ca giraph.masterComputeClass=$(masterCompute) -ca giraph.edgeValueClass=giraph.ml.grafos.okapi.spinner.EdgeValue -ca giraph.vertexValueClass=giraph.ml.grafos.okapi.spinner.VertexValue -ca giraph.outEdgesClass=giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut -ca giraph.inputOutEdgesClass=giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut -ca giraph.numComputeThreads=1,giraph.numInputThreads=1,giraph.numOutputThreads=1 -ca giraph.SplitMasterWorker=false -ca spinner.numberOfPartitions=$(partitions) -ca graph.directed=true -ca bgrap.SAMPLING_TYPE=$(sampling) -ca bgrap.GRAPH='$(graph)' -ca bgrap.DATE='$(date)' -ca rankdegree.TAU='$(tau)' -ca rankdegree.SIGMA='$(sigma)' -ca rankdegree.BETA='$(beta)' -ca rankdegree.SAVE_DD='$(save_dd)' 
+	giraph $(HADOOP_HOME)/lib/$(code) $(main) -w $(w) -vif $(vif) -vip $(ip) -vof $(vof) -op $(op) -ca giraph.masterComputeClass=$(masterCompute) -ca giraph.edgeValueClass=giraph.ml.grafos.okapi.spinner.EdgeValue -ca giraph.vertexValueClass=giraph.ml.grafos.okapi.spinner.VertexValue -ca giraph.outEdgesClass=giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut -ca giraph.inputOutEdgesClass=giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut -ca giraph.numComputeThreads=1,giraph.numInputThreads=1,giraph.numOutputThreads=1 -ca giraph.SplitMasterWorker=false -ca spinner.numberOfPartitions=$(partitions) -ca graph.directed=true -ca bgrap.SAMPLING_TYPE=$(sampling) -ca bgrap.GRAPH='$(graph)' -ca bgrap.DATE='$(date)' -ca rankdegree.TAU='$(tau)' -ca rankdegree.SIGMA='$(sigma)' -ca rankdegree.BETA='$(beta)' -ca rankdegree.SAVE_DD='$(save_dd)' 
 
 run_optimized:
-        sudo $(HADOOP_HOME)/bin/hadoop jar $GIRAPH_HOME/giraph-examples/target/giraph-examples-1.2.0-for-hadoop-1.2.1-jar-with-dependencies.jar org.apache.giraph.GiraphRunner $(main) -w $(w) -vif $(vifo) -vip $(ip) -vof $(vofo) -op $(op) -ca giraph.masterComputeClass=$(masterCompute) -ca giraph.edgeValueClass=giraph.ml.grafos.okapi.spinner.EdgeValue -ca giraph.vertexValueClass=giraph.ml.grafos.okapi.spinner.VertexValue -ca giraph.outEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.inputOutEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.numComputeThreads=1,giraph.numInputThreads=1,giraph.numOutputThreads=1 -ca giraph.SplitMasterWorker=false -ca spinner.numberOfPartitions=$(partitions) -ca graph.directed=true -ca bgrap.SAMPLING_TYPE=$(sampling) -ca bgrap.GRAPH='$(graph)' -ca bgrap.DATE='$(date)' -ca rankdegree.TAU='$(tau)' -ca rankdegree.SIGMA='$(sigma)' -ca rankdegree.BETA='$(beta)' -ca rankdegree.SAVE_DD='$(save_dd)'
+	sudo $(HADOOP_HOME)/bin/hadoop jar $GIRAPH_HOME/giraph-examples/target/giraph-examples-1.2.0-for-hadoop-1.2.1-jar-with-dependencies.jar org.apache.giraph.GiraphRunner $(main) -w $(w) -vif $(vifo) -vip $(ip) -vof $(vofo) -op $(op) -ca giraph.masterComputeClass=$(masterCompute) -ca giraph.edgeValueClass=giraph.ml.grafos.okapi.spinner.EdgeValue -ca giraph.vertexValueClass=giraph.ml.grafos.okapi.spinner.VertexValue -ca giraph.outEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.inputOutEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.numComputeThreads=1,giraph.numInputThreads=1,giraph.numOutputThreads=1 -ca giraph.SplitMasterWorker=false -ca spinner.numberOfPartitions=$(partitions) -ca graph.directed=true -ca bgrap.SAMPLING_TYPE=$(sampling) -ca bgrap.GRAPH='$(graph)' -ca bgrap.DATE='$(date)' -ca rankdegree.TAU='$(tau)' -ca rankdegree.SIGMA='$(sigma)' -ca rankdegree.BETA='$(beta)' -ca rankdegree.SAVE_DD='$(save_dd)'
 
