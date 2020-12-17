@@ -43,7 +43,7 @@ put_all_data:
 rm_data:
 	hadoop fs -rm /rrojas/inputdata/$(graph)
 get_results:
-	rm -fR ~/Results/*
+	sudo rm -fR ~/Results/*
 	sudo $HADOOP_HOME/bin/hadoop fs -get /bdrp/output/ ~/Results
 rm_logs:
 	rm -fR $(HADOOP_LOGS)/*
