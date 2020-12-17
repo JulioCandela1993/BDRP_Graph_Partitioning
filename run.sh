@@ -4,7 +4,7 @@ declare -a algs=('InitializeSampleRD' 'InitializeSampleHD') # 'InitializeSampleG
 #declare -a files=(sk-2005) --> todos 3 its = 8h
 #declare -a files=(Pokec soc-LiveJournal Orkut graph500-scale23-ef16) --> todos algs, 5 its = 9h
 #declare -a files=(WikiTalk BerkeleyStan Flixster DelaunaySC) -->todos algs, 5 its = 5h
-declare -a files=(WikiTalk BerkeleyStan Flixster DelaunaySC Pokec soc-LiveJournal Orkut graph500-scale23-ef16 sk-2005 Twitter)
+declare -a files=(testfile.txt)
 
 declare -a betas=(0.15)
 declare -a sigmas=(0.015)
