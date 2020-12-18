@@ -48,8 +48,8 @@ get_results:
 rm_logs:
 	rm -fR $(HADOOP_LOGS)/*
 rm_results:
-	rm -fR ~/Results/*
-	rm -fR ~/PaperResult/*
+	sudo rm -fR ~/Results/*
+	sudo rm -fR ~/PaperResult/*
 hrm_results:
 	hadoop fs -rmr  /bdrp/output/*
 clean_container:
