@@ -1,4 +1,4 @@
-declare -a algs=('InitializeSampleRD' 'InitializeSampleHD') # 'InitializeSampleGD' 'BGRAP') 
+declare -a algs=('InitializeSampleRD' 'InitializeSampleHD' 'BGRAP') # 'InitializeSampleGD' 'BGRAP') 
 #declare -a algs=('InitializeSampleHD')
 #declare -a files=(Twitter)
 #declare -a files=(sk-2005) --> todos 3 its = 8h
@@ -6,10 +6,10 @@ declare -a algs=('InitializeSampleRD' 'InitializeSampleHD') # 'InitializeSampleG
 #declare -a files=(WikiTalk BerkeleyStan Flixster DelaunaySC) -->todos algs, 5 its = 5h
 declare -a files=(testfile.txt)
 
-declare -a betas=(0.15)
-declare -a sigmas=(0.015)
-declare -a taus=(2)
-declare -a partitions=(4)
+declare -a betas=(0.1 0.15 0.2)
+declare -a sigmas=(0.01 0.015 0.02)
+declare -a taus=(5 25 50)
+declare -a partitions=(4 8 16)
 declare save_dd=false
 
 for graph in "${files[@]}"
