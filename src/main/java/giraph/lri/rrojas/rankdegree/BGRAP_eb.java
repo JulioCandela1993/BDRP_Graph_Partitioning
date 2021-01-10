@@ -354,8 +354,8 @@ public class BGRAP_eb extends LPGPartitionner {
 			aggregate(loadAggregatorNames[newPartition], new LongWritable(numberOfEdges));
 
 			// Adnan : update partition's vertices count
-			aggregate(vertexCountAggregatorNames[currentPartition], new IntWritable(-1));
-			aggregate(vertexCountAggregatorNames[newPartition], new IntWritable(1));
+			aggregate(vertexCountAggregatorNames[currentPartition], new LongWritable(-1)); // Hung
+			aggregate(vertexCountAggregatorNames[newPartition], new LongWritable(1)); // Hung
 
 			// Adnan : to tell other that 'i am migrating'
 			// Adnan : increment the total number of migration'

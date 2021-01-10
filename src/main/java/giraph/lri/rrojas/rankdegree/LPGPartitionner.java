@@ -1454,7 +1454,7 @@ public class LPGPartitionner {
 			for (int i = 0; i < numberOfPartitions + repartition; i++) {
 				loadAggregatorNames[i] = AGG_EGDES_LOAD_PREFIX + i;
 				registerPersistentAggregator(loadAggregatorNames[i], LongSumAggregator.class);
-				registerAggregator(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i, IntSumAggregator.class);
+				registerAggregator(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i, IntSumAggregator.class); 
 
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
 				registerPersistentAggregator(vertexCountAggregatorNames[i], IntSumAggregator.class);
@@ -1853,21 +1853,23 @@ public class LPGPartitionner {
 				loadAggregatorNames[i] = AGG_EGDES_LOAD_PREFIX + i;
 				registerPersistentAggregator(loadAggregatorNames[i], LongSumAggregator.class);
 				registerAggregator(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i, IntSumAggregator.class);
+				registerAggregator(AGG_MIGRATION_DEMAND_PREFIX + i, LongSumAggregator.class); //added by Hung
 
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
-				registerPersistentAggregator(vertexCountAggregatorNames[i], IntSumAggregator.class);
+				registerPersistentAggregator(vertexCountAggregatorNames[i], LongSumAggregator.class); // Hung
 
 				//RR:
 				vertexCountAggregatorNamesSampling[i] = AGG_VERTEX_COUNT_PREFIX + i +"_SAMPLING";
-				registerAggregator(vertexCountAggregatorNamesSampling[i], IntSumAggregator.class);
+				registerAggregator(vertexCountAggregatorNamesSampling[i], LongSumAggregator.class); // Hung
 
 			}
+
 			registerAggregator(AGGREGATOR_STATE, DoubleSumAggregator.class); //RR: maybe float?
 			registerAggregator(AGGREGATOR_LOCALS, LongSumAggregator.class);
 			registerAggregator(AGGREGATOR_MIGRATIONS, LongSumAggregator.class); //RR: used for e and v, maybe create one for each and use int in V and long in E?
 
 			// Added by Adnan
-			registerAggregator(AGG_UPDATED_VERTICES, IntSumAggregator.class);
+			registerAggregator(AGG_UPDATED_VERTICES, LongSumAggregator.class); // Hung
 			registerAggregator(AGG_INITIALIZED_VERTICES, IntSumAggregator.class);
 			registerAggregator(AGG_FIRST_LOADED_EDGES, LongSumAggregator.class);
 			registerPersistentAggregator(AGG_UPPER_TOTAL_COMM_VOLUME, LongSumAggregator.class);
@@ -2010,7 +2012,7 @@ public class LPGPartitionner {
 						} else if (superstep == sampling_ss_end + 2) {
 
 							getContext().getCounter("Partitioning Initialization", AGG_UPDATED_VERTICES)
-							.increment(((IntWritable) getAggregatedValue(AGG_UPDATED_VERTICES)).get());
+							.increment(((LongWritable) getAggregatedValue(AGG_UPDATED_VERTICES)).get()); //Hung
 							//System.out.println("*MC"+superstep+": CFM");
 							setComputation(BGRAP_eb.ComputeFirstMigration.class);											
 						} else {

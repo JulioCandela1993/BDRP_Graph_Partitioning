@@ -63,7 +63,7 @@ public class Samplers extends LPGPartitionner {
 			//MISC. CHECKS
 			if(partition == -2) {
 				// keep initialized partitions updated
-				aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new IntWritable(1)); 
+				aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new LongWritable(1)); // Hung
 
 				// test to see if we need to reactivate algorithm
 				int potentiallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
@@ -90,7 +90,7 @@ public class Samplers extends LPGPartitionner {
 						//System.out.println("*VID_"+vid+":Partition_"+partition);
 
 						//AE:
-						aggregate(vertexCountAggregatorNames[partition], new IntWritable(1));
+						aggregate(vertexCountAggregatorNames[partition], new LongWritable(1)); // Hung
 						aggregate(loadAggregatorNames[partition], new LongWritable(numOutEdges));
 						aggregate(AGG_INITIALIZED_VERTICES, new IntWritable(1));
 						aggregate(AGG_FIRST_LOADED_EDGES, new LongWritable(numOutEdges));
@@ -106,12 +106,12 @@ public class Samplers extends LPGPartitionner {
 				} else if (partition==-2) { // make sure to initialize all partitions while balancing loads 
 					int expectedNodes = Math.floorDiv(sampleSize, numberOfPartitions);
 					partition = vertex.getValue().getNewPartition();
-					int partitionSize = ((IntWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get();
+					long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get(); // Hung
 
 					if((partitionSize-expectedNodes)>0 && r.nextFloat() < (float)(partitionSize-expectedNodes)/partitionSize){
 						vertex.getValue().setNewPartition(newPartition());
 					}
-					aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new IntWritable(1));
+					aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new LongWritable(1)); // Hung
 				}
 			}
 			//IF ALGORITHM NEEDS TO CONTINUE
@@ -174,7 +174,7 @@ public class Samplers extends LPGPartitionner {
 							vertex.getValue().setNewPartition(newPartition());
 							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 							aggregate(AGG_SAMPLE, new IntWritable(1));
-							aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new IntWritable(1));
+							aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new LongWritable(1)); // Hung
 							aggregate(AGG_SAMPLE_SSR, new IntWritable(-1)); // we deduct the ones that got sampled to avoid reactivation
 							//System.out.println("*SS"+superstep+":isSampled-"+vid);
 						} else {
@@ -209,7 +209,7 @@ public class Samplers extends LPGPartitionner {
 		
 		protected boolean partitionsInitialized() {
 			for (int i = 0; i < numberOfPartitions; i++) {
-				int partitionSize = ((IntWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[i])).get();
+				long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[i])).get(); // Hung
 				if(partitionSize==0)
 					return false;
 			}
@@ -218,14 +218,14 @@ public class Samplers extends LPGPartitionner {
 
 		protected short newPartition() {
 			short newPartition;
-			int partitionSize;
+			long partitionSize;
 
 			do {
 				newPartition = (short) r.nextInt(numberOfPartitions);
 				if(partitionsInitialized()) {
 					break;
 				} else {
-					partitionSize = ((IntWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[newPartition])).get();
+					partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[newPartition])).get(); // Hung
 				}
 			} while(partitionSize!=0);
 			return newPartition;
@@ -301,7 +301,7 @@ public class Samplers extends LPGPartitionner {
 			//MISC. CHECKS
 			if(partition == -2) {
 				// keep initialized partitions updated
-				aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new IntWritable(1)); 
+				aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new LongWritable(1)); // Hung
 
 				// test to see if we need to reactivate algorithm
 				int potentiallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
@@ -328,7 +328,7 @@ public class Samplers extends LPGPartitionner {
 						//System.out.println("*VID_"+vid+":Partition_"+partition);
 
 						//AE:
-						aggregate(vertexCountAggregatorNames[partition], new IntWritable(1));
+						aggregate(vertexCountAggregatorNames[partition], new LongWritable(1)); // Hung
 						aggregate(loadAggregatorNames[partition], new LongWritable(numOutEdges));
 						aggregate(AGG_INITIALIZED_VERTICES, new IntWritable(1));
 						aggregate(AGG_FIRST_LOADED_EDGES, new LongWritable(numOutEdges));
@@ -344,12 +344,12 @@ public class Samplers extends LPGPartitionner {
 				} else if (partition==-2) { // initialize all partitions while balancing loads 
 					int expectedNodes = Math.floorDiv(sampleSize, numberOfPartitions);
 					partition = vertex.getValue().getNewPartition();
-					int partitionSize = ((IntWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get();
+					long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get(); // Hung
 
 					if((partitionSize-expectedNodes)>0 && r.nextFloat() < (float)(partitionSize-expectedNodes)/partitionSize){
 						vertex.getValue().setNewPartition(newPartition());
 					}
-					aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new IntWritable(1));
+					aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new LongWritable(1)); // Hung
 				}
 			}
 			//IF ALGORITHM NEEDS TO CONTINUE
@@ -426,7 +426,7 @@ public class Samplers extends LPGPartitionner {
 							vertex.getValue().setNewPartition(newPartition());
 							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 							aggregate(AGG_SAMPLE, new IntWritable(1));
-							aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new IntWritable(1));
+							aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new LongWritable(1)); // Hung
 							aggregate(AGG_SAMPLE_SSR, new IntWritable(-1)); // we deduct the ones that got sampled to avoid reactivation
 							//System.out.println("*SS"+superstep+":isSampled-"+vid);
 						} else {
@@ -461,7 +461,7 @@ public class Samplers extends LPGPartitionner {
 		
 		protected boolean partitionsInitialized() {
 			for (int i = 0; i < numberOfPartitions; i++) {
-				int partitionSize = ((IntWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[i])).get();
+				long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[i])).get(); // Hung
 				if(partitionSize==0)
 					return false;
 			}
@@ -470,14 +470,14 @@ public class Samplers extends LPGPartitionner {
 
 		protected short newPartition() {
 			short newPartition;
-			int partitionSize;
+			long partitionSize; // Hung
 
 			do {
 				newPartition = (short) r.nextInt(numberOfPartitions);
 				if(partitionsInitialized()) {
 					break;
 				} else {
-					partitionSize = ((IntWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[newPartition])).get();
+					partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[newPartition])).get(); // Hung
 				}
 			} while(partitionSize!=0);
 			return newPartition;
