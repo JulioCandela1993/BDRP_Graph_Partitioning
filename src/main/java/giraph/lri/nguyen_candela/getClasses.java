@@ -1,4 +1,4 @@
-package giraph.lri.hnguyen_jcandela;
+package giraph.lri.nguyen_candela;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,16 +12,17 @@ public class getClasses {
         long startTime = System.currentTimeMillis();
 
         String file = args[0];
+        String output = args[1];
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(
                     file));
 
-            FileWriter myWriter = new FileWriter("CSV_RESULT.csv");
+            FileWriter myWriter = new FileWriter(output + ".csv");
 
             String line = reader.readLine();
             String csv_line = "";
-            String csv_header = "FILE,ALGO,TAU,SIGMA,BETA,NUMPARTITIONS,Time,Score,Migrations,Total LP\n";
+            String csv_header = "FILE,ALGO,TAU,SIGMA,BETA,NUMPARTITIONS,Time,Score,Migrations,Total LP,R MaxNorm unbalance (x1000),V MaxNorm unbalance (x1000),#real EC,#real EC (%%),#virtrual EC,Vertex Balance JSD,Sampling Time\n";
             myWriter.write(csv_header);
             int counter = 0;
 
@@ -35,6 +36,14 @@ public class getClasses {
             String Score = "";
             String Migrations = "";
             String TotalLP = "";
+
+            String r_MNU = "";
+            String v_MNU = "";
+            String r_EC = "";
+            String r_EC_per = "";
+            String v_EC = "";
+            String JSD = "";
+            String ST = "";
 
 
             while (line != null) {
@@ -120,13 +129,52 @@ public class getClasses {
                     Time = args_line[1];
                 }
 
+                if (line.contains("R MaxNorm unbalance (x1000)")){
+                    String[] args_line = line.split("=");
+                    r_MNU = args_line[1];
+                }
+
+                if (line.contains("V MaxNorm unbalance (x1000)")){
+                    String[] args_line = line.split("=");
+                    v_MNU = args_line[1];
+                }
+
+                if (line.contains("#real EC")){
+                    String[] args_line = line.split("=");
+                    r_EC = args_line[1];
+                }
+
+                if (line.contains("#real EC (%%)")){
+                    String[] args_line = line.split("=");
+                    r_EC_per = args_line[1];
+                }
+
+                if (line.contains("#virtrual EC")){
+                    String[] args_line = line.split("=");
+                    v_EC = args_line[1];
+                }
+
+                if (line.contains("Vertex Balance JSD")){
+                    String[] args_line = line.split("=");
+                    JSD = args_line[1];
+                }
+
+                if (line.contains("Sampling Time")){
+                    String[] args_line = line.split("=");
+                    ST = args_line[1];
+                }
+
+
                 // read next line
                 line = reader.readLine();
             }
 
             csv_line = GRAPH + "," + SAMPLING_TYPE + "," +  TAU + "," + SIGMA + "," +
                     BETA + "," + numberOfPartitions +"," + Time +
-                    "," + Score +"," + Migrations +"," + TotalLP +"\n";
+                    "," + Score +"," + Migrations +"," + TotalLP +
+                    "," + r_MNU +"," + v_MNU +"," + r_EC +
+                    "," + r_EC_per +"," + v_EC +"," + JSD +
+                    "," + ST +"\n";
 
             myWriter.write(csv_line);
 
