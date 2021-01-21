@@ -54,7 +54,10 @@ public class getClasses {
 
                         csv_line = GRAPH + "," + SAMPLING_TYPE + "," +  TAU + "," + SIGMA + "," +
                                 BETA + "," + numberOfPartitions +"," + Time +
-                                "," + Score +"," + Migrations +"," + TotalLP +"\n";
+                                "," + Score +"," + Migrations +"," + TotalLP +
+                                "," + r_MNU +"," + v_MNU +"," + r_EC +
+                                "," + r_EC_per +"," + v_EC +"," + JSD +
+                                "," + ST +"\n";
 
                         myWriter.write(csv_line);
 
@@ -68,6 +71,13 @@ public class getClasses {
                         Score = "";
                         Migrations = "";
                         TotalLP = "";
+                        r_MNU = "";
+                        v_MNU = "";
+                        r_EC = "";
+                        r_EC_per = "";
+                        v_EC = "";
+                        JSD = "";
+                        ST = "";
 
                     }
                     counter++;
