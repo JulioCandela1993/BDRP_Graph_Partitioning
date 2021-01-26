@@ -76,7 +76,7 @@ public class BGRAP_vb extends LPGPartitionner{
 		/**
 		 * Adnan : Vertex-count in each partition (
 		 */
-		protected int[] vCount;
+		protected long[] vCount;
 		/**
 		 * Adnan: the balanced capacity of a partition |E|/K, |V|/K
 		 */
@@ -341,7 +341,7 @@ public class BGRAP_vb extends LPGPartitionner{
 			partitionFrequency = new int[numberOfPartitions + repartition];
 			
 			//eCutsPerPartition = new long[numberOfPartitions + repartition];
-			vCount = new int[numberOfPartitions + repartition];
+			vCount = new long[numberOfPartitions + repartition];
 			vertexEcCount = new long[numberOfPartitions + repartition];
 			
 			vDemandAggregatorNames = new String[numberOfPartitions + repartition];			
@@ -355,7 +355,7 @@ public class BGRAP_vb extends LPGPartitionner{
 			// Adnan : get the Vertex balance penality
 			for (int i = 0; i < numberOfPartitions + repartition; i++) {
 				vDemandAggregatorNames[i] = AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i;
-				vCount[i] = ((IntWritable) getAggregatedValue(AGG_VERTEX_COUNT_PREFIX + i)).get();
+				vCount[i] = ((LongWritable) getAggregatedValue(AGG_VERTEX_COUNT_PREFIX + i)).get(); //
 				//eCutsPerPartition[i] = ((LongWritable) getAggregatedValue(AGG_EC_COUNT_PREFIX + i)).get();
 			}
 		}
@@ -396,8 +396,8 @@ public class BGRAP_vb extends LPGPartitionner{
 			aggregate(loadAggregatorNames[newPartition], new LongWritable(numberOfEdges));
 			
 			// Adnan : update partition's vertices count
-			aggregate(vertexCountAggregatorNames[currentPartition], new IntWritable(-1));
-			aggregate(vertexCountAggregatorNames[newPartition], new IntWritable(1));
+			aggregate(vertexCountAggregatorNames[currentPartition], new LongWritable(-1)); // Hung
+			aggregate(vertexCountAggregatorNames[newPartition], new LongWritable(1)); // Hung
 			
 			// Adnan : update partition's vertices count
 			//aggregate(ecAggregatorNames[currentPartition], new LongWritable(-1));
@@ -467,13 +467,13 @@ public class BGRAP_vb extends LPGPartitionner{
 				//ecAggregatorNames [i] = AGG_EC_COUNT_PREFIX + i;
 				
 				long load = ((LongWritable) getAggregatedValue(loadAggregatorNames[i])).get();
-				int vCount = ((IntWritable) getAggregatedValue(vertexCountAggregatorNames[i])).get();
+				long vCount = ((LongWritable) getAggregatedValue(vertexCountAggregatorNames[i])).get(); // Hung
 				//long ecCount = ((LongWritable) getAggregatedValue(ecAggregatorNames[i])).get();
 				
 				
 				int demand = ((IntWritable) getAggregatedValue(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i)).get();
 				long remainingEcCapacity;//??
-				int remainingVertexCapacity = totalVertexCapacity - vCount;
+				long remainingVertexCapacity = totalVertexCapacity - vCount;
 				if (demand == 0 || remainingVertexCapacity <= 0) {
 					migrationProbabilities[i] = 0;
 				} else {
@@ -592,11 +592,11 @@ public class BGRAP_vb extends LPGPartitionner{
 			long numberOfEdges = vertex.getValue().getRealOutDegree();
 			if (currentPartition != -1) { 																			//RR: what does this do?
 				aggregate(loadAggregatorNames[currentPartition], new LongWritable(-numberOfEdges));
-				aggregate(vertexCountAggregatorNames[currentPartition], new IntWritable(-1));
+				aggregate(vertexCountAggregatorNames[currentPartition], new LongWritable(-1)); // Hung
 			}
 			
 			aggregate(loadAggregatorNames[newPartition], new LongWritable(numberOfEdges));
-			aggregate(vertexCountAggregatorNames[newPartition], new IntWritable(1));
+			aggregate(vertexCountAggregatorNames[newPartition], new LongWritable(1)); // Hung
 			
 			
 			aggregate(AGGREGATOR_MIGRATIONS, new LongWritable(1));
@@ -653,7 +653,7 @@ public class BGRAP_vb extends LPGPartitionner{
 				registerAggregator(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i, LongSumAggregator.class);
 
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
-				registerPersistentAggregator(vertexCountAggregatorNames[i], IntSumAggregator.class);
+				registerPersistentAggregator(vertexCountAggregatorNames[i], LongSumAggregator.class); // Hung
 			}
 			registerAggregator(AGGREGATOR_STATE, DoubleSumAggregator.class);
 			registerAggregator(AGGREGATOR_LOCALS, LongSumAggregator.class);

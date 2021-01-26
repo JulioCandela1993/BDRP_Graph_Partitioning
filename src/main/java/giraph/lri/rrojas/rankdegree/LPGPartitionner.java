@@ -77,7 +77,7 @@ import giraph.ml.grafos.okapi.spinner.VertexValue;
 @SuppressWarnings("unused")
 public class LPGPartitionner {
 	//GENERAL VARIABLES
-	public static final String SAVE_PATH = "/users/lahdak/rojas/PaperResult/";
+	public static final String SAVE_PATH = "/home/ubuntu/BGRAP/Results/";
 	public static final String SAVE_STATS = "partition.SaveStatsIntoFile";
 	
 	
@@ -764,7 +764,7 @@ public class LPGPartitionner {
 				registerPersistentAggregator(virtualLoadAggregatorNames[i], LongSumAggregator.class);
 				
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
-				registerPersistentAggregator(vertexCountAggregatorNames[i], IntSumAggregator.class);
+				registerPersistentAggregator(vertexCountAggregatorNames[i], LongSumAggregator.class);
 
 				finalVertexCounts[i] = FINAL_AGG_VERTEX_COUNT_PREFIX + i;
 				registerPersistentAggregator(finalVertexCounts[i], IntSumAggregator.class);
@@ -1043,8 +1043,14 @@ public class LPGPartitionner {
 			vertexMaxMinLoad = ((double) vertexMaxLoad) / vertexMinLoad;
 			vertexBalanceJSD = vertexBalanceJSD / (2 * Math.log(2));
 
+
+			System.out.println("Llegamos hasta aquí");
+			System.out.println(isSaveStatsIntoFile);
 			try {
 				String filename = SAVE_PATH+formattedDate+".csv";
+				
+				System.out.println(filename);
+
 				FileWriter file = new FileWriter(filename, true);
 				savePartitionStats(file);
 				saveRealStats(file);
@@ -1457,11 +1463,11 @@ public class LPGPartitionner {
 				registerAggregator(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i, IntSumAggregator.class); 
 
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
-				registerPersistentAggregator(vertexCountAggregatorNames[i], IntSumAggregator.class);
+				registerPersistentAggregator(vertexCountAggregatorNames[i], LongSumAggregator.class); // Hung
 				
 				//RR:
 				vertexCountAggregatorNamesSampling[i] = AGG_VERTEX_COUNT_PREFIX + i +"_SAMPLING";
-				registerAggregator(vertexCountAggregatorNamesSampling[i], IntSumAggregator.class);
+				registerAggregator(vertexCountAggregatorNamesSampling[i], LongSumAggregator.class);
 				
 			}
 			registerAggregator(AGGREGATOR_STATE, DoubleSumAggregator.class); //RR: maybe float?
@@ -1505,10 +1511,10 @@ public class LPGPartitionner {
 			int superstep = (int) getSuperstep();
 			if (computeStates) {
 				if (superstep == lastStep + 1) {
-					//System.out.println("*MC"+superstep+": CGPS");
+					System.out.println("*MC"+superstep+": CGPS");
 					setComputation(ComputeGraphPartitionStatistics.class); 
 				} else {
-					//System.out.println("Finish stats.");
+					System.out.println("Finish stats.");
 					haltComputation();
 					updatePartitioningQuality();  												//RR: review datatypes
 					saveTimersStats(totalMigrations);  											//RR: review datatypes
@@ -1834,6 +1840,7 @@ public class LPGPartitionner {
 	public static class RDEBMasterCompute extends SuperPartitionerMasterCompute {
 		@Override
 		public void initialize() throws InstantiationException, IllegalAccessException {
+
 			maxIterations = getContext().getConfiguration().getInt(MAX_ITERATIONS_LP, DEFAULT_MAX_ITERATIONS);
 
 			// DEFAULT_NUM_PARTITIONS = getConf().getMaxWorkers()*getConf().get();
@@ -1903,13 +1910,14 @@ public class LPGPartitionner {
 
 		@Override
 		public void compute() {
+			System.out.println("Start the machine");
 			int superstep = (int) getSuperstep();
 			if (computeStates) {
 				if (superstep == lastStep + 1) {
-					//System.out.println("*MC"+superstep+": CGPS");
+					System.out.println("*MC"+superstep+": CGPS");
 					setComputation(ComputeGraphPartitionStatistics.class); 
 				} else {
-					//System.out.println("Finish stats.");
+					System.out.println("Finish stats.");
 					haltComputation();
 					updatePartitioningQuality();  												//RR: review datatypes
 					saveTimersStats(totalMigrations);  											//RR: review datatypes
@@ -2044,7 +2052,7 @@ public class LPGPartitionner {
 					lp_ss_end = (short) superstep;
 					lp_messages_end = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
 
-					//System.out.println("Halting computation: " + hasConverged);
+					System.out.println("Halting computation: " + hasConverged);
 					computeStates = true;
 					lastStep = superstep;
 				}
