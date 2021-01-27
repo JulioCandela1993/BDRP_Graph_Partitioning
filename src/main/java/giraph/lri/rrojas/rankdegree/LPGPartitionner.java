@@ -77,7 +77,7 @@ import giraph.ml.grafos.okapi.spinner.VertexValue;
 @SuppressWarnings("unused")
 public class LPGPartitionner {
 	//GENERAL VARIABLES
-	public static final String SAVE_PATH = "/home/ubuntu/BGRAP/Results/";
+	public static final String SAVE_PATH = "/home/ubuntu/BDRP_Graph_Partitioning/Results/";
 	public static final String SAVE_STATS = "partition.SaveStatsIntoFile";
 	
 	

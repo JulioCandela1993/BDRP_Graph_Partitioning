@@ -1,7 +1,7 @@
 # REBUILD
 mvn clean package
-sudo mv target/lri.modhel.adnanEM.SnapGpart-0.0.1-SNAPSHOT.jar /usr/local/hadoop/lib/bgrap.jar
-
+sudo cp target/lri.modhel.adnanEM.SnapGpart-0.0.1-SNAPSHOT.jar ~/AppHadoop/hadoop-1.2.1/lib/bgrap.jar
+sudo cp target/lri.modhel.adnanEM.SnapGpart-0.0.1-SNAPSHOT.jar /home/ubuntu/AppHadoop/giraph-1.2.0-for-hadoop-1.2.1/lib/bgrap.jar
 declare -a algs=('BGRAP' 'InitializeSampleGD' 'InitializeSampleRD' 'InitializeSampleHD')
 #declare -a algs=('InitializeSampleHD')
 #declare -a files=(Twitter)

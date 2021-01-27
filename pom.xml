@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<java.home>/usr/lib/jvm/java-8-openjdk-amd64</java.home>
+		<java.home>/usr/lib/jvm/java-8-openjdk-arm64</java.home>
 		<giraph.version>1.2.0</giraph.version>
 		<!-- <hadoop.version>0.20.203.0</hadoop.version> -->
 		<hadoop.version>1.2.1</hadoop.version>
@@ -47,7 +47,7 @@
 			<artifactId>jdk.tools</artifactId>
 			<version>1.8.0_261</version>
 			<scope>system</scope>
-			<systemPath>/usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar</systemPath>
+			<systemPath>/usr/lib/jvm/java-8-openjdk-arm64/lib/tools.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
