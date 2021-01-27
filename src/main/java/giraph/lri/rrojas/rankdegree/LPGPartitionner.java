@@ -1047,7 +1047,7 @@ public class LPGPartitionner {
 			System.out.println("Llegamos hasta aquí");
 			System.out.println(isSaveStatsIntoFile);
 			try {
-				String filename = SAVE_PATH+formattedDate+".csv";
+				String filename = SAVE_PATH+formattedDate + "_" + SAMPLING_TYPE+".csv";
 				
 				System.out.println(filename);
 
@@ -1723,7 +1723,7 @@ public class LPGPartitionner {
 			String date = new SimpleDateFormat("yyyy-MM-dd--hh:mm:ss").format(new Date());
 			if (super.isSaveStatsIntoFile) {
 				try {
-					String filename = SAVE_PATH+formattedDate+".csv";
+					String filename = SAVE_PATH+formattedDate+"_"+SAMPLING_TYPE+".csv";
 					FileWriter file = new FileWriter(filename, true);
 					file.write("\n");
 					//SUPERSTEPS
@@ -2127,7 +2127,7 @@ public class LPGPartitionner {
 			String date = new SimpleDateFormat("yyyy-MM-dd--hh:mm:ss").format(new Date());
 			if (super.isSaveStatsIntoFile) {
 				try {
-					String filename = SAVE_PATH+formattedDate+".csv";
+					String filename = SAVE_PATH+formattedDate+"_"+SAMPLING_TYPE+".csv";
 					FileWriter file = new FileWriter(filename, true);
 					file.write("\n");
 					//SUPERSTEPS
