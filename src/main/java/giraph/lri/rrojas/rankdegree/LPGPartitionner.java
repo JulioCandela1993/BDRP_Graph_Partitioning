@@ -1767,7 +1767,8 @@ public class LPGPartitionner {
 					file.write("SIGMA"+DELIMITER+SIGMA_P+"\n");
 					file.write("TAU"+DELIMITER+TAU+"\n");
 					file.write("SAMPLING_ERROR"+DELIMITER+SAMPLING_ERROR+"\n");
-					
+				
+
 					//MEMORY
 					//file.write("VMEM BYTES"+DELIMITER+getContext().getCounter(Task.Counter.VIRTUAL_MEMORY_BYTES).getValue() +"\n");
 					//file.write("PMEM BYTES"+DELIMITER+getContext().getCounter(Task.Counter.PHYSICAL_MEMORY_BYTES).getValue()+"\n");
@@ -2166,8 +2167,8 @@ public class LPGPartitionner {
 					file.write("TOTAL TIME"+DELIMITER+(totalLPTime+samplingTime+initializingTime)+"\n");
 
 					file.write("OUT DEGREE THRESHOLD"+DELIMITER+outDegreeThreshold + "\n");
-					file.write("BETA"+DELIMITER+BETA +"\n");
-					file.write("SIGMA"+DELIMITER+SIGMA+"\n");
+					file.write("BETA"+DELIMITER+BETA_P +"\n");
+					file.write("SIGMA"+DELIMITER+SIGMA_P+"\n");
 					file.write("TAU"+DELIMITER+TAU+"\n");
 					file.write("SAMPLING_ERROR"+DELIMITER+SAMPLING_ERROR+"\n");
 
