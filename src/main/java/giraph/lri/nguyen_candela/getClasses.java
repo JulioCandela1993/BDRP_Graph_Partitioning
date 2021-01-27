@@ -1,19 +1,174 @@
 package giraph.lri.nguyen_candela;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 
 public class getClasses {
+
+
+    public void listFilesForFolder(final File folder) {
+
+    }
 
     public static void main(String[] args) {
 
         long startTime = System.currentTimeMillis();
 
-        String file = args[0];
-        String output = args[1];
+        String input_folder = args[0];
+        String mode = args[1];
+        String output = args[2];
         BufferedReader reader;
+
+        try {
+
+            FileWriter myWriter = new FileWriter(output + ".csv");
+            String line_csv = "";
+            String csv_header = "MODE,JOB_ID,WORKERS,FILE,ALGO,TAU,SIGMA,BETA,NUMPARTITIONS,VERTICES"+
+                                    ",REAL EDGES, VIRTUAL EDGES,Time,Sampling Time,Total LP,Score,Migrations,"+
+                                "R MaxNorm unbalance,V MaxNorm unbalance,Vertex MaxNorm unbalance,#real EC,#real EC (%%),"+
+                                "#virtual EC,#virtual EC (%%),Vertex Balance JSD,Real Edge Balance JSD,Virtual Edge Balance JSD\n";
+            myWriter.write(csv_header);
+
+
+            File folder = new File(input_folder);
+            for (File fileEntry : folder.listFiles()) {
+                if (!fileEntry.getName().contains("GDD")) {
+                    reader = new BufferedReader(new FileReader(
+                            fileEntry));
+                    String line = reader.readLine();
+                    String JobID = "";
+
+                    String par_1 = "";
+                    String par_2 = "";
+                    String par_3 = "";
+                    String par_4 = "";
+                    String par_5 = "";
+                    String par_6 = "";
+                    String par_7 = "";
+                    String par_8 = "";
+                    String par_9 = "";
+                    String par_10 = "";
+                    String par_11 = "";
+                    String par_12 = "";
+                    String par_13 = "";
+                    String par_14 = "";
+                    String par_15 = "";
+                    String par_16 = "";
+                    String par_17 = "";
+                    String par_18 = "";
+                    String par_19 = "";
+                    String par_20 = "";
+                    String par_21 = "";
+                    String par_22 = "";
+                    String par_23 = "";
+                    String par_24 = "";
+                    String par_25 = "";
+                    String par_26 = "";
+
+                    while (line != null) {
+                        if (line.contains("JOB ID")){
+                            par_1 = line.split(",")[1];
+                        }
+                        if (line.contains("WORKERS")){
+                            par_2 = line.split(",")[1];
+                        }
+                        if (line.contains("GRAPH")){
+                            par_3 = line.split(",")[1];
+                        }
+                        if (line.contains("ALGORITHM")){
+                            par_4 = line.split(",")[1];
+                        }
+                        if (line.contains("TAU")){
+                            par_5 = line.split(",")[1];
+                        }
+                        if (line.contains("SIGMA")){
+                            par_6 = line.split(",")[1];
+                        }
+                        if (line.contains("BETA")){
+                            par_7 = line.split(",")[1];
+                        }
+                        if (line.contains("PARITIONS")){
+                            par_8 = line.split(",")[1];
+                        }
+                        if (line.contains("VERTICES")){
+                            par_9 = line.split(",")[1];
+                        }
+                        if (line.contains("REAL EDGES")){
+                            par_10 = line.split(",")[1];
+                        }
+                        if (line.contains("VIRTUAL EDGES")){
+                            par_11 = line.split(",")[1];
+                        }
+                        if (line.contains("TOTAL TIME")){
+                            par_12 = line.split(",")[1];
+                        }
+                        if (line.contains("Sampling time")){
+                            par_13 = line.split(",")[1];
+                        }
+                        if (line.contains("LP time")){
+                            par_14 = line.split(",")[1];
+                        }
+
+                        if (line.contains("REAL SCORE")){
+                            par_15 = line.split(",")[1];
+                        }
+                        if (line.contains("TOT MIGRATIONS")){
+                            par_16 = line.split(",")[1];
+                        }
+                        if (line.contains("REAL E MAXNORMLOAD")){
+                            par_17 = line.split(",")[1];
+                        }
+                        if (line.contains("VIRTUAL E MAXNORM LOAD")){
+                            par_18 = line.split(",")[1];
+                        }
+                        if (line.contains("REAL V MAXNORMLOAD")){
+                            par_19 = line.split(",")[1];
+                        }
+                        if (line.contains("REAL EC")){
+                            par_20 = line.split(",")[1];
+                        }
+                        if (line.contains("REAL EC PCT")){
+                            par_21 = line.split(",")[1];
+                        }
+                        if (line.contains("VIRTUAL EC")){
+                            par_22 = line.split(",")[1];
+                        }
+                        if (line.contains("VIRTUAL EC PCT")){
+                            par_23 = line.split(",")[1];
+                        }
+                        if (line.contains("REAL VB JSD")){
+                            par_24 = line.split(",")[1];
+                        }
+                        if (line.contains("REAL EB JSD")){
+                            par_25 = line.split(",")[1];
+                        }
+                        if (line.contains("VIRTUAL ED JSD")){
+                            par_26 = line.split(",")[1];
+                        }
+
+                        // read next line
+                        line = reader.readLine();
+                    }
+
+                    line_csv = mode +","+par_1 +","+par_2 +","+par_3 +","+par_4 +","+par_5 +","+par_6 +","+par_7 +","+
+                            par_8 +","+par_9 +","+par_10 +","+par_11 +","+par_12 +","+par_13 +","+
+                            par_14 +","+par_15 +","+par_16 +","+par_17 +","+par_18 +","+par_19 +","+par_20+","+
+                            par_21 +","+par_22 +","+par_23 +","+par_24 +","+par_25 +","+par_26 ;
+
+                    myWriter.write(line_csv + "\n");
+                    line_csv="";
+                    reader.close();
+
+                }
+            }
+
+            myWriter.close();
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*
         try {
             reader = new BufferedReader(new FileReader(
                     file));
@@ -194,6 +349,7 @@ public class getClasses {
             e.printStackTrace();
         }
         System.out.println(file);
+        */
 
 
         long stopTime = System.currentTimeMillis();
