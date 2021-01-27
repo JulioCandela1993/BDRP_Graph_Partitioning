@@ -1763,8 +1763,8 @@ public class LPGPartitionner {
 					file.write("TOTAL TIME"+DELIMITER+(totalLPTime+samplingTime+initializingTime)+"\n");
 					
 					file.write("OUT DEGREE THRESHOLD"+DELIMITER+outDegreeThreshold + "\n");
-					file.write("BETA"+DELIMITER+BETA +"\n");
-					file.write("SIGMA"+DELIMITER+SIGMA+"\n");
+					file.write("BETA"+DELIMITER+BETA_P +"\n");
+					file.write("SIGMA"+DELIMITER+SIGMA_P+"\n");
 					file.write("TAU"+DELIMITER+TAU+"\n");
 					file.write("SAMPLING_ERROR"+DELIMITER+SAMPLING_ERROR+"\n");
 					
