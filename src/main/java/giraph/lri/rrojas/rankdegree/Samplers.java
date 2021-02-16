@@ -621,12 +621,7 @@ public class Samplers extends LPGPartitionner {
 					// JC : List of neighbors
 					System.out.println("MC2: SendFriendsList");
 
-					final ArrayListWritable friends =  new ArrayListWritable() {
-						@Override
-						public void setClass() {
-							setClass(vertex.getId().getClass());
-						}
-					};
+					final LongArrayListWritable friends =  new LongArrayListWritable();
 
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
 						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
@@ -636,13 +631,13 @@ public class Samplers extends LPGPartitionner {
 					temp.put(new IntWritable(vid), friends);
 					aggregate(AGG_FRIENDS_LIST, temp);
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid
+					/*sendMessageToAllEdges(vertex, new SamplingMessage(vid
 							, -1
-							, friends));
+							, friends));*/
 
-					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 				} else if(superstep == 3){
-					System.out.println("MC2: Clustering Coefficient");
+					System.out.println("MC3: Clustering Coefficient");
 /*
 
 					HashSet<LongWritable> friends = new HashSet<LongWritable>();

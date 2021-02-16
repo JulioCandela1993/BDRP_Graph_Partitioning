@@ -35,7 +35,7 @@ import org.apache.hadoop.io.Writable;
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private ArrayListWritable friendlist;
+	private LongArrayListWritable friendlist;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ public class SamplingMessage implements Writable {
 		this.partition = partition;
 	}
 
-	public SamplingMessage(int sourceId, int partition, ArrayListWritable friendList) {
+	public SamplingMessage(int sourceId, int partition, LongArrayListWritable friendList) {
 		this.sourceId = sourceId;
 		this.partition = partition;
 		this.friendlist = friendList;
@@ -83,11 +83,11 @@ public class SamplingMessage implements Writable {
 		this.partition = partition;
 	}
 
-	public ArrayListWritable getfriendlist() {
+	public LongArrayListWritable getfriendlist() {
 		return friendlist;
 	}
 
-	public void setfriendlist(ArrayListWritable friendlist) {
+	public void setfriendlist(LongArrayListWritable friendlist) {
 		this.friendlist = friendlist;
 	}
 
