@@ -79,14 +79,14 @@ public class SamplingMessage implements Writable {
 
 	@Override
 	public void readFields(DataInput input) throws IOException {
-		//sourceId = input.readInt();
-		//partition = input.readInt();
+		sourceId = input.readInt();
+		partition = input.readInt();
 	}
 
 	@Override
 	public void write(DataOutput output) throws IOException {
-		//output.writeInt(sourceId);
-		//output.writeInt(partition);
+		output.writeInt(sourceId);
+		output.writeInt(partition);
 
 	}
 
