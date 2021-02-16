@@ -268,7 +268,7 @@ public class Samplers extends LPGPartitionner {
 			debug = getContext().getConfiguration().getBoolean(DEBUG, false);
 			
 			//RR:
-			if(superstep == 5){
+			if(superstep == 3){
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
@@ -356,12 +356,12 @@ public class Samplers extends LPGPartitionner {
 			//IF ALGORITHM NEEDS TO CONTINUE
 			else {
 				//IF ALGORITHM IS INITIALIZING
-				if(superstep == 4){
+				if(superstep == 2){
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree()+vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
-				} else if(superstep == 5 || sampleSize == 0){ 
+				} else if(superstep == 3 || sampleSize == 0){
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					if(vertexDegree > degreeSigma){
@@ -526,7 +526,7 @@ public class Samplers extends LPGPartitionner {
 			debug = getContext().getConfiguration().getBoolean(DEBUG, false);
 			
 			//RR:
-			if(superstep == 5){
+			if(superstep == 3){
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
@@ -616,12 +616,12 @@ public class Samplers extends LPGPartitionner {
 			//IF ALGORITHM NEEDS TO CONTINUE
 			else {
 				//IF ALGORITHM IS INITIALIZING
-				if(superstep == 4){
+				if(superstep == 2){
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree()+vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
-				} else if(superstep == 5 || sampleSize == 0){ 
+				} else if(superstep == 3 || sampleSize == 0){
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					if(vertexDegree > degreeSigma){

@@ -1637,21 +1637,11 @@ public class LPGPartitionner {
 					break;
 						
 				case 1:
-					System.out.println("MC1: SendFriendsList");
-					setComputation(SendFriendsList.class);
-					break;
-
-				case 2:
-					System.out.println("*MC2: ClusteringCoefficientComputation");
-					setComputation(ClusteringCoefficientComputation.class);
-					break;
-
-				case 3:
 					System.out.println("*MC3: ConverterUpdateEdges");
 					setComputation(ConverterUpdateEdges.class);
 					break;
 
-				case 4:
+				case 2:
 					if (repartition != 0) {
 						NEEDS_SAMPLE = false;
 						setComputation(Repartitioner.class);									
