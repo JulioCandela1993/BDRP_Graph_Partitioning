@@ -634,6 +634,32 @@ public class Samplers extends LPGPartitionner {
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 
 				} else if(superstep == 3){
+					System.out.println("MC2: Clustering Coefficient");
+
+					/*
+					HashSet<LongWritable> friends = new HashSet<LongWritable>();
+					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
+						friends.add(new LongWritable(edge.getTargetVertexId().get()));
+					}
+					int edges = vertex.getNumEdges();
+					int triangles = 0;
+					for (SamplingMessage msg : messages) {
+						LongArrayListWritable tmp = (LongArrayListWritable)msg.getfriendlist();
+						for (IntWritable id : tmp) {
+							if (friends.contains(id)) {
+								// Triangle found
+								triangles++;
+							}
+						}
+					}
+					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
+					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
+					// vertex.setValue(clCoefficient);
+					MapWritable temp = new  MapWritable();
+					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
+					aggregate(AGG_CL_COEFFICIENT, temp);
+*/
+
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);

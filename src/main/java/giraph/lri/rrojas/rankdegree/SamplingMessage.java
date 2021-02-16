@@ -25,6 +25,7 @@ import org.apache.hadoop.io.Writable;
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
+	private int partition_2;
 
 	public SamplingMessage() {
 	}
@@ -33,6 +34,21 @@ public class SamplingMessage implements Writable {
 		this.sourceId = sourceId;
 		this.partition = partition;
 	}
+
+	public SamplingMessage(int sourceId, int partition, int partition2) {
+		this.sourceId = sourceId;
+		this.partition = partition;
+		this.partition_2 = partition_2;
+	}
+
+	public int getPartition_2() {
+		return partition_2;
+	}
+
+	public void setPartition_2(int partition_2) {
+		this.partition_2 = partition_2;
+	}
+
 
 
 	public int getSourceId() {
