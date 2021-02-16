@@ -666,6 +666,7 @@ public class Samplers extends LPGPartitionner {
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new LongWritable(edge.getTargetVertexId().get()));
 					}
+					/*
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
 					for (SamplingMessage msg : messages) {
@@ -683,7 +684,7 @@ public class Samplers extends LPGPartitionner {
 					MapWritable temp = new  MapWritable();
 					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
 					aggregate(AGG_CL_COEFFICIENT, temp);
-
+					*/
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
