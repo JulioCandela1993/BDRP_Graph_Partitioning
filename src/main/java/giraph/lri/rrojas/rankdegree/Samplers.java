@@ -653,7 +653,7 @@ public class Samplers extends LPGPartitionner {
 					};
 
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
-						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
+						friends.add(new LongWritable(edge.getTargetVertexId().get()));
 					}
 
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, friends));
