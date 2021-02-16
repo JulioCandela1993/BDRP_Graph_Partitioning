@@ -101,6 +101,7 @@ public class SamplingMessage implements Writable {
 	public void write(DataOutput output) throws IOException {
 		output.writeInt(sourceId);
 		output.writeInt(partition);
+
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class SamplingMessage implements Writable {
 			return false;
 		}
 		SamplingMessage that = (SamplingMessage) o;
-		if (partition != that.partition || sourceId != that.sourceId) {
+		if (partition != that.partition || sourceId != that.sourceId || friendlist != that.friendlist) {
 			return false;
 		}
 		return true;

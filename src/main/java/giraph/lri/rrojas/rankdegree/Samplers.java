@@ -632,11 +632,15 @@ public class Samplers extends LPGPartitionner {
 						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
 					}
 
-					/*sendMessageToAllEdges(vertex, new SamplingMessage(vid
-							, -1
-							, friends));*/
+					MapWritable temp = new  MapWritable();
+					temp.put(new IntWritable(vid), friends);
+					aggregate(AGG_FRIENDS_LIST, temp);
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid
+							, -1
+							, friends));
+
+					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
 /*
@@ -801,6 +805,8 @@ public class Samplers extends LPGPartitionner {
 			temp.put(new IntWritable(degree), new IntWritable(1));
 			aggregate(AGG_DEGREE_DIST, temp);
 		}
+
+
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
