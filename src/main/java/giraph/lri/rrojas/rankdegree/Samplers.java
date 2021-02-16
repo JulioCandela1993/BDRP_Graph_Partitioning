@@ -631,7 +631,7 @@ public class Samplers extends LPGPartitionner {
 
 					System.out.println(friends.toString());
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, -1));
 
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
