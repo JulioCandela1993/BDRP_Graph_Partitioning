@@ -263,7 +263,9 @@ public class LPGPartitionner {
 	//ALGORITHM SPECIFIC
 	//Hashmaps
 	protected static MapWritable degreeDist = new MapWritable();
+	protected static MapWritable clustCoef = new MapWritable();
 	protected static HashMap<Integer,Float> degreeProb = new HashMap<Integer,Float>();
+	protected static HashMap<Long,Double> coefMap = new HashMap<Long,Double>();
 
 	protected static float adjustingFactorSeed=0.0f;
 	protected static float relaxingFactorPropagation=0.0f;
