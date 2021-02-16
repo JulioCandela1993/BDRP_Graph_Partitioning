@@ -618,6 +618,7 @@ public class Samplers extends LPGPartitionner {
 				//IF ALGORITHM IS INITIALIZING
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 
 				} else if(superstep == 3){
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
