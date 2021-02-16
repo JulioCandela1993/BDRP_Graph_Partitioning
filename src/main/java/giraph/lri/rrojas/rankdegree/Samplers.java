@@ -543,8 +543,10 @@ public class Samplers extends LPGPartitionner {
 
 				sigma_vertex = (int)(totalVertexNumber*SIGMA);
 
-				minCC = Collections.min(values.subList(0,sigma_vertex));
-				/**/
+				List<Double> values_sub = values.subList(0,sigma_vertex);
+				/*
+				minCC = Collections.min();
+				*/
 
 
 
