@@ -645,13 +645,13 @@ public class Samplers extends LPGPartitionner {
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
 
-					final LongArrayListWritable friends =  new LongArrayListWritable();
+					LongArrayListWritable friends =  new LongArrayListWritable();
 
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 					}
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, friends));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, friends));
 
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
@@ -666,9 +666,9 @@ public class Samplers extends LPGPartitionner {
 					int triangles = 0;
 					for (SamplingMessage msg : messages) {
 						LongArrayListWritable tmp = msg.getFriendlist();
-						for (IntWritable id : tmp){
-							triangles++;
-						}
+						//for (IntWritable id : tmp){
+						//	triangles++;
+						//}
 						/*for (Object id : tmp) {
 							if (friends.contains((IntWritable)id)) {
 								// Triangle found

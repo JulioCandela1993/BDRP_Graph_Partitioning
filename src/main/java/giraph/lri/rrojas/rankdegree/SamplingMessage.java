@@ -38,9 +38,9 @@ public class SamplingMessage implements Writable {
 		this.friendlist = new LongArrayListWritable();
 	}
 
-	public SamplingMessage(int sourceId, LongArrayListWritable friendlist) {
+	public SamplingMessage(int sourceId, int partition, LongArrayListWritable friendlist) {
 		this.sourceId = sourceId;
-		this.partition = -1;
+		this.partition = partition;
 		this.friendlist = friendlist;
 	}
 
