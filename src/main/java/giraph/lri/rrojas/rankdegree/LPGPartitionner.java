@@ -47,6 +47,13 @@ import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.Task;
 
+// Hung
+import org.apache.hadoop.io.NullWritable;
+import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
+import giraph.ml.grafos.okapi.common.data.MessageWrapper;
+import java.util.HashSet;
+import org.apache.giraph.graph.BasicComputation;
+
 import com.google.common.collect.Lists;
 /*
 import giraph.lri.rrojas.rankdegree.BGRAP_vb.ComputeFirstMigration;
@@ -69,6 +76,7 @@ import giraph.lri.rrojas.rankdegree.SamplingMessage;
 import giraph.ml.grafos.okapi.spinner.EdgeValue;
 import giraph.ml.grafos.okapi.spinner.PartitionMessage;
 import giraph.ml.grafos.okapi.spinner.VertexValue;
+import giraph.ml.grafos.okapi.common.computation.SendFriends;
 
 /**
  *
@@ -238,6 +246,7 @@ public class LPGPartitionner {
 	protected static final String AGG_SAMPLE = "SAMPLE";
 	protected static final String AGG_SAMPLE_SS = "SAMPLED_IN_SUPERSTEP";
 	protected static final String AGG_SAMPLE_SSR = "SAMPLED_IN_SUPERSTEP_FOR_REAL";
+	protected static final String AGG_CL_COEFFICIENT = "CL_COEFFICIENT";
 	
 	//RESULTS
 	//super steps 
@@ -277,9 +286,104 @@ public class LPGPartitionner {
 			aggregate(AGG_VERTICES, new IntWritable(1));
 		}
 	}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	  public static class LongIdFriendsList extends MessageWrapper<IntWritable, 
+	  LongArrayListWritable> { 
+	    @Override
+	    public Class<IntWritable> getVertexIdClass() {
+	      return IntWritable.class;
+	    }
+	    @Override
+	    public Class<LongArrayListWritable> getMessageClass() {
+	      return LongArrayListWritable.class;
+	    }
+	  }
+
+	  public static class SendFriendsList extends SendFriends<IntWritable, 
+	    VertexValue, EdgeValue, LongIdFriendsList> {
+	  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SS2: CLUSTERING COEFFICIENT //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+	  public static class ClusteringCoefficientComputation extends BasicComputation<IntWritable, VertexValue, EdgeValue, LongIdFriendsList>{
+	  // AbstractComputation<IntWritable, VertexValue, EdgeValue, IntWritable, IntWritable>{ 
+	  // BasicComputation<LongWritable, DoubleWritable, NullWritable, LongIdFriendsList> {
+
+	  // Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages
+	    @Override
+	    public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<LongIdFriendsList> messages)
+	            throws IOException {
+
+	      // Add the friends of this vertex in a HashSet so that we can check 
+	      // for the existence of triangles quickly.
+	      HashSet<LongWritable> friends = new HashSet<LongWritable>();
+	      for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
+	        friends.add(new LongWritable(edge.getTargetVertexId().get()));
+	      }
+	      LongIdFriendsList tmp = new LongIdFriendsList();
+
+	      int edges = vertex.getNumEdges();
+	      int triangles = 0;
+	      for (LongIdFriendsList msg : messages) {
+	      	tmp = msg;
+	        for (IntWritable id : msg.getMessage()) {
+	          if (friends.contains(id)) {
+	            // Triangle found
+	            triangles++;
+	          }
+	        }
+	      }
+	      
+	      double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
+	      // DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
+	      // vertex.setValue(clCoefficient);
+
+	      int vid = vertex.getId().get();
+
+	      MapWritable temp = new  MapWritable();
+	      temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
+	      aggregate(AGG_CL_COEFFICIENT, temp);
+	      
+	      // sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get(), -1)); //SEND MESSAGE TO KEEP ALIVE
+	      vertex.voteToHalt();
+	    }
+	  }
+
+	  
+
+
+
+	  /**
+	   * Coordinates the execution of the algorithm.
+	   */
+	  // public static class MasterCompute extends DefaultMasterCompute {
+
+	  //   @Override
+	  //   public final void compute() {
+	  //     long superstep = getSuperstep();
+	  //     if (superstep == 0) {
+	  //       setComputation(SendFriendsList.class);
+	  //     } else {
+	  //       setComputation(ClusteringCoefficientComputation.class);
+	  //     }
+	  //     // if (superstep == 2) {
+	  //     //   double partialSum = ((DoubleWritable)getAggregatedValue(
+	  //     //       CL_COEFFICIENT_AGGREGATOR)).get();
+	  //       // double globalCoefficient = partialSum/(double)getTotalNumVertices();
+	  //       // Counters.updateCounter(getContext(), COUNTER_GROUP, COUNTER_NAME,
+	  //       //     (long)(1000*globalCoefficient));
+	  //     }
+	  //   }
+	  // }
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//SS1: CONVERTER UPDATE EDGES ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//SS3: CONVERTER UPDATE EDGES ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static class ConverterUpdateEdges
@@ -291,7 +395,7 @@ public class LPGPartitionner {
 		@Override
 		public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<IntWritable> messages)
 				throws IOException {
-
+			// For BGRAP
 			if(SAMPLING_TYPE.contentEquals("BGRAP")) {
 				if (vertex.getNumEdges() >= 100) {
 					aggregate(outDegreeFrequency[100], new IntWritable(1));
@@ -784,6 +888,11 @@ public class LPGPartitionner {
 
 			registerAggregator(AGG_REAL_LOCAL_EDGES, LongSumAggregator.class);
 			registerAggregator(AGG_VIRTUAL_LOCALS, LongSumAggregator.class);
+
+
+			// Added by Hung
+			registerPersistentAggregator(AGG_CL_COEFFICIENT, HashMapAggregator.class);
+
 
 			if(SAMPLING_TYPE.contentEquals("BGRAP")) {
 				outDegreeFrequency = new String[101];
@@ -1523,14 +1632,26 @@ public class LPGPartitionner {
 			} else {
 			switch(superstep){
 				case 0:
-					System.out.println("MC0: CP");
+					System.out.println("MC0: ConverterPropagate");
 					setComputation(ConverterPropagate.class); 
 					break;
+						
 				case 1:
-					System.out.println("*MC1: CUE");
+					System.out.println("MC1: SendFriendsList");
+					setComputation(SendFriendsList.class);
+					break;
+
+				case 2:
+					System.out.println("*MC2: ClusteringCoefficientComputation");
+					setComputation(ClusteringCoefficientComputation.class);
+					break;
+
+				case 3:
+					System.out.println("*MC3: ConverterUpdateEdges");
 					setComputation(ConverterUpdateEdges.class);
 					break;
-				case 2:
+
+				case 4:
 					if (repartition != 0) {
 						NEEDS_SAMPLE = false;
 						setComputation(Repartitioner.class);									
@@ -1556,6 +1677,14 @@ public class LPGPartitionner {
 							System.out.println(":SAMPLING TAU"+TAU);
 							setComputation(InitializeSampleHD.class);
 							break;
+
+						case "InitializeSampleCC":
+							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+							System.out.println(":SAMPLING SIGMA"+SIGMA);
+							System.out.println(":SAMPLING TAU"+TAU);
+							setComputation(InitializeSampleCC.class);
+							break;
+
 						case "InitializeSampleGD":
 							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
 							System.out.println(":SAMPLING SIGMA"+SIGMA);
@@ -1593,6 +1722,9 @@ public class LPGPartitionner {
 								break;
 							case "InitializeSampleHD":
 								setComputation(InitializeSampleHD.class);
+								break;
+							case "InitializeSampleCC":
+								setComputation(InitializeSampleCC.class);
 								break;
 							case "InitializeSampleGD":
 								setComputation(InitializeSampleGD.class);
