@@ -645,10 +645,10 @@ public class Samplers extends LPGPartitionner {
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
 
-					LongArrayListWritable friends =  new LongArrayListWritable();
+					ArrayList<Long> friends =  new ArrayList<Long>();
 
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
-						friends.add(new IntWritable(edge.getTargetVertexId().get()));
+						friends.add(new Long(edge.getTargetVertexId().get()));
 					}
 
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, friends));
@@ -665,10 +665,10 @@ public class Samplers extends LPGPartitionner {
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
 
-					LongArrayListWritable tmp = new LongArrayListWritable();
+					ArrayList<Long> tmp = new ArrayList<Long>();
 
 					for (SamplingMessage msg : messages) {
-						tmp = (LongArrayListWritable)msg.getFriendlist();
+						tmp = (ArrayList<Long>)msg.getFriendlist();
 						/*if (tmp.isEmpty()){
 
 						}

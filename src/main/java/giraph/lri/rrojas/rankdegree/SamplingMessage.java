@@ -19,6 +19,7 @@ package giraph.lri.rrojas.rankdegree;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
 import org.apache.giraph.utils.ArrayListWritable;
@@ -27,7 +28,7 @@ import org.apache.hadoop.io.Writable;
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private LongArrayListWritable friendlist;
+	private ArrayList<Long> friendlist;
 
 	public SamplingMessage() {
 	}
@@ -35,10 +36,10 @@ public class SamplingMessage implements Writable {
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
-		this.friendlist = new LongArrayListWritable();
+		this.friendlist = new ArrayList<Long>();
 	}
 
-	public SamplingMessage(int sourceId, int partition, LongArrayListWritable friendlist) {
+	public SamplingMessage(int sourceId, int partition, ArrayList<Long> friendlist) {
 		this.sourceId = sourceId;
 		this.partition = partition;
 		this.friendlist = friendlist;
@@ -63,11 +64,11 @@ public class SamplingMessage implements Writable {
 	}
 
 
-	public LongArrayListWritable getFriendlist() {
+	public ArrayList<Long> getFriendlist() {
 		return friendlist;
 	}
 
-	public void setFriendlist(LongArrayListWritable friendlist) {
+	public void setFriendlist(ArrayList<Long> friendlist) {
 		this.friendlist = friendlist;
 	}
 
