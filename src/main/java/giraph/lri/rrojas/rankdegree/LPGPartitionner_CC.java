@@ -15,75 +15,44 @@
  */
 package giraph.lri.rrojas.rankdegree;
 
+import com.google.common.collect.Lists;
+import giraph.lri.rrojas.rankdegree.BGRAP_eb.ComputeFirstMigration;
+import giraph.lri.rrojas.rankdegree.BGRAP_eb.ComputeFirstPartition;
+import giraph.lri.rrojas.rankdegree.Samplers.InitializeSampleCC;
+import giraph.lri.rrojas.rankdegree.Samplers.InitializeSampleGD;
+import giraph.lri.rrojas.rankdegree.Samplers.InitializeSampleHD;
+import giraph.lri.rrojas.rankdegree.Samplers.InitializeSampleRD;
+import giraph.ml.grafos.okapi.common.computation.SendFriends;
+import giraph.ml.grafos.okapi.spinner.EdgeValue;
+import giraph.ml.grafos.okapi.spinner.VertexValue;
 import it.unimi.dsi.fastutil.shorts.ShortArrayList;
+import org.apache.giraph.aggregators.DoubleSumAggregator;
+import org.apache.giraph.aggregators.IntMaxAggregator;
+import org.apache.giraph.aggregators.IntSumAggregator;
+import org.apache.giraph.aggregators.LongSumAggregator;
+import org.apache.giraph.edge.Edge;
+import org.apache.giraph.edge.EdgeFactory;
+import org.apache.giraph.graph.AbstractComputation;
+import org.apache.giraph.graph.BasicComputation;
+import org.apache.giraph.graph.Vertex;
+import org.apache.giraph.master.DefaultMasterCompute;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.Task;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.*;
 import java.util.Map.Entry;
-
-import org.apache.giraph.aggregators.DoubleSumAggregator;
-import org.apache.giraph.aggregators.IntMaxAggregator;
-import org.apache.giraph.aggregators.IntSumAggregator;
-import org.apache.giraph.aggregators.LongSumAggregator;
-import org.apache.giraph.counters.GiraphTimers;
-import org.apache.giraph.edge.Edge;
-import org.apache.giraph.edge.EdgeFactory;
-import org.apache.giraph.graph.AbstractComputation;
-import org.apache.giraph.graph.Vertex;
-import org.apache.giraph.master.DefaultMasterCompute;
-import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.mapred.Task;
-
-// Hung
-import org.apache.hadoop.io.NullWritable;
-import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
-import giraph.ml.grafos.okapi.common.data.MessageWrapper;
-import java.util.HashSet;
-import org.apache.giraph.graph.BasicComputation;
-
-import com.google.common.collect.Lists;
-/*
-import giraph.lri.rrojas.rankdegree.BGRAP_vb.ComputeFirstMigration;
-import giraph.lri.rrojas.rankdegree.BGRAP_vb.ComputeFirstPartition;
-import giraph.lri.rrojas.rankdegree.BGRAP_vb.ComputeMigration;
-import giraph.lri.rrojas.rankdegree.BGRAP_vb.ComputeNewPartition;
-//*/
-import giraph.lri.rrojas.rankdegree.BGRAP_eb.ComputeFirstMigration;
-import giraph.lri.rrojas.rankdegree.BGRAP_eb.ComputeFirstPartition;
-import giraph.lri.rrojas.rankdegree.BGRAP_eb.ComputeMigration;
-import giraph.lri.rrojas.rankdegree.BGRAP_eb.ComputeNewPartition;
-import giraph.lri.rrojas.rankdegree.HashMapAggregator;
-import giraph.lri.rrojas.rankdegree.LPGPartitionner.ComputeGraphPartitionStatistics;
-import giraph.lri.rrojas.rankdegree.LPGPartitionner.ConverterPropagate;
-import giraph.lri.rrojas.rankdegree.LPGPartitionner.ConverterUpdateEdges;
-import giraph.lri.rrojas.rankdegree.LPGPartitionner.Repartitioner;
-import giraph.lri.rrojas.rankdegree.LPGPartitionner.SuperPartitionerMasterCompute;
-import giraph.lri.rrojas.rankdegree.Samplers.*;
-import giraph.lri.rrojas.rankdegree.SamplingMessage;
-import giraph.ml.grafos.okapi.spinner.EdgeValue;
-import giraph.ml.grafos.okapi.spinner.PartitionMessage;
-import giraph.ml.grafos.okapi.spinner.VertexValue;
-import giraph.ml.grafos.okapi.common.computation.SendFriends;
 
 /**
  *
  * 
  */
 @SuppressWarnings("unused")
-public class LPGPartitionner {
+public class LPGPartitionner_CC {
 	//GENERAL VARIABLES
 	public static final String SAVE_PATH = "/home/ubuntu/BDRP_Graph_Partitioning/Results/";
 	public static final String SAVE_STATS = "partition.SaveStatsIntoFile";
@@ -287,37 +256,22 @@ public class LPGPartitionner {
 		}
 	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	  public static class LongIdFriendsList extends MessageWrapper<IntWritable,
-	  LongArrayListWritable> {
-	    @Override
-	    public Class<IntWritable> getVertexIdClass() {
-	      return IntWritable.class;
-	    }
-	    @Override
-	    public Class<LongArrayListWritable> getMessageClass() {
-	      return LongArrayListWritable.class;
-	    }
-	  }
 
 	  public static class SendFriendsList extends SendFriends<IntWritable, 
-	    VertexValue, EdgeValue, LongIdFriendsList> {
+	    VertexValue, EdgeValue, SamplingMessage.LongIdFriendsList> {
 	  }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SS2: CLUSTERING COEFFICIENT //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-	  public static class ClusteringCoefficientComputation extends BasicComputation<IntWritable, VertexValue, EdgeValue, LongIdFriendsList>{
+	  public static class ClusteringCoefficientComputation extends BasicComputation<IntWritable, VertexValue, EdgeValue, SamplingMessage>{
 	  // AbstractComputation<IntWritable, VertexValue, EdgeValue, IntWritable, IntWritable>{ 
 	  // BasicComputation<LongWritable, DoubleWritable, NullWritable, LongIdFriendsList> {
 
 	  // Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages
 	    @Override
-	    public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<LongIdFriendsList> messages)
+	    public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages)
 	            throws IOException {
 
 	      // Add the friends of this vertex in a HashSet so that we can check 
@@ -326,13 +280,13 @@ public class LPGPartitionner {
 	      for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 	        friends.add(new LongWritable(edge.getTargetVertexId().get()));
 	      }
-	      LongIdFriendsList tmp = new LongIdFriendsList();
+	      SamplingMessage.LongIdFriendsList tmp = new SamplingMessage.LongIdFriendsList();
 
 	      int edges = vertex.getNumEdges();
 	      int triangles = 0;
-	      for (LongIdFriendsList msg : messages) {
-	      	tmp = msg;
-	        for (IntWritable id : msg.getMessage()) {
+	      for (SamplingMessage msg : messages) {
+	      	tmp = msg.getfriendlist();
+	        for (IntWritable id : tmp.getMessage()) {
 	          if (friends.contains(id)) {
 	            // Triangle found
 	            triangles++;
@@ -350,8 +304,10 @@ public class LPGPartitionner {
 	      temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
 	      aggregate(AGG_CL_COEFFICIENT, temp);
 	      
-	      // sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get(), -1)); //SEND MESSAGE TO KEEP ALIVE
-	      vertex.voteToHalt();
+	      sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get()
+				  							, -1
+		  									, new SamplingMessage.LongIdFriendsList())); //SEND MESSAGE TO KEEP ALIVE
+	      //vertex.voteToHalt();
 	    }
 	  }
 
@@ -1618,6 +1574,7 @@ public class LPGPartitionner {
 		@Override
 		public void compute() {
 			int superstep = (int) getSuperstep();
+
 			if (computeStates) {
 				if (superstep == lastStep + 1) {
 					System.out.println("*MC"+superstep+": CGPS");
@@ -2149,13 +2106,13 @@ public class LPGPartitionner {
 							getContext().getCounter("Partitioning Initialization", AGG_INITIALIZED_VERTICES)
 							.increment(((IntWritable) getAggregatedValue(AGG_INITIALIZED_VERTICES)).get());
 							//System.out.println("*MC"+superstep+": CFP");
-							setComputation(BGRAP_eb.ComputeFirstPartition.class);											
+							setComputation(ComputeFirstPartition.class);
 						} else if (superstep == sampling_ss_end + 2) {
 
 							getContext().getCounter("Partitioning Initialization", AGG_UPDATED_VERTICES)
 							.increment(((LongWritable) getAggregatedValue(AGG_UPDATED_VERTICES)).get()); //Hung
 							//System.out.println("*MC"+superstep+": CFM");
-							setComputation(BGRAP_eb.ComputeFirstMigration.class);											
+							setComputation(ComputeFirstMigration.class);
 						} else {
 							switch ((superstep-sampling_ss_end) % 2) {
 							case 0:
