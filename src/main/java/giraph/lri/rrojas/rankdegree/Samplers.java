@@ -528,7 +528,7 @@ public class Samplers extends LPGPartitionner {
 
 			if(superstep == 4){
 				//degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
-				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
+				/*clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 				List<Double> values = new  ArrayList<Double>();
 
 				double total_coef = 0;
@@ -545,10 +545,10 @@ public class Samplers extends LPGPartitionner {
 				sigma_vertex = (Integer)totalVertexNumber*SIGMA;
 
 				minCC = Collections.min(values.subList(0,sigma_vertex));
-
+*/
 				//totalVertexNumber
 
-				/*
+
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
 				//get sigma seeds
@@ -567,7 +567,7 @@ public class Samplers extends LPGPartitionner {
 							break;
 						}
 					}
-				}*/
+				}
 			}
 		}
 
@@ -688,8 +688,27 @@ public class Samplers extends LPGPartitionner {
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 				} else if(superstep == 4 || sampleSize == 0){
+
+					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
+					if(vertexDegree > degreeSigma){
+						vertex.getValue().setCurrentPartition((short)-2);
+						vertex.getValue().setNewPartition(newPartition());
+						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+						aggregate(AGG_SAMPLE, new IntWritable(1));
+						//System.out.println("*SS"+superstep+":isSampled-"+vid);
+					} else if (vertexDegree == degreeSigma){
+						if(r.nextFloat() < probSigma){
+							vertex.getValue().setCurrentPartition((short)-2);
+							vertex.getValue().setNewPartition(newPartition());
+							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+							aggregate(AGG_SAMPLE, new IntWritable(1));
+							//System.out.println("*SS"+superstep+":isSampled-"+vid);
+						}
+					}
+
+
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
-					double vertex_coef=-1;
+					/*double vertex_coef=-1;
 
 					if(clustCoef.containsKey(vid))
 						vertex_coef = coefMap.get(vid);
@@ -699,7 +718,7 @@ public class Samplers extends LPGPartitionner {
 							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 							aggregate(AGG_SAMPLE, new IntWritable(1));
 							//System.out.println("*SS"+superstep+":isSampled-"+vid);
-						}
+						}*/
 				}
 
 				//CORE ALGORITHM
