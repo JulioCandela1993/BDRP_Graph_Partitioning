@@ -2,7 +2,10 @@
 package giraph.lri.rrojas.rankdegree;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
 import java.util.Map.Entry;
 
 import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
@@ -21,9 +24,9 @@ import giraph.ml.grafos.okapi.common.computation.SendFriends;
 
 @SuppressWarnings("unused")
 public class Samplers extends LPGPartitionner {
-	
+
 	//to obtain sample and seed set seed to -3, then change agg at the beginning of each SS and end of sampling.
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//SS2: INITIALIZE SAMPLE RD : RANDOM SEEDS  => NEED TO REMOVE USELESS CODE FROM HD //////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,9 +39,9 @@ public class Samplers extends LPGPartitionner {
 		protected String[] vertexCountAggregatorNamesSampling;
 		private boolean debug;
 
-		@Override 
+		@Override
 		public void preSuperstep() {
-			int superstep = (int) getSuperstep();			
+			int superstep = (int) getSuperstep();
 			directedGraph = getContext().getConfiguration().getBoolean(GRAPH_DIRECTED, DEFAULT_GRAPH_DIRECTED);
 			numberOfPartitions = getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS);
 			loadAggregatorNames = new String[numberOfPartitions];
@@ -68,7 +71,7 @@ public class Samplers extends LPGPartitionner {
 				int potentiallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
 				int actuallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SSR)).get();
 				if(potentiallySampled==actuallySampled && potentiallySampled!=0) {
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); 
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 					System.out.println("*SS"+superstep+":Algorithm Reactivation");
 				}
 			}
@@ -135,26 +138,26 @@ public class Samplers extends LPGPartitionner {
 					boolean getsSampled = false;
 					forMessage : for (SamplingMessage m : messages) {
 						switch(m.getPartition()){
-						case -1: //Request vertex degree
-							answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
-							break;
+							case -1: //Request vertex degree
+								answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								break;
 
-						case -2: //Notify vertex has been sampled 
-							int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
-							float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
-							if(r.nextFloat() < sampledProb){
-								getsSampled = true;
-							}
-							aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
-							aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
-							break forMessage;
+							case -2: //Notify vertex has been sampled
+								int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
+								float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
+								if(r.nextFloat() < sampledProb){
+									getsSampled = true;
+								}
+								aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
+								aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
+								break forMessage;
 
-						default: //Rank highest degree neighbors
-							if(rankedNeighbors.isEmpty()||rankedNeighbors.size()<TAU)
-								rankedNeighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
-							else
-								rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage(m.getSourceId(),m.getPartition()));
-							break;
+							default: //Rank highest degree neighbors
+								if(rankedNeighbors.isEmpty()||rankedNeighbors.size()<TAU)
+									rankedNeighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								else
+									rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage(m.getSourceId(),m.getPartition()));
+								break;
 						}
 					}
 
@@ -190,7 +193,7 @@ public class Samplers extends LPGPartitionner {
 			}
 		}
 
-		protected ArrayList<SamplingMessage> replaceMin(ArrayList<SamplingMessage> list, SamplingMessage message){ 
+		protected ArrayList<SamplingMessage> replaceMin(ArrayList<SamplingMessage> list, SamplingMessage message){
 			int minValue = Integer.MAX_VALUE;
 			int minIndex = Integer.MAX_VALUE;
 			for (int i = 0; i < list.size() ; i++) {
@@ -205,7 +208,7 @@ public class Samplers extends LPGPartitionner {
 			}
 			return list;
 		}
-		
+
 		protected boolean partitionsInitialized() {
 			for (int i = 0; i < numberOfPartitions; i++) {
 				long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[i])).get(); // Hung
@@ -245,13 +248,13 @@ public class Samplers extends LPGPartitionner {
 		private boolean debug;
 
 		//RR:
-		protected int degreeSigma; 
-		protected float probSigma; 
+		protected int degreeSigma;
+		protected float probSigma;
 
 
-		@Override 
+		@Override
 		public void preSuperstep() {
-			int superstep = (int) getSuperstep();			
+			int superstep = (int) getSuperstep();
 			//AE:
 			directedGraph = getContext().getConfiguration().getBoolean(GRAPH_DIRECTED, DEFAULT_GRAPH_DIRECTED);
 			numberOfPartitions = getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS);
@@ -264,7 +267,7 @@ public class Samplers extends LPGPartitionner {
 				vertexCountAggregatorNamesSampling[i] = AGG_VERTEX_COUNT_PREFIX + i+"_SAMPLING";
 			}
 			debug = getContext().getConfiguration().getBoolean(DEBUG, false);
-			
+
 			//RR:
 			if(superstep == 3){
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
@@ -306,12 +309,12 @@ public class Samplers extends LPGPartitionner {
 				int potentiallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
 				int actuallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SSR)).get();
 				if(potentiallySampled==actuallySampled && potentiallySampled!=0) {
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); 
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 					System.out.println("*SS"+superstep+":Algorithm Reactivation");
 				}
 			}
 			//IF ALGORITHM IS DONE
-			if (sampleSize >= BETA){				
+			if (sampleSize >= BETA){
 				// if all partitions are initialized, finish sampling
 				if(partitionsInitialized()) {
 					//AE:
@@ -387,26 +390,26 @@ public class Samplers extends LPGPartitionner {
 					boolean getsSampled = false;
 					forMessage : for (SamplingMessage m : messages) {
 						switch(m.getPartition()){
-						case -1: //Request vertex degree
-							answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
-							break;
+							case -1: //Request vertex degree
+								answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								break;
 
-						case -2: //Notify vertex has been sampled 
-							int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
-							float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
-							if(r.nextFloat() < sampledProb){
-								getsSampled = true;
-							}
-							aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
-							aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
-							break forMessage;
+							case -2: //Notify vertex has been sampled
+								int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
+								float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
+								if(r.nextFloat() < sampledProb){
+									getsSampled = true;
+								}
+								aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
+								aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
+								break forMessage;
 
-						default: //Rank highest degree neighbors
-							if(rankedNeighbors.isEmpty()||rankedNeighbors.size()<TAU)
-								rankedNeighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
-							else
-								rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage(m.getSourceId(),m.getPartition()));
-							break;
+							default: //Rank highest degree neighbors
+								if(rankedNeighbors.isEmpty()||rankedNeighbors.size()<TAU)
+									rankedNeighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								else
+									rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage(m.getSourceId(),m.getPartition()));
+								break;
 						}
 					}
 
@@ -442,7 +445,7 @@ public class Samplers extends LPGPartitionner {
 			}
 		}
 
-		protected ArrayList<SamplingMessage> replaceMin(ArrayList<SamplingMessage> list, SamplingMessage message){ 
+		protected ArrayList<SamplingMessage> replaceMin(ArrayList<SamplingMessage> list, SamplingMessage message){
 			int minValue = Integer.MAX_VALUE;
 			int minIndex = Integer.MAX_VALUE;
 			for (int i = 0; i < list.size() ; i++) {
@@ -457,7 +460,7 @@ public class Samplers extends LPGPartitionner {
 			}
 			return list;
 		}
-		
+
 		protected boolean partitionsInitialized() {
 			for (int i = 0; i < numberOfPartitions; i++) {
 				long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[i])).get(); // Hung
@@ -481,7 +484,7 @@ public class Samplers extends LPGPartitionner {
 			} while(partitionSize!=0);
 			return newPartition;
 		}
-		
+
 		protected synchronized void addDegreeDist(int degree) {
 			MapWritable temp = new  MapWritable();
 			temp.put(new IntWritable(degree), new IntWritable(1));
@@ -502,53 +505,29 @@ public class Samplers extends LPGPartitionner {
 		private boolean debug;
 
 		//RR:
-		protected int degreeSigma; 
+		protected int degreeSigma;
 		protected float probSigma;
-		protected int sigma_vertex;
-		protected double minCC;
 
-		@Override 
+
+		@Override
 		public void preSuperstep() {
-			int superstep = (int) getSuperstep();			
+			int superstep = (int) getSuperstep();
 			//AE:
 			directedGraph = getContext().getConfiguration().getBoolean(GRAPH_DIRECTED, DEFAULT_GRAPH_DIRECTED);
 			numberOfPartitions = getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS);
 			loadAggregatorNames = new String[numberOfPartitions];
 			vertexCountAggregatorNames = new String[numberOfPartitions];
 			vertexCountAggregatorNamesSampling = new String[numberOfPartitions];
-			
+
 			for (int i = 0; i < numberOfPartitions; i++) {
 				loadAggregatorNames[i] = AGG_EGDES_LOAD_PREFIX + i;
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
 				vertexCountAggregatorNamesSampling[i] = AGG_VERTEX_COUNT_PREFIX + i+"_SAMPLING";
 			}
 			debug = getContext().getConfiguration().getBoolean(DEBUG, false);
-			
+
 			//RR:
-
 			if(superstep == 4){
-				//degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
-				/*clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
-				List<Double> values = new  ArrayList<Double>();
-
-				double total_coef = 0;
-				for (Entry<Writable, Writable> entry : clustCoef.entrySet()) {
-					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
-					double c_coef = ((DoubleWritable) entry.getValue()).get();
-					Long vertex = ((LongWritable) entry.getKey()).get();
-					values.add(c_coef);
-					coefMap.put(vertex,c_coef);
-				}
-
-				Collections.sort(values, Collections.reverseOrder());
-
-				sigma_vertex = (Integer)totalVertexNumber*SIGMA;
-
-				minCC = Collections.min(values.subList(0,sigma_vertex));
-*/
-				//totalVertexNumber
-
-
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
@@ -572,8 +551,6 @@ public class Samplers extends LPGPartitionner {
 			}
 		}
 
-
-
 		@Override
 		public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages) throws IOException {
 			int sampleSize = ((IntWritable) getAggregatedValue(AGG_SAMPLE)).get();
@@ -590,13 +567,13 @@ public class Samplers extends LPGPartitionner {
 				int potentiallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
 				int actuallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SSR)).get();
 				if(potentiallySampled==actuallySampled && potentiallySampled!=0) {
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); 
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 					System.out.println("*SS"+superstep+":Algorithm Reactivation");
 				}
 			}
 
 			//IF ALGORITHM IS DONE
-			if (sampleSize >= BETA){				
+			if (sampleSize >= BETA){
 				// if all partitions are initialized, finish sampling
 				if(partitionsInitialized()) {
 					//AE:
@@ -688,8 +665,8 @@ public class Samplers extends LPGPartitionner {
 					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
-				} else if(superstep == 4 || sampleSize == 0) {
-					
+				} else if(superstep == 4 || sampleSize == 0){
+					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					if(vertexDegree > degreeSigma){
 						vertex.getValue().setCurrentPartition((short)-2);
@@ -706,20 +683,6 @@ public class Samplers extends LPGPartitionner {
 							//System.out.println("*SS"+superstep+":isSampled-"+vid);
 						}
 					}
-
-
-					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
-					/*double vertex_coef=-1;
-
-					if(clustCoef.containsKey(vid))
-						vertex_coef = coefMap.get(vid);
-					if(vertex_coef > minCC){
-							vertex.getValue().setCurrentPartition((short)-2);
-							vertex.getValue().setNewPartition(newPartition());
-							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
-							aggregate(AGG_SAMPLE, new IntWritable(1));
-							//System.out.println("*SS"+superstep+":isSampled-"+vid);
-						}*/
 				}
 
 				//CORE ALGORITHM
@@ -731,26 +694,26 @@ public class Samplers extends LPGPartitionner {
 					boolean getsSampled = false;
 					forMessage : for (SamplingMessage m : messages) {
 						switch(m.getPartition()){
-						case -1: //Request vertex degree
-							answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
-							break;
+							case -1: //Request vertex degree
+								answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								break;
 
-						case -2: //Notify vertex has been sampled 
-							int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
-							float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
-							if(r.nextFloat() < sampledProb){
-								getsSampled = true;
-							}
-							aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
-							aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
-							break forMessage;
+							case -2: //Notify vertex has been sampled
+								int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
+								float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
+								if(r.nextFloat() < sampledProb){
+									getsSampled = true;
+								}
+								aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
+								aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
+								break forMessage;
 
-						default: //Rank highest degree neighbors
-							if(rankedNeighbors.isEmpty()||rankedNeighbors.size()<TAU)
-								rankedNeighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
-							else
-								rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage(m.getSourceId(),m.getPartition()));
-							break;
+							default: //Rank highest degree neighbors
+								if(rankedNeighbors.isEmpty()||rankedNeighbors.size()<TAU)
+									rankedNeighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								else
+									rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage(m.getSourceId(),m.getPartition()));
+								break;
 						}
 					}
 
@@ -786,7 +749,7 @@ public class Samplers extends LPGPartitionner {
 			}
 		}
 
-		protected ArrayList<SamplingMessage> replaceMin(ArrayList<SamplingMessage> list, SamplingMessage message){ 
+		protected ArrayList<SamplingMessage> replaceMin(ArrayList<SamplingMessage> list, SamplingMessage message){
 			int minValue = Integer.MAX_VALUE;
 			int minIndex = Integer.MAX_VALUE;
 			for (int i = 0; i < list.size() ; i++) {
@@ -801,7 +764,7 @@ public class Samplers extends LPGPartitionner {
 			}
 			return list;
 		}
-		
+
 		protected boolean partitionsInitialized() {
 			for (int i = 0; i < numberOfPartitions; i++) {
 				long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[i])).get(); // Hung
@@ -825,7 +788,7 @@ public class Samplers extends LPGPartitionner {
 			} while(partitionSize!=0);
 			return newPartition;
 		}
-		
+
 		protected synchronized void addDegreeDist(int degree) {
 			MapWritable temp = new  MapWritable();
 			temp.put(new IntWritable(degree), new IntWritable(1));
@@ -845,9 +808,9 @@ public class Samplers extends LPGPartitionner {
 		protected String[] vertexCountAggregatorNamesSampling;
 		private boolean debug;
 
-		@Override 
+		@Override
 		public void preSuperstep() {
-			int superstep = (int) getSuperstep();			
+			int superstep = (int) getSuperstep();
 			//AE:
 			directedGraph = getContext().getConfiguration().getBoolean(GRAPH_DIRECTED, DEFAULT_GRAPH_DIRECTED);
 			numberOfPartitions = getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS);
@@ -860,10 +823,10 @@ public class Samplers extends LPGPartitionner {
 				vertexCountAggregatorNamesSampling[i] = AGG_VERTEX_COUNT_PREFIX + i+"_SAMPLING";
 			}
 			debug = getContext().getConfiguration().getBoolean(DEBUG, false);
-			
+
 			if(superstep == 3){
-				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);				
-				
+				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
+
 				//calculate graph degree probability
 				int frequency;
 				float prob = 0;
@@ -900,12 +863,12 @@ public class Samplers extends LPGPartitionner {
 				int potentiallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
 				int actuallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SSR)).get();
 				if(potentiallySampled==actuallySampled && potentiallySampled!=0) {
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); 
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 					System.out.println("*SS"+superstep+":Algorithm Reactivation");
 				}
 			}
 			//IF ALGORITHM IS DONE
-			if (sampleSize >= BETA){				
+			if (sampleSize >= BETA){
 				// if all partitions are initialized, finish sampling
 				if(partitionsInitialized()) {
 					//AE:
@@ -953,10 +916,10 @@ public class Samplers extends LPGPartitionner {
 					int vertexDegree = vertex.getValue().getRealOutDegree()+vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
-				} else if(superstep == 3 || sampleSize == 0){ 
+				} else if(superstep == 3 || sampleSize == 0){
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					
+
 					float vertexProb = 0.0f;
 					if(degreeProb.containsKey(vertexDegree))
 						vertexProb = degreeProb.get(vertexDegree)*adjustingFactorSeed;
@@ -977,22 +940,22 @@ public class Samplers extends LPGPartitionner {
 					boolean getsSampled = false;
 					forMessage : for (SamplingMessage m : messages) {
 						switch(m.getPartition()){
-						case -1: //Request vertex degree
-							answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
-							break;
+							case -1: //Request vertex degree
+								answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								break;
 
-						case -2: //Notify vertex has been sampled 
-							int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
-							float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
-							if(r.nextFloat() < sampledProb){
-								getsSampled = true;
-							}
-							aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
-							aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
-							break forMessage;
+							case -2: //Notify vertex has been sampled
+								int sampledVerticesSS = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
+								float sampledProb = (float)1/((float)sampledVerticesSS/(BETA - sampleSize));
+								if(r.nextFloat() < sampledProb){
+									getsSampled = true;
+								}
+								aggregate(AGG_SAMPLE_SS, new IntWritable(1));	// these two are to make sure at least one gets sampled
+								aggregate(AGG_SAMPLE_SSR, new IntWritable(1)); // otherwise we will need to reactivate the algorithm
+								break forMessage;
 
-						default: 
-							neighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+							default:
+								neighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
 						}
 					}
 
@@ -1007,7 +970,7 @@ public class Samplers extends LPGPartitionner {
 								if(r.nextFloat() < vertexProb){
 									aggregate(AGG_SAMPLE_SS, new IntWritable(1));
 									sendMessage(new IntWritable(neighbors.get(rn).getSourceId()), nm);
-								}								
+								}
 							}
 						}
 					} else {
@@ -1056,7 +1019,7 @@ public class Samplers extends LPGPartitionner {
 			} while(partitionSize!=0);
 			return newPartition;
 		}
-		
+
 		protected synchronized void addDegreeDist(int degree) {
 			MapWritable temp = new  MapWritable();
 			temp.put(new IntWritable(degree), new IntWritable(1));
