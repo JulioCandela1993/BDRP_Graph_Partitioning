@@ -4,6 +4,7 @@ package giraph.lri.rrojas.rankdegree;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Map.Entry;
 
@@ -526,6 +527,28 @@ public class Samplers extends LPGPartitionner {
 
 			//RR:
 			if(superstep == 4){
+
+				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
+				List<Double> values = new  ArrayList<Double>();
+
+				double total_coef = 0;
+				for (Entry<Writable, Writable> entry : clustCoef.entrySet()) {
+					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
+					double c_coef = ((DoubleWritable) entry.getValue()).get();
+					Long vertex = ((LongWritable) entry.getKey()).get();
+					values.add(c_coef);
+					coefMap.put(vertex,c_coef);
+				}
+				/*
+				Collections.sort(values, Collections.reverseOrder());
+
+				sigma_vertex = (Integer)totalVertexNumber*SIGMA;
+
+				minCC = Collections.min(values.subList(0,sigma_vertex));
+				*/
+
+
+
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
