@@ -666,7 +666,7 @@ public class Samplers extends LPGPartitionner {
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new LongWritable(edge.getTargetVertexId().get()));
 					}
-					/*
+
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
 					for (SamplingMessage msg : messages) {
@@ -678,6 +678,7 @@ public class Samplers extends LPGPartitionner {
 							}
 						}
 					}
+					/*
 					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
