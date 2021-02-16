@@ -665,10 +665,11 @@ public class Samplers extends LPGPartitionner {
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
 
-					SamplingMessage tmp = new SamplingMessage();
+					LongArrayListWritable tmp = new LongArrayListWritable();
 
 					for (SamplingMessage msg : messages) {
-						tmp = msg;
+						tmp = msg.getFriendlist();
+						System.out.println(tmp.get(0));
 						/*for (IntWritable id : msg.getFriendlist()){
 									triangles++;
 						}*/
