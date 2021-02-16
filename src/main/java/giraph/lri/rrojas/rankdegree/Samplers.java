@@ -671,12 +671,12 @@ public class Samplers extends LPGPartitionner {
 					int triangles = 0;
 					for (SamplingMessage msg : messages) {
 						ArrayListWritable tmp = msg.getFriendlist();
-						for (Object id : tmp) {
+						/*for (Object id : tmp) {
 							if (friends.contains((LongWritable)id)) {
 								// Triangle found
 								triangles++;
 							}
-						}
+						}*/
 					}
 					/*
 					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
