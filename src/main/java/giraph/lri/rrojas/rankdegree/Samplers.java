@@ -669,6 +669,12 @@ public class Samplers extends LPGPartitionner {
 
 					for (SamplingMessage msg : messages) {
 						tmp = msg.getFriendlist();
+						if (tmp.isEmpty()){
+
+						}
+						else{
+							System.out.println(tmp.get(0));
+						}
 						System.out.println(tmp.get(0));
 						/*for (IntWritable id : msg.getFriendlist()){
 									triangles++;
