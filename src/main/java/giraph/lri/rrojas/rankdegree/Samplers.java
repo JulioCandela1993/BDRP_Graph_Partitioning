@@ -523,7 +523,7 @@ public class Samplers extends LPGPartitionner {
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
 				vertexCountAggregatorNamesSampling[i] = AGG_VERTEX_COUNT_PREFIX + i+"_SAMPLING";
 			}
-			debug = getContext().getConfiguration().getBoolean(DEBUG, false);
+			debug = true; //getContext().getConfiguration().getBoolean(DEBUG, false);
 
 			//RR:
 			if(superstep == 4){
@@ -669,10 +669,10 @@ public class Samplers extends LPGPartitionner {
 
 					for (SamplingMessage msg : messages) {
 						tmp = (ArrayList<Long>)msg.getFriendlist();
-						for (Long id : msg.getFriendlist()){
+						/*for (Long id : msg.getFriendlist()){
 							triangles++;
 						}
-						/*if (tmp.isEmpty()){
+						if (tmp.isEmpty()){
 
 						}
 						else{
