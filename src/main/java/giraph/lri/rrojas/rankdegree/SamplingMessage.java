@@ -41,20 +41,6 @@ public class SamplingMessage implements Writable {
 // SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
-			LongArrayListWritable> {
-		@Override
-		public Class<IntWritable> getVertexIdClass() {
-			return IntWritable.class;
-		}
-		@Override
-		public Class<LongArrayListWritable> getMessageClass() {
-			return LongArrayListWritable.class;
-		}
-	}
-
-	public SamplingMessage() {
-	}
 
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
@@ -93,14 +79,14 @@ public class SamplingMessage implements Writable {
 
 	@Override
 	public void readFields(DataInput input) throws IOException {
-		sourceId = input.readInt();
-		partition = input.readInt();
+		//sourceId = input.readInt();
+		//partition = input.readInt();
 	}
 
 	@Override
 	public void write(DataOutput output) throws IOException {
-		output.writeInt(sourceId);
-		output.writeInt(partition);
+		//output.writeInt(sourceId);
+		//output.writeInt(partition);
 
 	}
 

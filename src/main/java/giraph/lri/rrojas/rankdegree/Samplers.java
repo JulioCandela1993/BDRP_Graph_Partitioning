@@ -627,9 +627,9 @@ public class Samplers extends LPGPartitionner {
 						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
 					}
 
-					MapWritable temp = new  MapWritable();
-					temp.put(new IntWritable(vid), friends);
-					aggregate(AGG_FRIENDS_LIST, temp);
+					//MapWritable temp = new  MapWritable();
+					//temp.put(new IntWritable(vid), friends);
+					//aggregate(AGG_FRIENDS_LIST, temp);
 
 					/*sendMessageToAllEdges(vertex, new SamplingMessage(vid
 							, -1
