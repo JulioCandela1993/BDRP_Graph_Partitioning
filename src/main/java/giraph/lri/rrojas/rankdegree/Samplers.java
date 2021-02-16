@@ -662,9 +662,9 @@ public class Samplers extends LPGPartitionner {
 					System.out.println("MC2: Clustering Coefficient");
 
 
-					HashSet<IntWritable> friends = new HashSet<IntWritable>();
+					HashSet<LongWritable> friends = new HashSet<LongWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
-						friends.add(new IntWritable(edge.getTargetVertexId().get()));
+						friends.add(new LongWritable(edge.getTargetVertexId().get()));
 					}
 
 					int edges = vertex.getNumEdges();
@@ -672,10 +672,10 @@ public class Samplers extends LPGPartitionner {
 					for (SamplingMessage msg : messages) {
 						ArrayListWritable tmp = msg.getFriendlist();
 						for (Object id : tmp) {
-							if (friends.contains((IntWritable)id)) {
+							/*if (friends.contains((IntWritable)id)) {
 								// Triangle found
 								triangles++;
-							}
+							}*/
 						}
 					}
 					/*
