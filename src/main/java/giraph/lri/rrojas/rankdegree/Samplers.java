@@ -549,6 +549,7 @@ public class Samplers extends LPGPartitionner {
 				//totalVertexNumber
 
 
+				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
 				//get sigma seeds
