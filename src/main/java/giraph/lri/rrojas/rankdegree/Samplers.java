@@ -672,10 +672,10 @@ public class Samplers extends LPGPartitionner {
 					for (SamplingMessage msg : messages) {
 						LongArrayListWritable tmp = (LongArrayListWritable)msg.getFriendlist();
 						for (IntWritable id : tmp) {
-							if (friends.contains(id)) {
+							/*if (friends.contains(id)) {
 								// Triangle found
 								triangles++;
-							}
+							}*/
 						}
 					}
 					/*
