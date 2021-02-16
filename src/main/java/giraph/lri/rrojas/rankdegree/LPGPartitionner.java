@@ -247,7 +247,6 @@ public class LPGPartitionner {
 	protected static final String AGG_SAMPLE_SS = "SAMPLED_IN_SUPERSTEP";
 	protected static final String AGG_SAMPLE_SSR = "SAMPLED_IN_SUPERSTEP_FOR_REAL";
 	protected static final String AGG_CL_COEFFICIENT = "CL_COEFFICIENT";
-	protected static final String AGG_FRIENDS_LIST = "AGG_FRIENDS_LIST";
 	
 	//RESULTS
 	//super steps 
@@ -893,7 +892,7 @@ public class LPGPartitionner {
 
 			// Added by Hung
 			registerPersistentAggregator(AGG_CL_COEFFICIENT, HashMapAggregator.class);
-			registerPersistentAggregator(AGG_FRIENDS_LIST, HashMapAggregator.class);
+
 
 
 			if(SAMPLING_TYPE.contentEquals("BGRAP")) {

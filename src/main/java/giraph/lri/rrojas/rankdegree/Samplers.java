@@ -621,7 +621,7 @@ public class Samplers extends LPGPartitionner {
 					// JC : List of neighbors
 					System.out.println("MC2: SendFriendsList");
 
-					final ArrayListWritable friends =  new ArrayListWritable() {
+					/*final ArrayListWritable friends =  new ArrayListWritable() {
 						@Override
 						public void setClass() {
 							setClass(vertex.getId().getClass());
@@ -631,6 +631,7 @@ public class Samplers extends LPGPartitionner {
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
 						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
 					}
+					*/
 
 					/*sendMessageToAllEdges(vertex, new SamplingMessage(vid
 							, -1
