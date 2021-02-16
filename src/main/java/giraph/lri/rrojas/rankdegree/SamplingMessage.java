@@ -20,38 +20,11 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import giraph.ml.grafos.okapi.common.computation.SendFriends;
-import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
-import giraph.ml.grafos.okapi.common.data.MessageWrapper;
-import giraph.ml.grafos.okapi.spinner.EdgeValue;
-import giraph.ml.grafos.okapi.spinner.VertexValue;
-import org.apache.giraph.utils.ArrayListWritable;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
-
-
-
 
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private ArrayListWritable friendlist;
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
-			LongArrayListWritable> {
-		@Override
-		public Class<IntWritable> getVertexIdClass() {
-			return IntWritable.class;
-		}
-		@Override
-		public Class<LongArrayListWritable> getMessageClass() {
-			return LongArrayListWritable.class;
-		}
-	}
 
 	public SamplingMessage() {
 	}
@@ -61,11 +34,6 @@ public class SamplingMessage implements Writable {
 		this.partition = partition;
 	}
 
-	public SamplingMessage(int sourceId, int partition, ArrayListWritable friendList) {
-		this.sourceId = sourceId;
-		this.partition = partition;
-		this.friendlist = friendList;
-	}
 
 	public int getSourceId() {
 		return sourceId;
@@ -83,14 +51,6 @@ public class SamplingMessage implements Writable {
 		this.partition = partition;
 	}
 
-	public ArrayListWritable getfriendlist() {
-		return friendlist;
-	}
-
-	public void setfriendlist(ArrayListWritable friendlist) {
-		this.friendlist = friendlist;
-	}
-
 	@Override
 	public void readFields(DataInput input) throws IOException {
 		sourceId = input.readInt();
@@ -101,7 +61,6 @@ public class SamplingMessage implements Writable {
 	public void write(DataOutput output) throws IOException {
 		output.writeInt(sourceId);
 		output.writeInt(partition);
-
 	}
 
 	@Override
@@ -113,7 +72,7 @@ public class SamplingMessage implements Writable {
 			return false;
 		}
 		SamplingMessage that = (SamplingMessage) o;
-		if (partition != that.partition || sourceId != that.sourceId || friendlist != that.friendlist) {
+		if (partition != that.partition || sourceId != that.sourceId) {
 			return false;
 		}
 		return true;
