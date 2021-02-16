@@ -4,16 +4,15 @@ package giraph.lri.rrojas.rankdegree;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Map.Entry;
 
-import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
-import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.AbstractComputation;
 import org.apache.giraph.graph.Vertex;
-import org.apache.giraph.utils.ArrayListWritable;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.Writable;
 
 import giraph.ml.grafos.okapi.spinner.EdgeValue;
 import giraph.ml.grafos.okapi.spinner.VertexValue;
@@ -618,56 +617,9 @@ public class Samplers extends LPGPartitionner {
 			else {
 				//IF ALGORITHM IS INITIALIZING
 				if(superstep == 2) {
-					// JC : List of neighbors
-					System.out.println("MC2: SendFriendsList");
+					System.out.println("MC1: SendFriendsList");
 
-					/*final ArrayListWritable friends =  new ArrayListWritable() {
-						@Override
-						public void setClass() {
-							setClass(vertex.getId().getClass());
-						}
-					};
-
-					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
-						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
-					}
-					*/
-
-					/*sendMessageToAllEdges(vertex, new SamplingMessage(vid
-							, -1
-							, friends));*/
-
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 				} else if(superstep == 3){
-					System.out.println("MC2: Clustering Coefficient");
-/*
-
-					HashSet<LongWritable> friends = new HashSet<LongWritable>();
-					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
-						friends.add(new LongWritable(edge.getTargetVertexId().get()));
-					}
-
-					int edges = vertex.getNumEdges();
-					int triangles = 0;
-					for (SamplingMessage msg : messages) {
-						LongArrayListWritable tmp = (LongArrayListWritable)msg.getfriendlist();
-						for (IntWritable id : tmp) {
-							if (friends.contains(id)) {
-								// Triangle found
-								triangles++;
-							}
-						}
-					}
-
-					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
-					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
-					// vertex.setValue(clCoefficient);
-
-					MapWritable temp = new  MapWritable();
-					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
-					aggregate(AGG_CL_COEFFICIENT, temp);
-*/
-
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
@@ -802,8 +754,6 @@ public class Samplers extends LPGPartitionner {
 			temp.put(new IntWritable(degree), new IntWritable(1));
 			aggregate(AGG_DEGREE_DIST, temp);
 		}
-
-
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
