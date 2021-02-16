@@ -671,8 +671,8 @@ public class Samplers extends LPGPartitionner {
 					int triangles = 0;
 					for (SamplingMessage msg : messages) {
 						LongArrayListWritable tmp = (LongArrayListWritable)msg.getFriendlist();
-						/*for (IntWritable id : tmp) {
-							if (friends.contains(id)) {
+						/*for (Object id : tmp) {
+							if (friends.contains((IntWritable)id)) {
 								// Triangle found
 								triangles++;
 							}
