@@ -1637,7 +1637,7 @@ public class LPGPartitionner {
 					break;
 						
 				case 1:
-					System.out.println("*MC3: ConverterUpdateEdges");
+					System.out.println("*MC1: ConverterUpdateEdges");
 					setComputation(ConverterUpdateEdges.class);
 					break;
 

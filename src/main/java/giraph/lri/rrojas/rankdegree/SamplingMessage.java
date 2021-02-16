@@ -25,6 +25,7 @@ import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
 import giraph.ml.grafos.okapi.common.data.MessageWrapper;
 import giraph.ml.grafos.okapi.spinner.EdgeValue;
 import giraph.ml.grafos.okapi.spinner.VertexValue;
+import org.apache.giraph.utils.ArrayListWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
 
@@ -34,7 +35,7 @@ import org.apache.hadoop.io.Writable;
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private LongIdFriendsList friendlist;
+	private ArrayListWritable friendlist;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +61,7 @@ public class SamplingMessage implements Writable {
 		this.partition = partition;
 	}
 
-	public SamplingMessage(int sourceId, int partition, LongIdFriendsList friendList) {
+	public SamplingMessage(int sourceId, int partition, ArrayListWritable friendList) {
 		this.sourceId = sourceId;
 		this.partition = partition;
 		this.friendlist = friendList;
@@ -82,11 +83,11 @@ public class SamplingMessage implements Writable {
 		this.partition = partition;
 	}
 
-	public LongIdFriendsList getfriendlist() {
+	public ArrayListWritable getfriendlist() {
 		return friendlist;
 	}
 
-	public void setfriendlist(LongIdFriendsList friendlist) {
+	public void setfriendlist(ArrayListWritable friendlist) {
 		this.friendlist = friendlist;
 	}
 
