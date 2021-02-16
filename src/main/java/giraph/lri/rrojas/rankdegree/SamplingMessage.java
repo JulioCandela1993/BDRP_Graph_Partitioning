@@ -20,12 +20,14 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
+import org.apache.giraph.utils.ArrayListWritable;
 import org.apache.hadoop.io.Writable;
 
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private int partition_2;
+	private ArrayListWritable friendlist;
 
 	public SamplingMessage() {
 	}
@@ -33,20 +35,13 @@ public class SamplingMessage implements Writable {
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
+		this.friendlist = new LongArrayListWritable();
 	}
 
-	public SamplingMessage(int sourceId, int partition, int partition2) {
+	public SamplingMessage(int sourceId, ArrayListWritable friendlist) {
 		this.sourceId = sourceId;
-		this.partition = partition;
-		this.partition_2 = partition_2;
-	}
-
-	public int getPartition_2() {
-		return partition_2;
-	}
-
-	public void setPartition_2(int partition_2) {
-		this.partition_2 = partition_2;
+		this.partition = -1;
+		this.friendlist = friendlist;
 	}
 
 
@@ -65,6 +60,15 @@ public class SamplingMessage implements Writable {
 
 	public void setPartition(int partition) {
 		this.partition = partition;
+	}
+
+
+	public ArrayListWritable getFriendlist() {
+		return friendlist;
+	}
+
+	public void setFriendlist(ArrayListWritable friendlist) {
+		this.friendlist = friendlist;
 	}
 
 	@Override
