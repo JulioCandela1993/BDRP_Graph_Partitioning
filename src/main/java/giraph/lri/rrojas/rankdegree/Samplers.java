@@ -688,8 +688,8 @@ public class Samplers extends LPGPartitionner {
 					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
-				} else if(superstep == 4 || sampleSize == 0){
-
+				} else if(superstep == 4 || sampleSize == 0) {
+					
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					if(vertexDegree > degreeSigma){
 						vertex.getValue().setCurrentPartition((short)-2);
