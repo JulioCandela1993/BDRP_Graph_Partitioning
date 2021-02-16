@@ -2,10 +2,7 @@
 package giraph.lri.rrojas.rankdegree;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.giraph.edge.Edge;
@@ -507,6 +504,8 @@ public class Samplers extends LPGPartitionner {
 		protected int degreeSigma;
 		protected float probSigma;
 
+		protected int sigma_vertex;
+		protected double minCC;
 
 		@Override
 		public void preSuperstep() {
@@ -539,13 +538,13 @@ public class Samplers extends LPGPartitionner {
 					values.add(c_coef);
 					coefMap.put(vertex,c_coef);
 				}
-				/*
+
 				Collections.sort(values, Collections.reverseOrder());
 
 				sigma_vertex = (Integer)totalVertexNumber*SIGMA;
 
 				minCC = Collections.min(values.subList(0,sigma_vertex));
-				*/
+				/**/
 
 
 
