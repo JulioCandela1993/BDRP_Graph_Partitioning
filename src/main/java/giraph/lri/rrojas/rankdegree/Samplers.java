@@ -540,9 +540,9 @@ public class Samplers extends LPGPartitionner {
 				}
 
 				Collections.sort(values, Collections.reverseOrder());
-				/*
-				sigma_vertex = (Integer)totalVertexNumber*SIGMA;
 
+				sigma_vertex = (int)(totalVertexNumber*SIGMA);
+/*
 				minCC = Collections.min(values.subList(0,sigma_vertex));
 				*/
 
