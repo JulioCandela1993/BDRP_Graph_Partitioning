@@ -7,12 +7,11 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.AbstractComputation;
 import org.apache.giraph.graph.Vertex;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Writable;
+import org.apache.giraph.utils.ArrayListWritable;
+import org.apache.hadoop.io.*;
 
 import giraph.ml.grafos.okapi.spinner.EdgeValue;
 import giraph.ml.grafos.okapi.spinner.VertexValue;
@@ -526,7 +525,7 @@ public class Samplers extends LPGPartitionner {
 			debug = getContext().getConfiguration().getBoolean(DEBUG, false);
 			
 			//RR:
-			if(superstep == 5){
+			if(superstep == 4){
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
@@ -618,6 +617,20 @@ public class Samplers extends LPGPartitionner {
 				//IF ALGORITHM IS INITIALIZING
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
+
+					final ArrayListWritable friends =  new ArrayListWritable() {
+						@Override
+						public void setClass() {
+							setClass(vertex.getId().getClass());
+						}
+					};
+
+					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
+						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
+					}
+
+					System.out.println(friends.toString());
+
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 
 				} else if(superstep == 3){
