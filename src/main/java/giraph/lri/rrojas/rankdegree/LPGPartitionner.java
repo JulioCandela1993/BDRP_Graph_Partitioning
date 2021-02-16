@@ -1605,6 +1605,7 @@ public class LPGPartitionner {
 		@Override
 		public void compute() {
 			int superstep = (int) getSuperstep();
+			System.out.println(superstep);
 			if (computeStates) {
 				if (superstep == lastStep + 1) {
 					System.out.println("*MC"+superstep+": CGPS");
