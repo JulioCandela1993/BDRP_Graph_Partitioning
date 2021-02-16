@@ -35,19 +35,33 @@ import org.apache.hadoop.io.Writable;
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private LongArrayListWritable friendlist;
+	private ArrayListWritable friendlist;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
+			LongArrayListWritable> {
+		@Override
+		public Class<IntWritable> getVertexIdClass() {
+			return IntWritable.class;
+		}
+		@Override
+		public Class<LongArrayListWritable> getMessageClass() {
+			return LongArrayListWritable.class;
+		}
+	}
+
+	public SamplingMessage() {
+	}
 
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
 	}
 
-	public SamplingMessage(int sourceId, int partition, LongArrayListWritable friendList) {
+	public SamplingMessage(int sourceId, int partition, ArrayListWritable friendList) {
 		this.sourceId = sourceId;
 		this.partition = partition;
 		this.friendlist = friendList;
@@ -69,11 +83,11 @@ public class SamplingMessage implements Writable {
 		this.partition = partition;
 	}
 
-	public LongArrayListWritable getfriendlist() {
+	public ArrayListWritable getfriendlist() {
 		return friendlist;
 	}
 
-	public void setfriendlist(LongArrayListWritable friendlist) {
+	public void setfriendlist(ArrayListWritable friendlist) {
 		this.friendlist = friendlist;
 	}
 
