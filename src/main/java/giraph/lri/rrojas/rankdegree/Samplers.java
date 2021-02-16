@@ -541,9 +541,13 @@ public class Samplers extends LPGPartitionner {
 
 				Collections.sort(values, Collections.reverseOrder());
 
+
+
 				sigma_vertex = (int)(totalVertexNumber*SIGMA);
 
-				List<Double> values_sub = values.subList(0,sigma_vertex);
+				System.out.println(sigma_vertex);
+
+				List<Double> values_sub = values.subList(0,10);
 				/*
 				minCC = Collections.min();
 				*/
