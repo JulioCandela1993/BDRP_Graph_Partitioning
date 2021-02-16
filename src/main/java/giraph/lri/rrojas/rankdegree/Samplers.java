@@ -4,11 +4,9 @@ package giraph.lri.rrojas.rankdegree;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Map.Entry;
 
-import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
 import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.AbstractComputation;
 import org.apache.giraph.graph.Vertex;
@@ -105,7 +103,7 @@ public class Samplers extends LPGPartitionner {
 					//AE:
 					aggregate(AGG_UPPER_TOTAL_COMM_VOLUME, new LongWritable(Math.min(numberOfPartitions, numOutEdges)));
 
-				} else if (partition==-2) { // make sure to initialize all partitions while balancing loads 
+				} else if (partition==-2) { // make sure to initialize all partitions while balancing loads
 					int expectedNodes = Math.floorDiv(sampleSize, numberOfPartitions);
 					partition = vertex.getValue().getNewPartition();
 					long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get(); // Hung
@@ -343,7 +341,7 @@ public class Samplers extends LPGPartitionner {
 					//AE:
 					aggregate(AGG_UPPER_TOTAL_COMM_VOLUME, new LongWritable(Math.min(numberOfPartitions, numOutEdges)));
 
-				} else if (partition==-2) { // initialize all partitions while balancing loads 
+				} else if (partition==-2) { // initialize all partitions while balancing loads
 					int expectedNodes = Math.floorDiv(sampleSize, numberOfPartitions);
 					partition = vertex.getValue().getNewPartition();
 					long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get(); // Hung
@@ -602,7 +600,7 @@ public class Samplers extends LPGPartitionner {
 					//AE:
 					aggregate(AGG_UPPER_TOTAL_COMM_VOLUME, new LongWritable(Math.min(numberOfPartitions, numOutEdges)));
 
-				} else if (partition==-2) { // initialize all partitions while balancing loads 
+				} else if (partition==-2) { // initialize all partitions while balancing loads
 					int expectedNodes = Math.floorDiv(sampleSize, numberOfPartitions);
 					partition = vertex.getValue().getNewPartition();
 					long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get(); // Hung
@@ -636,7 +634,7 @@ public class Samplers extends LPGPartitionner {
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
 
-
+					/*
 					HashSet<LongWritable> friends = new HashSet<LongWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new LongWritable(edge.getTargetVertexId().get()));
@@ -644,9 +642,9 @@ public class Samplers extends LPGPartitionner {
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
 					for (SamplingMessage msg : messages) {
-						ArrayListWritable tmp = msg.getFriendlist();
-						for (Object id : tmp) {
-							if (friends.contains((LongWritable)id)) {
+						LongArrayListWritable tmp = (LongArrayListWritable)msg.getfriendlist();
+						for (IntWritable id : tmp) {
+							if (friends.contains(id)) {
 								// Triangle found
 								triangles++;
 							}
@@ -658,7 +656,7 @@ public class Samplers extends LPGPartitionner {
 					MapWritable temp = new  MapWritable();
 					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
 					aggregate(AGG_CL_COEFFICIENT, temp);
-
+*/
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
@@ -897,7 +895,7 @@ public class Samplers extends LPGPartitionner {
 					//AE:
 					aggregate(AGG_UPPER_TOTAL_COMM_VOLUME, new LongWritable(Math.min(numberOfPartitions, numOutEdges)));
 
-				} else if (partition==-2) { // initialize all partitions while balancing loads 
+				} else if (partition==-2) { // initialize all partitions while balancing loads
 					int expectedNodes = Math.floorDiv(sampleSize, numberOfPartitions);
 					partition = vertex.getValue().getNewPartition();
 					Long partitionSize = ((LongWritable) getAggregatedValue(vertexCountAggregatorNamesSampling[partition])).get(); //Hung

@@ -80,17 +80,17 @@ import giraph.ml.grafos.okapi.common.computation.SendFriends;
 
 /**
  *
- * 
+ *
  */
 @SuppressWarnings("unused")
 public class LPGPartitionner {
 	//GENERAL VARIABLES
 	public static final String SAVE_PATH = "/home/ubuntu/BDRP_Graph_Partitioning/Results/";
 	public static final String SAVE_STATS = "partition.SaveStatsIntoFile";
-	
-	
+
+
 	//ALGORITHM PARAMETERS
-		//execution and graph environment
+	//execution and graph environment
 	public static final String MAX_ITERATIONS_LP = "spinner.MaxIterationsLP";
 	protected static final int DEFAULT_MAX_ITERATIONS = 290;// 10;//290;
 	public static final String GRAPH_DIRECTED = "graph.directed";
@@ -98,7 +98,7 @@ public class LPGPartitionner {
 	public static final String EDGE_WEIGHT = "spinner.weight";
 	public static final byte DEFAULT_EDGE_WEIGHT = 1;														//RR: Shouldn't edge weights be respected? It helps convergence speed
 
-		//initialization degreeThreshold																	
+	//initialization degreeThreshold
 	protected static int outDegreeThreshold;
 	public static final String COMPUTE_OUTDEGREE_THRESHOLD = "partition.OUTDEGREE_THRESHOLD";				// makes the algorithm set the threshold for initialization
 	protected static final boolean DEFAULT_COMPUTE_OUTDEGREE_THRESHOLD = true;
@@ -106,17 +106,17 @@ public class LPGPartitionner {
 	protected static final int DEFAULT_OUTDEGREE_Threshold = 1;
 	public static final String MIN_OUTDEGREE_THRESHOLD = "partition.MIN_OUTDEGREE_THRESHOLD";				//RR: completely useless
 	protected static final int DEFAULT_MIN_OUTDEGREE_Threshold = 25;										//RR: completely useless
-	
-	
-		//user objectives
+
+
+	//user objectives
 	public static final String NUM_PARTITIONS = "spinner.numberOfPartitions";
 	protected static final int DEFAULT_NUM_PARTITIONS = 8;//32;
 	protected static final String REPARTITION = "spinner.repartition";
 	protected static final short DEFAULT_REPARTITION = 0;
 	protected static final String ADDITIONAL_CAPACITY = "spinner.additionalCapacity";
 	protected static final float DEFAULT_ADDITIONAL_CAPACITY = 0.05f;
-	
-		//convergence
+
+	//convergence
 	protected static final String LAMBDA = "spinner.lambda";												// constraints the penalty value => Why is it added as well to H?
 	protected static final float DEFAULT_LAMBDA = 1.0f;
 	public static final String KAPPA = "partition.edgeBalanceWeight.kappa";									// for scoring, in vb gives more priority to vb or ec
@@ -125,23 +125,23 @@ public class LPGPartitionner {
 	protected static final int DEFAULT_WINDOW_SIZE = 5;
 	protected static final String CONVERGENCE_THRESHOLD = "spinner.threshold";
 	protected static final float DEFAULT_CONVERGENCE_THRESHOLD = 0.001f;
-	
+
 	//AGGREGATORS
-		//score
+	//score
 	protected static final String AGGREGATOR_STATE = "AGG_STATE";											// To calculate overall solution score
-	
-		//migration
+
+	//migration
 	protected static final String AGGREGATOR_MIGRATIONS = "AGG_MIGRATIONS";									// Total of migrating v (for eb and vb)
 	protected static final String AGG_MIGRATION_DEMAND_PREFIX = "AGG_EDGE_MIGRATION_DEMAND_";				// only for eb
 	protected static final String AGG_VERTEX_MIGRATION_DEMAND_PREFIX = "AGG_VERTEX_MIGRATION_DEMAND_";		// only for vb
 
-		//edges
+	//edges
 	protected static final String TOTAL_DIRECTED_OUT_EDGES = "#Total Directed Out Edges";					// initial graph out-edges
-	
+
 	protected static final String AGG_EGDES_LOAD_PREFIX = "AGG_LOAD_";										// Edges in a partition for balancing
 	protected static final String AGG_REAL_LOAD_PREFIX = "AGG_REAL_LOAD_";
 	protected static final String AGG_VIRTUAL_LOAD_PREFIX = "AGG_VIRTUAL_LOAD_";
-	
+
 	protected static final String AGGREGATOR_LOCALS = "AGG_LOCALS";											// Local edges (intra-partition)
 	protected static final String AGG_REAL_LOCAL_EDGES = "AGG_REAL_LOCALS";
 	protected static final String AGG_VIRTUAL_LOCALS = "AGG_VIRTUAL_LOCALS";
@@ -149,11 +149,11 @@ public class LPGPartitionner {
 	protected static final String AGG_EDGE_CUTS = "# Edge cuts";											// External edges (a.k.a. edge-cut)
 	protected static final String AGG_REAL_EDGE_CUTS = "#REAL Edge cuts";
 	protected static final String AGG_VIRTUAL_EDGE_CUTS = "#VIRTUAL Edge cuts";
-	
+
 	//AUTRES
-		//OUTDEGREE_FREQUENCY_COUNTER => not even defined, it is for the histogram
-	
-	
+	//OUTDEGREE_FREQUENCY_COUNTER => not even defined, it is for the histogram
+
+
 
 	protected static final String COUNTER_GROUP = "Partitioning Counters";
 	protected static final String MIGRATIONS_COUNTER = "Migrations";
@@ -167,7 +167,7 @@ public class LPGPartitionner {
 	// Adnan
 	protected static int totalVertexNumber; //RR: changed to int
 	// Adnan : ration Communication Computation
-	
+
 
 	// Adnan: some statistics about the initialization
 	protected static final String AGG_INITIALIZED_VERTICES = "Initialized vertex %";
@@ -177,9 +177,9 @@ public class LPGPartitionner {
 
 	// Adnan: some statistics about the partition
 	// global stat
-	
+
 	protected static final String AGG_UPPER_TOTAL_COMM_VOLUME = "# CV Upper Bound";
-	
+
 	// local stat (per partition)
 	protected static final String FINAL_AGG_VERTEX_COUNT_PREFIX = "FINAL_AGG_VERTEX_CAPACITY_";
 	protected static final String AGG_VERTEX_COUNT_PREFIX = "AGG_VERTEX_CAPACITY_";
@@ -198,11 +198,11 @@ public class LPGPartitionner {
 	public static final String Vertex_Balance_JSD_COUNTER = "Vertex Balance JSD";
 	public static final String Edge_Balance_JSD_COUNTER = "Edge Balance JSD";
 	public static final String OUTDEGREE_FREQUENCY_COUNTER = "OUTDEGREE_FREQUENCY_COUNTER_";
-	
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //RR VARIABLES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-	
+
 	//Variables for saving results in files
 	protected static final String DELIMITER = ",";
 	public static final String DATE_HANDLE = "bgrap.DATE";
@@ -211,9 +211,9 @@ public class LPGPartitionner {
 	protected static String GRAPH_NAME="Unknown";
 	public static final String SAVE_DD_HANDLE = "rankdegree.SAVE_DD";
 	protected static String SAVE_DD="false";
-	
+
 	//RANK DEGREE SAMPLING
-	public static boolean NEEDS_SAMPLE;	
+	public static boolean NEEDS_SAMPLE;
 	public static final String SAMPLING_TYPE_HANDLE = "bgrap.SAMPLING_TYPE";
 	protected static final String DEFAULT_SAMPLING_TYPE = "InitializeSampleRD";
 	protected static String SAMPLING_TYPE;
@@ -234,11 +234,11 @@ public class LPGPartitionner {
 
 	//protected static boolean[] initializedPartition;
 	protected static Random r = new Random();
-	
+
 	//VARIABLE NAMERS
 	//for degree distribution
 	public static final String VIRTUAL_DEGREE_FREQUENCY_COUNTER = "VIRTUAL_DEGREE_FREQUENCY_COUNTER_";
-	
+
 	//AGGREGATORS
 	protected static final String AGG_VERTICES = "VERTICES";
 	protected static final String AGG_MAX_DEGREE = "MAX_DEGREE";
@@ -247,32 +247,30 @@ public class LPGPartitionner {
 	protected static final String AGG_SAMPLE_SS = "SAMPLED_IN_SUPERSTEP";
 	protected static final String AGG_SAMPLE_SSR = "SAMPLED_IN_SUPERSTEP_FOR_REAL";
 	protected static final String AGG_CL_COEFFICIENT = "CL_COEFFICIENT";
-	
+
 	//RESULTS
 	//super steps 
 	protected static short sampling_ss_start = 2;
 	protected static short sampling_ss_extra = 0; //super steps to guarantee partition initializing
 	protected static short sampling_ss_end;
 	protected static short lp_ss_end;
-		
+
 	//messages
 	protected static long sampling_messages_start;
 	protected static long sampling_messages_end;
 	protected static long lp_messages_end;
-	
+
 	//ALGORITHM SPECIFIC
 	//Hashmaps
 	protected static MapWritable degreeDist = new MapWritable();
-	protected static MapWritable clustCoef = new MapWritable();
 	protected static HashMap<Integer,Float> degreeProb = new HashMap<Integer,Float>();
-	protected static HashMap<Long,Double> coefMap = new HashMap<Long,Double>();
-	
+
 	protected static float adjustingFactorSeed=0.0f;
 	protected static float relaxingFactorPropagation=0.0f;
 	protected static boolean SAMPLING_ERROR = false;
-	
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //SS0: CONVERTER PROPAGATE //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static class ConverterPropagate
@@ -293,97 +291,97 @@ public class LPGPartitionner {
 // SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	  public static class LongIdFriendsList extends MessageWrapper<IntWritable,
-	  LongArrayListWritable> {
-	    @Override
-	    public Class<IntWritable> getVertexIdClass() {
-	      return IntWritable.class;
-	    }
-	    @Override
-	    public Class<LongArrayListWritable> getMessageClass() {
-	      return LongArrayListWritable.class;
-	    }
-	  }
+	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
+			LongArrayListWritable> {
+		@Override
+		public Class<IntWritable> getVertexIdClass() {
+			return IntWritable.class;
+		}
+		@Override
+		public Class<LongArrayListWritable> getMessageClass() {
+			return LongArrayListWritable.class;
+		}
+	}
 
-	  public static class SendFriendsList extends SendFriends<IntWritable, 
-	    VertexValue, EdgeValue, LongIdFriendsList> {
-	  }
+	public static class SendFriendsList extends SendFriends<IntWritable,
+			VertexValue, EdgeValue, LongIdFriendsList> {
+	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SS2: CLUSTERING COEFFICIENT //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-	  public static class ClusteringCoefficientComputation extends BasicComputation<IntWritable, VertexValue, EdgeValue, LongIdFriendsList>{
-	  // AbstractComputation<IntWritable, VertexValue, EdgeValue, IntWritable, IntWritable>{ 
-	  // BasicComputation<LongWritable, DoubleWritable, NullWritable, LongIdFriendsList> {
+	public static class ClusteringCoefficientComputation extends BasicComputation<IntWritable, VertexValue, EdgeValue, LongIdFriendsList>{
+		// AbstractComputation<IntWritable, VertexValue, EdgeValue, IntWritable, IntWritable>{
+		// BasicComputation<LongWritable, DoubleWritable, NullWritable, LongIdFriendsList> {
 
-	  // Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages
-	    @Override
-	    public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<LongIdFriendsList> messages)
-	            throws IOException {
+		// Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages
+		@Override
+		public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<LongIdFriendsList> messages)
+				throws IOException {
 
-	      // Add the friends of this vertex in a HashSet so that we can check 
-	      // for the existence of triangles quickly.
-	      HashSet<LongWritable> friends = new HashSet<LongWritable>();
-	      for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
-	        friends.add(new LongWritable(edge.getTargetVertexId().get()));
-	      }
-	      LongIdFriendsList tmp = new LongIdFriendsList();
+			// Add the friends of this vertex in a HashSet so that we can check
+			// for the existence of triangles quickly.
+			HashSet<LongWritable> friends = new HashSet<LongWritable>();
+			for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
+				friends.add(new LongWritable(edge.getTargetVertexId().get()));
+			}
+			LongIdFriendsList tmp = new LongIdFriendsList();
 
-	      int edges = vertex.getNumEdges();
-	      int triangles = 0;
-	      for (LongIdFriendsList msg : messages) {
-	      	tmp = msg;
-	        for (IntWritable id : msg.getMessage()) {
-	          if (friends.contains(id)) {
-	            // Triangle found
-	            triangles++;
-	          }
-	        }
-	      }
-	      
-	      double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
-	      // DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
-	      // vertex.setValue(clCoefficient);
+			int edges = vertex.getNumEdges();
+			int triangles = 0;
+			for (LongIdFriendsList msg : messages) {
+				tmp = msg;
+				for (IntWritable id : msg.getMessage()) {
+					if (friends.contains(id)) {
+						// Triangle found
+						triangles++;
+					}
+				}
+			}
 
-	      int vid = vertex.getId().get();
+			double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
+			// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
+			// vertex.setValue(clCoefficient);
 
-	      MapWritable temp = new  MapWritable();
-	      temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
-	      aggregate(AGG_CL_COEFFICIENT, temp);
-	      
-	      // sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get(), -1)); //SEND MESSAGE TO KEEP ALIVE
-	      vertex.voteToHalt();
-	    }
-	  }
+			int vid = vertex.getId().get();
 
-	  
+			MapWritable temp = new  MapWritable();
+			temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
+			aggregate(AGG_CL_COEFFICIENT, temp);
+
+			// sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get(), -1)); //SEND MESSAGE TO KEEP ALIVE
+			vertex.voteToHalt();
+		}
+	}
 
 
 
-	  /**
-	   * Coordinates the execution of the algorithm.
-	   */
-	  // public static class MasterCompute extends DefaultMasterCompute {
 
-	  //   @Override
-	  //   public final void compute() {
-	  //     long superstep = getSuperstep();
-	  //     if (superstep == 0) {
-	  //       setComputation(SendFriendsList.class);
-	  //     } else {
-	  //       setComputation(ClusteringCoefficientComputation.class);
-	  //     }
-	  //     // if (superstep == 2) {
-	  //     //   double partialSum = ((DoubleWritable)getAggregatedValue(
-	  //     //       CL_COEFFICIENT_AGGREGATOR)).get();
-	  //       // double globalCoefficient = partialSum/(double)getTotalNumVertices();
-	  //       // Counters.updateCounter(getContext(), COUNTER_GROUP, COUNTER_NAME,
-	  //       //     (long)(1000*globalCoefficient));
-	  //     }
-	  //   }
-	  // }
-	
+
+	/**
+	 * Coordinates the execution of the algorithm.
+	 */
+	// public static class MasterCompute extends DefaultMasterCompute {
+
+	//   @Override
+	//   public final void compute() {
+	//     long superstep = getSuperstep();
+	//     if (superstep == 0) {
+	//       setComputation(SendFriendsList.class);
+	//     } else {
+	//       setComputation(ClusteringCoefficientComputation.class);
+	//     }
+	//     // if (superstep == 2) {
+	//     //   double partialSum = ((DoubleWritable)getAggregatedValue(
+	//     //       CL_COEFFICIENT_AGGREGATOR)).get();
+	//       // double globalCoefficient = partialSum/(double)getTotalNumVertices();
+	//       // Counters.updateCounter(getContext(), COUNTER_GROUP, COUNTER_NAME,
+	//       //     (long)(1000*globalCoefficient));
+	//     }
+	//   }
+	// }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //SS3: CONVERTER UPDATE EDGES ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -418,7 +416,7 @@ public class LPGPartitionner {
 					vertex.addEdge(edge);
 					// aggregate(AGG_REAL_LOCAL_EDGES, new LongWritable(1));
 				} else {
-				//else change the edge value to a default one for edgecut calculations
+					//else change the edge value to a default one for edgecut calculations
 					edgeValue = new EdgeValue();																		//RR: really necessary to create another edge? reuse the same! just comment and see result
 					edgeValue.setWeight(edgeWeight);
 					edgeValue.setVirtualEdge(false);
@@ -428,7 +426,7 @@ public class LPGPartitionner {
 			}
 			//set real in-degree
 			vertex.getValue().setRealInDegree(inter);
-			
+
 			//RR: calculate max degree
 			aggregate(AGG_MAX_DEGREE, new IntWritable(vertex.getValue().getRealOutDegree()+vertex.getValue().getRealInDegree()));
 			sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get(), -1)); //SEND MESSAGE TO KEEP ALIVE
@@ -437,16 +435,16 @@ public class LPGPartitionner {
 		// sets the edge-weight
 		@Override
 		public void preSuperstep() {
-			
+
 			edgeWeight = (byte) getContext().getConfiguration().getInt(EDGE_WEIGHT, DEFAULT_EDGE_WEIGHT);
 			SAMPLING_TYPE = getContext().getConfiguration().get(SAMPLING_TYPE_HANDLE, DEFAULT_SAMPLING_TYPE);
 			if(SAMPLING_TYPE.contentEquals("BGRAP")) {
-				outDegreeFrequency = new String[101]; 															
+				outDegreeFrequency = new String[101];
 				for (int i = 0; i < 101; i++) {
 					outDegreeFrequency[i] = OUTDEGREE_FREQUENCY_COUNTER + i;
 				}
 			}
-			
+
 			//RR: change SIGMA percentage to long
 			totalVertexNumber = ((IntWritable) getAggregatedValue(AGG_VERTICES)).get();
 			BETA_P = getContext().getConfiguration().getFloat(BETA_HANDLE, (float) BETA_DEFAULT);
@@ -462,7 +460,7 @@ public class LPGPartitionner {
 		}
 	}
 
-//SS2: POTENTIAL VERTICES INITIALIZER ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//SS2: POTENTIAL VERTICES INITIALIZER ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static class PotentialVerticesInitializer
 			extends AbstractComputation<IntWritable, VertexValue, EdgeValue, SamplingMessage, SamplingMessage> {
 		protected String[] loadAggregatorNames;
@@ -514,8 +512,8 @@ public class LPGPartitionner {
 
 			totalNumEdges = ((LongWritable) getAggregatedValue(TOTAL_DIRECTED_OUT_EDGES)).get();
 			//totalVertexNumber = getTotalNumVertices(); //RR: changed it because the method is only the number of active vertices on previous SS
-			totalVertexNumber = ((IntWritable) getAggregatedValue(AGG_VERTICES)).get(); 
-			
+			totalVertexNumber = ((IntWritable) getAggregatedValue(AGG_VERTICES)).get();
+
 
 			degreeThreshold = getContext().getConfiguration().getInt(OUTDEGREE_THRESHOLD, DEFAULT_OUTDEGREE_Threshold);
 			minOutDegreeThreshold = getContext().getConfiguration().getInt(MIN_OUTDEGREE_THRESHOLD, DEFAULT_MIN_OUTDEGREE_Threshold);
@@ -540,7 +538,7 @@ public class LPGPartitionner {
 		}
 	}
 
-//SS2: REPARTITIONER ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//SS2: REPARTITIONER ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static class Repartitioner
 			extends AbstractComputation<IntWritable, VertexValue, EdgeValue, SamplingMessage, SamplingMessage> { //RR:Change to SamplingMessage
 		private String[] loadAggregatorNames;
@@ -616,7 +614,7 @@ public class LPGPartitionner {
 			}
 		}
 	}
-	
+
 	public static class ResetPartition
 			// AbstractComputation<LongWritable, VertexValue, EdgeValue, LongWritable,
 			// PartitionMessage>
@@ -821,10 +819,10 @@ public class LPGPartitionner {
 		protected double vertexMaxMinLoad;
 		protected double vertexMaxNormLoad;
 		protected double vertexBalanceJSD;
-		
+
 		//RR:
 		protected String[] vertexCountAggregatorNamesSampling;
-		
+
 		/**
 		 * if True, the statistics of the partition will be stored
 		 * in a local file.
@@ -836,13 +834,13 @@ public class LPGPartitionner {
 		public void initialize() throws InstantiationException, IllegalAccessException {
 
 		}
-		
+
 		/**
 		 * Initialize the algorithm parameters (number of partitions, etc.)
-		 * 
-		 * Initialize the Aggregators (global/shared variables) needed to store 
+		 *
+		 * Initialize the Aggregators (global/shared variables) needed to store
 		 * the state of the partition (edge cuts, number of edges/vertices, etc.).
-		 * 
+		 *
 		 * @throws InstantiationException
 		 * @throws IllegalAccessException
 		 */
@@ -868,7 +866,7 @@ public class LPGPartitionner {
 
 				virtualLoadAggregatorNames[i] = AGG_VIRTUAL_LOAD_PREFIX + i;
 				registerPersistentAggregator(virtualLoadAggregatorNames[i], LongSumAggregator.class);
-				
+
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
 				registerPersistentAggregator(vertexCountAggregatorNames[i], LongSumAggregator.class);
 
@@ -902,7 +900,7 @@ public class LPGPartitionner {
 				for (int i = 0; i < 101; i++) {
 					outDegreeFrequency[i] = OUTDEGREE_FREQUENCY_COUNTER + i;
 					registerPersistentAggregator(outDegreeFrequency[i], IntSumAggregator.class);
-	
+
 				}
 			}
 		}
@@ -923,26 +921,26 @@ public class LPGPartitionner {
 				// "+getSuperstep()).increment(realLocalEdges);
 
 				switch (superstep % 2) {
-				case 0:
-					//System.out.println(((double) localEdges) / getTotalNumEdges() + " local edges");
-					long minLoad = Long.MAX_VALUE;
-					long maxLoad = -Long.MAX_VALUE;
-					for (int i = 0; i < numberOfPartitions + repartition; i++) {
-						long load = ((LongWritable) getAggregatedValue(loadAggregatorNames[i])).get();
-						if (load < minLoad) {
-							minLoad = load;
+					case 0:
+						//System.out.println(((double) localEdges) / getTotalNumEdges() + " local edges");
+						long minLoad = Long.MAX_VALUE;
+						long maxLoad = -Long.MAX_VALUE;
+						for (int i = 0; i < numberOfPartitions + repartition; i++) {
+							long load = ((LongWritable) getAggregatedValue(loadAggregatorNames[i])).get();
+							if (load < minLoad) {
+								minLoad = load;
+							}
+							if (load > maxLoad) {
+								maxLoad = load;
+							}
 						}
-						if (load > maxLoad) {
-							maxLoad = load;
-						}
-					}
-					double expectedLoad = ((double) getTotalNumEdges()) / (numberOfPartitions + repartition);
-					//System.out.println((((double) maxLoad) / minLoad) + " max-min unbalance");
-					//System.out.println(((maxLoad) / expectedLoad) + " maximum normalized load");
-					break;
-				case 1:
-					//System.out.println(migrations + " migrations");
-					break;
+						double expectedLoad = ((double) getTotalNumEdges()) / (numberOfPartitions + repartition);
+						//System.out.println((((double) maxLoad) / minLoad) + " max-min unbalance");
+						//System.out.println(((maxLoad) / expectedLoad) + " maximum normalized load");
+						break;
+					case 1:
+						//System.out.println(migrations + " migrations");
+						break;
 				}
 			}
 		}
@@ -993,7 +991,7 @@ public class LPGPartitionner {
 			if (superstep > sampling_ss_end + 3 + windowSize) {
 				double best = Collections.max(states);
 				double step = Math.abs(1 - newState / best);
-				converged = step < convergenceThreshold;				
+				converged = step < convergenceThreshold;
 				states.removeFirst();
 			}
 			states.addLast(newState);
@@ -1160,7 +1158,7 @@ public class LPGPartitionner {
 			System.out.println(isSaveStatsIntoFile);
 			try {
 				String filename = SAVE_PATH+formattedDate + "_" + SAMPLING_TYPE+".csv";
-				
+
 				System.out.println(filename);
 
 				FileWriter file = new FileWriter(filename, true);
@@ -1179,13 +1177,13 @@ public class LPGPartitionner {
 		@SuppressWarnings("unchecked")
 		/**
 		 * A method to store the computational time stat.
-		 * 
-		 * @param isSpinner a flag to distinguish between our Method 
+		 *
+		 * @param isSpinner a flag to distinguish between our Method
 		 * and Spinner method
-		 * 
+		 *
 		 * @param totalMigrations
 		 */
-		
+
 		protected void saveTimersStats(boolean isSpinner, long totalMigrations) {
 			long firstLPIteration;
 			long initializingLPTime;
@@ -1222,7 +1220,7 @@ public class LPGPartitionner {
 				totalIterationsTime += getContext()
 						.getCounter("Giraph Timers", "Superstep " + i + " ComputeNewPartition (ms)").getValue()
 						+ getContext().getCounter("Giraph Timers", "Superstep " + (i + 1) + " ComputeMigration (ms)")
-								.getValue();
+						.getValue();
 			}
 			avg = (float) totalIterationsTime / (totalLPSupersteps / 2);
 
@@ -1257,8 +1255,8 @@ public class LPGPartitionner {
 					file.write(getContext().getCounter(Task.Counter.PHYSICAL_MEMORY_BYTES).getValue() + DELIMITER);
 					file.write(getContext().getCounter(Task.Counter.COMMITTED_HEAP_BYTES).getValue() + DELIMITER);
 					file.write(getContext().getCounter(Task.Counter.MAP_INPUT_BYTES).getValue() + DELIMITER);
-					file.write(getContext().getCounter(Task.Counter.CPU_MILLISECONDS).getValue() + DELIMITER);				
-					file.write(outDegreeThreshold + "\n");				
+					file.write(getContext().getCounter(Task.Counter.CPU_MILLISECONDS).getValue() + DELIMITER);
+					file.write(outDegreeThreshold + "\n");
 					file.flush();
 					file.close();
 
@@ -1272,7 +1270,7 @@ public class LPGPartitionner {
 				;
 			}
 		}
-		
+
 
 		/**
 		 * A method to store the partition stat. based on real edges
@@ -1425,7 +1423,7 @@ public class LPGPartitionner {
 				;
 			}
 		}
-		
+
 		/**
 		 * A method to store aditional stat.
 		 */
@@ -1439,7 +1437,7 @@ public class LPGPartitionner {
 					str1 += realLoads[i] + delimiter_temp;
 					edges += realLoads[i];
 					str2 += virtualLoads[i] + delimiter_temp;
-					vedges += virtualLoads[i]; 
+					vedges += virtualLoads[i];
 					str3 += vCounts[i] + delimiter_temp;
 					vertices += vCounts[i];
 				}
@@ -1474,7 +1472,7 @@ public class LPGPartitionner {
 				;
 			}
 		}
-		
+
 		private double divergenceKLU(double[] p) {
 			double distance = 0;
 			double sum = sum(p);
@@ -1494,7 +1492,7 @@ public class LPGPartitionner {
 		private double divergenceKLU(long[] p) {
 			double distance = 0;
 			long sum = sum(p);
-			
+
 			double u = ((double) 1) / (p.length);
 			for (int i = 0; i < p.length; i++) {
 				if (p[i] != 0) {
@@ -1506,11 +1504,11 @@ public class LPGPartitionner {
 			}
 			return distance / Math.log(p.length);
 		}
-		
+
 		private double divergenceKLU(int[] p) {
 			double distance = 0;
 			int sum = sum(p);
-			
+
 			double u = ((double) 1) / (p.length);
 			for (int i = 0; i < p.length; i++) {
 				if (p[i] != 0) {
@@ -1530,7 +1528,7 @@ public class LPGPartitionner {
 			}
 			return sum;
 		}
-		
+
 		private long sum(long[] p) {
 			long sum = 0;
 			for (int i = 0; i < p.length; i++) {
@@ -1538,7 +1536,7 @@ public class LPGPartitionner {
 			}
 			return sum;
 		}
-		
+
 		private int sum(int[] p) {
 			int sum = 0;
 			for (int i = 0; i < p.length; i++) {
@@ -1548,9 +1546,9 @@ public class LPGPartitionner {
 		}
 	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // RD: MASTER COMPUTE TEMP //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static class RDVBMasterCompute extends SuperPartitionerMasterCompute {
 		@Override
 		public void initialize() throws InstantiationException, IllegalAccessException {
@@ -1568,19 +1566,19 @@ public class LPGPartitionner {
 			loadAggregatorNames = new String[numberOfPartitions + repartition];
 			vertexCountAggregatorNames = new String[numberOfPartitions + repartition];
 			vertexCountAggregatorNamesSampling = new String[numberOfPartitions + repartition]; //RR:
-			
+
 			for (int i = 0; i < numberOfPartitions + repartition; i++) {
 				loadAggregatorNames[i] = AGG_EGDES_LOAD_PREFIX + i;
 				registerPersistentAggregator(loadAggregatorNames[i], LongSumAggregator.class);
-				registerAggregator(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i, IntSumAggregator.class); 
+				registerAggregator(AGG_VERTEX_MIGRATION_DEMAND_PREFIX + i, IntSumAggregator.class);
 
 				vertexCountAggregatorNames[i] = AGG_VERTEX_COUNT_PREFIX + i;
 				registerPersistentAggregator(vertexCountAggregatorNames[i], LongSumAggregator.class); // Hung
-				
+
 				//RR:
 				vertexCountAggregatorNamesSampling[i] = AGG_VERTEX_COUNT_PREFIX + i +"_SAMPLING";
 				registerAggregator(vertexCountAggregatorNamesSampling[i], LongSumAggregator.class);
-				
+
 			}
 			registerAggregator(AGGREGATOR_STATE, DoubleSumAggregator.class); //RR: maybe float?
 			registerAggregator(AGGREGATOR_LOCALS, LongSumAggregator.class);
@@ -1592,11 +1590,11 @@ public class LPGPartitionner {
 			registerAggregator(AGG_FIRST_LOADED_EDGES, LongSumAggregator.class);
 			registerPersistentAggregator(AGG_UPPER_TOTAL_COMM_VOLUME, LongSumAggregator.class);
 			registerAggregator(AGG_EDGE_CUTS, LongSumAggregator.class);
-			
+
 			//RR:
 			SAMPLING_TYPE = getContext().getConfiguration().get(SAMPLING_TYPE_HANDLE, DEFAULT_SAMPLING_TYPE);
 			SAVE_DD = getContext().getConfiguration().get(SAVE_DD_HANDLE, "false");
-			
+
 			registerAggregator(AGG_VERTICES,IntSumAggregator.class);
 			registerPersistentAggregator(AGG_MAX_DEGREE, IntMaxAggregator.class);
 			registerPersistentAggregator(AGG_SAMPLE, IntSumAggregator.class);
@@ -1604,27 +1602,27 @@ public class LPGPartitionner {
 			registerAggregator(AGG_SAMPLE_SSR,IntSumAggregator.class);
 			if (SAVE_DD.contentEquals("true") || SAMPLING_TYPE.contentEquals("InitializeSampleHD")|| SAMPLING_TYPE.contentEquals("InitializeSampleGD"))
 				registerPersistentAggregator(AGG_DEGREE_DIST, HashMapAggregator.class);
-			
+
 			super.init();
-			
+
 			formattedDate = getContext().getConfiguration().get(DATE_HANDLE, "None");
 			if(formattedDate == "None") {
 				LocalDateTime myDateObj = LocalDateTime.now();
-			    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MMdd_HHmmss");
-			    formattedDate = myDateObj.format(myFormatObj);
+				DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MMdd_HHmmss");
+				formattedDate = myDateObj.format(myFormatObj);
 			}
 		}
-		
+
 		private static boolean computeStates = false;
 		private static int lastStep = Integer.MAX_VALUE;
-		
+
 		@Override
 		public void compute() {
 			int superstep = (int) getSuperstep();
 			if (computeStates) {
 				if (superstep == lastStep + 1) {
 					System.out.println("*MC"+superstep+": CGPS");
-					setComputation(ComputeGraphPartitionStatistics.class); 
+					setComputation(ComputeGraphPartitionStatistics.class);
 				} else {
 					System.out.println("Finish stats.");
 					haltComputation();
@@ -1633,168 +1631,168 @@ public class LPGPartitionner {
 					saveDegreeDistribution(); 													//RR: check if it works with the hashmap
 				}
 			} else {
-			switch(superstep){
-				case 0:
-					System.out.println("MC0: ConverterPropagate");
-					setComputation(ConverterPropagate.class); 
-					break;
-						
-				case 1:
-					System.out.println("*MC1: ConverterUpdateEdges");
-					setComputation(ConverterUpdateEdges.class);
-					break;
+				switch(superstep){
+					case 0:
+						System.out.println("MC0: ConverterPropagate");
+						setComputation(ConverterPropagate.class);
+						break;
 
-				case 2:
-					if (repartition != 0) {
-						NEEDS_SAMPLE = false;
-						setComputation(Repartitioner.class);									
-					} else {
-						sampling_messages_start = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
-						NEEDS_SAMPLE = true;
-						if(BETA < getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS)) { 
-							System.out.println("*WARNING: BETA is smaller than number of partitions wanted. Setting BETA to "+numberOfPartitions+".");
-							BETA = numberOfPartitions;
-						}
-						//Set sampling execution
-						System.out.println("*MC2: "+SAMPLING_TYPE);
-						switch(SAMPLING_TYPE) {
-						case "InitializeSampleRD":
-							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
-							System.out.println(":SAMPLING SIGMA"+SIGMA);
-							System.out.println(":SAMPLING TAU"+TAU);
-							setComputation(InitializeSampleRD.class);
-							break;
-						case "InitializeSampleHD":
-							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
-							System.out.println(":SAMPLING SIGMA"+SIGMA);
-							System.out.println(":SAMPLING TAU"+TAU);
-							setComputation(InitializeSampleHD.class);
-							break;
+					case 1:
+						System.out.println("*MC1: ConverterUpdateEdges");
+						setComputation(ConverterUpdateEdges.class);
+						break;
 
-						case "InitializeSampleCC":
-							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
-							System.out.println(":SAMPLING SIGMA"+SIGMA);
-							System.out.println(":SAMPLING TAU"+TAU);
-							setComputation(InitializeSampleCC.class);
-							break;
-
-						case "InitializeSampleGD":
-							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
-							System.out.println(":SAMPLING SIGMA"+SIGMA);
-							setComputation(InitializeSampleGD.class);
-							break;
-						default:
-							System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
-							NEEDS_SAMPLE=false;
-							sampling_ss_end = 2;
-							setComputation(PotentialVerticesInitializer.class); 
-							break;
-						}
-					}
-					break;
-				default:
-					if (NEEDS_SAMPLE) {
-						int sampleSize = ((IntWritable) getAggregatedValue(AGG_SAMPLE)).get();
-						System.out.println("*MC"+superstep+": "+SAMPLING_TYPE+" SampleSize="+sampleSize);
-						
-						sampling_ss_end = (short) superstep;
-						if(sampleSize>BETA) {
-							sampling_ss_extra += 1;
-						}
-						
-						if(superstep>150){ //RR: what is a good value for this condition?
-							System.out.println("WARNING: Sampling did not execute correctly. Reverting to BGRAP.");
+					case 2:
+						if (repartition != 0) {
 							NEEDS_SAMPLE = false;
-							sampling_ss_end = (short) superstep;
-							SAMPLING_ERROR = true;
-							setComputation(PotentialVerticesInitializer.class);
-						}else{
-							switch(SAMPLING_TYPE) {
-							case "InitializeSampleRD":
-								setComputation(InitializeSampleRD.class);
-								break;
-							case "InitializeSampleHD":
-								setComputation(InitializeSampleHD.class);
-								break;
-							case "InitializeSampleCC":
-								setComputation(InitializeSampleCC.class);
-								break;
-							case "InitializeSampleGD":
-								setComputation(InitializeSampleGD.class);
-								break;
-							default:
-								System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
-								NEEDS_SAMPLE=false;
-								sampling_ss_end = 2;
-								setComputation(PotentialVerticesInitializer.class);
-								break;
-							}
-						}
-					} else {
-						if (superstep == sampling_ss_end + 1) {
-							sampling_messages_end = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
-							//System.out.println("*samplingStep: "+ sampling_ss_end);
-							// System.out.println("after stp2 "+ getTotalNumEdges());
-							getContext().getCounter("Partitioning Initialization", AGG_INITIALIZED_VERTICES)
-									.increment(((IntWritable) getAggregatedValue(AGG_INITIALIZED_VERTICES)).get());
-							//System.out.println("*MC"+superstep+": CFP");
-							setComputation(BGRAP_vb.ComputeFirstPartition.class);											
-						} else if (superstep == sampling_ss_end + 2) {
-
-							getContext().getCounter("Partitioning Initialization", AGG_UPDATED_VERTICES)
-									.increment(((IntWritable) getAggregatedValue(AGG_UPDATED_VERTICES)).get());
-							//System.out.println("*MC"+superstep+": CFM");
-							setComputation(BGRAP_vb.ComputeFirstMigration.class);											
+							setComputation(Repartitioner.class);
 						} else {
-							switch ((superstep-sampling_ss_end) % 2) {
-							case 0:
-								//System.out.println("*MC"+superstep+": CM");
-								setComputation(BGRAP_vb.ComputeMigration.class);
-								break;
-							case 1:
-								//System.out.println("*MC"+superstep+": CNP");
-								setComputation(BGRAP_vb.ComputeNewPartition.class);
-								break;
+							sampling_messages_start = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
+							NEEDS_SAMPLE = true;
+							if(BETA < getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS)) {
+								System.out.println("*WARNING: BETA is smaller than number of partitions wanted. Setting BETA to "+numberOfPartitions+".");
+								BETA = numberOfPartitions;
+							}
+							//Set sampling execution
+							System.out.println("*MC2: "+SAMPLING_TYPE);
+							switch(SAMPLING_TYPE) {
+								case "InitializeSampleRD":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									System.out.println(":SAMPLING TAU"+TAU);
+									setComputation(InitializeSampleRD.class);
+									break;
+								case "InitializeSampleHD":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									System.out.println(":SAMPLING TAU"+TAU);
+									setComputation(InitializeSampleHD.class);
+									break;
+
+								case "InitializeSampleCC":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									System.out.println(":SAMPLING TAU"+TAU);
+									setComputation(InitializeSampleCC.class);
+									break;
+
+								case "InitializeSampleGD":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									setComputation(InitializeSampleGD.class);
+									break;
+								default:
+									System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
+									NEEDS_SAMPLE=false;
+									sampling_ss_end = 2;
+									setComputation(PotentialVerticesInitializer.class);
+									break;
 							}
 						}
-					}
-					break;
+						break;
+					default:
+						if (NEEDS_SAMPLE) {
+							int sampleSize = ((IntWritable) getAggregatedValue(AGG_SAMPLE)).get();
+							System.out.println("*MC"+superstep+": "+SAMPLING_TYPE+" SampleSize="+sampleSize);
+
+							sampling_ss_end = (short) superstep;
+							if(sampleSize>BETA) {
+								sampling_ss_extra += 1;
+							}
+
+							if(superstep>150){ //RR: what is a good value for this condition?
+								System.out.println("WARNING: Sampling did not execute correctly. Reverting to BGRAP.");
+								NEEDS_SAMPLE = false;
+								sampling_ss_end = (short) superstep;
+								SAMPLING_ERROR = true;
+								setComputation(PotentialVerticesInitializer.class);
+							}else{
+								switch(SAMPLING_TYPE) {
+									case "InitializeSampleRD":
+										setComputation(InitializeSampleRD.class);
+										break;
+									case "InitializeSampleHD":
+										setComputation(InitializeSampleHD.class);
+										break;
+									case "InitializeSampleCC":
+										setComputation(InitializeSampleCC.class);
+										break;
+									case "InitializeSampleGD":
+										setComputation(InitializeSampleGD.class);
+										break;
+									default:
+										System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
+										NEEDS_SAMPLE=false;
+										sampling_ss_end = 2;
+										setComputation(PotentialVerticesInitializer.class);
+										break;
+								}
+							}
+						} else {
+							if (superstep == sampling_ss_end + 1) {
+								sampling_messages_end = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
+								//System.out.println("*samplingStep: "+ sampling_ss_end);
+								// System.out.println("after stp2 "+ getTotalNumEdges());
+								getContext().getCounter("Partitioning Initialization", AGG_INITIALIZED_VERTICES)
+										.increment(((IntWritable) getAggregatedValue(AGG_INITIALIZED_VERTICES)).get());
+								//System.out.println("*MC"+superstep+": CFP");
+								setComputation(BGRAP_vb.ComputeFirstPartition.class);
+							} else if (superstep == sampling_ss_end + 2) {
+
+								getContext().getCounter("Partitioning Initialization", AGG_UPDATED_VERTICES)
+										.increment(((IntWritable) getAggregatedValue(AGG_UPDATED_VERTICES)).get());
+								//System.out.println("*MC"+superstep+": CFM");
+								setComputation(BGRAP_vb.ComputeFirstMigration.class);
+							} else {
+								switch ((superstep-sampling_ss_end) % 2) {
+									case 0:
+										//System.out.println("*MC"+superstep+": CM");
+										setComputation(BGRAP_vb.ComputeMigration.class);
+										break;
+									case 1:
+										//System.out.println("*MC"+superstep+": CNP");
+										setComputation(BGRAP_vb.ComputeNewPartition.class);
+										break;
+								}
+							}
+						}
+						break;
 				}
 				boolean hasConverged = false;
 				if (superstep > sampling_ss_end + 3) {
 					if ((superstep - sampling_ss_end) % 2 == 0) {
-						hasConverged = algorithmConverged(superstep); 
+						hasConverged = algorithmConverged(superstep);
 					}
 				}
-				printStats(superstep); 
-				updateStats(); 
-				
-				// LP iteration = 2 super-steps, LP process start after 3 super-steps 
+				printStats(superstep);
+				updateStats();
+
+				// LP iteration = 2 super-steps, LP process start after 3 super-steps
 				if (hasConverged || superstep >= (maxIterations*2+sampling_ss_end)) {
 					lp_ss_end = (short) superstep;
 					lp_messages_end = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
-					
+
 					//System.out.println("Halting computation: " + hasConverged);
 					computeStates = true;
 					lastStep = superstep;
 				}
 			}
-			
+
 		}
-		
+
 		protected void saveTimersStats(long totalMigrations) {
-			
+
 			long initializingTime=0; //time to initialize nodes (+ time to make sure all partitions are initialized + time to initialize sampling)
 			long samplingTime=0; //time to run RD cycles
 			long firstLPIteration=0;
 			long LPTime=0;
 			long totalLPTime=0;
-			
+
 			long totalSamplingSupersteps=0; //RD cycle (request degree, receive degree, select sampled neighbors)
 			long totalLPSupersteps=0;
 			float avgSampling = 0;
 			float avgLP = 0;
-			
+
 			if (repartition != 0) {
 				initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 Repartitioner (ms)").getValue();
 				firstLPIteration = getContext().getCounter("Giraph Timers", "Superstep 3 ComputeFirstPartition (ms)").getValue()
@@ -1811,7 +1809,7 @@ public class LPGPartitionner {
 						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 1;
 						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
 						break;
-					
+
 					case "InitializeSampleHD":
 						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
 								+ getSamplingInitTime();
@@ -1827,8 +1825,8 @@ public class LPGPartitionner {
 						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
 						break;
 					default:
-							System.out.println("WARNING: Unrecognized sampling type. Running BGRAP timers.");
-							initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 PotentialVerticesInitializer (ms)").getValue();
+						System.out.println("WARNING: Unrecognized sampling type. Running BGRAP timers.");
+						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 PotentialVerticesInitializer (ms)").getValue();
 						break;
 				}
 
@@ -1839,7 +1837,7 @@ public class LPGPartitionner {
 				totalLPSupersteps = getSuperstep() - (sampling_ss_end+2);
 				avgLP = (float) totalLPTime / (totalLPSupersteps / 2);
 			}
-			
+
 			getContext().getCounter(PARTITION_COUNTER_GROUP, "Total LP (ms)").increment((totalLPTime));
 			getContext().getCounter(PARTITION_COUNTER_GROUP, MIGRATIONS_COUNTER).increment(totalMigrations);
 			getContext().getCounter(PARTITION_COUNTER_GROUP, SCORE_COUNTER).increment((long) (1000 * score));
@@ -1861,7 +1859,7 @@ public class LPGPartitionner {
 					file.write("LP CYCLES"+DELIMITER+(int)(totalLPSupersteps)/2+"\n");
 					file.write("TOT MIGRATIONS"+DELIMITER+totalMigrations +"\n");
 					file.write("\n");
-					
+
 					//MESSAGES
 					long totalMessages = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
 					file.write("INITIAL MESSAGES"+DELIMITER+sampling_messages_start+"\n");
@@ -1870,14 +1868,14 @@ public class LPGPartitionner {
 					file.write("SHUTDOWN MESSAGES"+DELIMITER+(totalMessages-lp_messages_end)+"\n");
 					file.write("TOTAL MESSAGES"+DELIMITER+totalMessages+"\n");
 					file.write("\n");
-					
+
 					//TIME
 					file.write("INPUT TIME (not included in total)"+DELIMITER+getContext().getCounter("Giraph Timers", "Input superstep (ms)").getValue() +"\n");
 					file.write("INITIALIZE TIME"+DELIMITER+getContext().getCounter("Giraph Timers", "Initialize (ms)").getValue() +"\n");
 					file.write("SETUP TIME"+DELIMITER+getContext().getCounter("Giraph Timers", "Setup (ms)").getValue() +"\n");
 					//file.write("SHUTDOWN TIME"+DELIMITER+getContext().getCounter("Giraph Timers", "Shutdown (ms)").getValue()+"\n");
 					//file.write("TOTAL TIME"+DELIMITER+getContext().getCounter("Giraph Timers", "Total (ms)").getValue()+"\n");
-					
+
 					file.write("Initializing algorithm time"+DELIMITER+initializingTime +"\n");
 					//file.write("1LP TIME"+DELIMITER+firstLPIteration +"\n");
 					//file.write("LP TIME"+DELIMITER+LPTime +"\n");
@@ -1886,13 +1884,13 @@ public class LPGPartitionner {
 					file.write("Sampling time"+DELIMITER+samplingTime +"\n");
 					file.write("Avg. Sampling cycle time"+DELIMITER+avgSampling +"\n");
 					file.write("TOTAL TIME"+DELIMITER+(totalLPTime+samplingTime+initializingTime)+"\n");
-					
+
 					file.write("OUT DEGREE THRESHOLD"+DELIMITER+outDegreeThreshold + "\n");
 					file.write("BETA"+DELIMITER+BETA_P +"\n");
 					file.write("SIGMA"+DELIMITER+SIGMA_P+"\n");
 					file.write("TAU"+DELIMITER+TAU+"\n");
 					file.write("SAMPLING_ERROR"+DELIMITER+SAMPLING_ERROR+"\n");
-				
+
 
 					//MEMORY
 					//file.write("VMEM BYTES"+DELIMITER+getContext().getCounter(Task.Counter.VIRTUAL_MEMORY_BYTES).getValue() +"\n");
@@ -1900,7 +1898,7 @@ public class LPGPartitionner {
 					//file.write("HEAP BYTES"+DELIMITER+getContext().getCounter(Task.Counter.COMMITTED_HEAP_BYTES).getValue()+"\n");
 					//file.write("MAP INPUT BYTES"+DELIMITER+getContext().getCounter(Task.Counter.MAP_INPUT_BYTES).getValue()+"\n");
 					//file.write("CPU MS"+DELIMITER+getContext().getCounter(Task.Counter.CPU_MILLISECONDS).getValue()+"\n");
-					
+
 					//AE:
 					file.flush();
 					file.close();
@@ -1913,15 +1911,15 @@ public class LPGPartitionner {
 				}
 			}
 		}
-		
+
 		protected long getSamplingInitTime() {
 			long SITime=0;
 			for (int i = sampling_ss_end - sampling_ss_extra - 1; i <= sampling_ss_end; i++) {
-				SITime += getContext().getCounter("Giraph Timers", "Superstep " + i + " "+SAMPLING_TYPE+" (ms)").getValue(); 
+				SITime += getContext().getCounter("Giraph Timers", "Superstep " + i + " "+SAMPLING_TYPE+" (ms)").getValue();
 			}
 			return SITime;
 		}
-		
+
 		protected long getSamplingTime(int samplingStart) {
 			long STime=0;
 			for (int i = samplingStart; i < sampling_ss_end - sampling_ss_extra - 1; i++) {
@@ -1929,7 +1927,7 @@ public class LPGPartitionner {
 			}
 			return STime;
 		}
-		
+
 		protected long getLPTime(int LPStart) {
 			long LPTime=0;
 			for (int i = LPStart; i < getSuperstep() - 1; i += 2) {
@@ -1938,14 +1936,14 @@ public class LPGPartitionner {
 			}
 			return LPTime;
 		}
-		
+
 		protected void saveDegreeDistribution() {
 			if (SAVE_DD.contentEquals("true")) {
 				try {
 					String graphName = getContext().getConfiguration().get(GRAPH_NAME_HANDLE, GRAPH_NAME);
 					String filename = SAVE_PATH+graphName+"-GDD.csv";
 					FileWriter file = new FileWriter(filename, true);
-					
+
 					for (Entry<Writable, Writable> entry : degreeDist.entrySet()) {
 						file.write(((IntWritable)entry.getKey()).get()+DELIMITER+((IntWritable)entry.getValue()).get()+"\n");
 					}
@@ -1960,9 +1958,9 @@ public class LPGPartitionner {
 		}
 	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //RD: MASTER COMPUTE TEMP //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static class RDEBMasterCompute extends SuperPartitionerMasterCompute {
 		@Override
 		public void initialize() throws InstantiationException, IllegalAccessException {
@@ -2041,7 +2039,7 @@ public class LPGPartitionner {
 			if (computeStates) {
 				if (superstep == lastStep + 1) {
 					System.out.println("*MC"+superstep+": CGPS");
-					setComputation(ComputeGraphPartitionStatistics.class); 
+					setComputation(ComputeGraphPartitionStatistics.class);
 				} else {
 					System.out.println("Finish stats.");
 					haltComputation();
@@ -2051,129 +2049,129 @@ public class LPGPartitionner {
 				}
 			} else {
 				switch(superstep){
-				case 0:
-					System.out.println("MC0: CP");
-					setComputation(ConverterPropagate.class); 
-					break;
-				case 1:
-					System.out.println("*MC1: CUE");
-					setComputation(ConverterUpdateEdges.class);
-					break;
-				case 2:
-					if (repartition != 0) {
-						NEEDS_SAMPLE = false;
-						setComputation(Repartitioner.class);									
-					} else {
-						sampling_messages_start = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
-						NEEDS_SAMPLE = true;
-						if(BETA < getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS)) { 
-							System.out.println("*WARNING: BETA is smaller than number of partitions wanted. Setting BETA to "+numberOfPartitions+".");
-							BETA = numberOfPartitions;
-						}
-						//Set sampling execution
-						System.out.println("*MC2: "+SAMPLING_TYPE);
-						switch(SAMPLING_TYPE) {
-						case "InitializeSampleRD":
-							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
-							System.out.println(":SAMPLING SIGMA"+SIGMA);
-							System.out.println(":SAMPLING TAU"+TAU);
-							setComputation(InitializeSampleRD.class);
-							break;
-						case "InitializeSampleHD":
-							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
-							System.out.println(":SAMPLING SIGMA"+SIGMA);
-							System.out.println(":SAMPLING TAU"+TAU);
-							setComputation(InitializeSampleHD.class);
-							break;
-						case "InitializeSampleGD":
-							System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
-							System.out.println(":SAMPLING SIGMA"+SIGMA);
-							setComputation(InitializeSampleGD.class);
-							break;
-						default:
-							System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
-							NEEDS_SAMPLE=false;
-							sampling_ss_end = 2;
-							setComputation(PotentialVerticesInitializer.class); 
-							break;
-						}
-					}
-					break;
-				default:
-					if (NEEDS_SAMPLE) {
-						int sampleSize = ((IntWritable) getAggregatedValue(AGG_SAMPLE)).get();
-						System.out.println("*MC"+superstep+": "+SAMPLING_TYPE+" SampleSize="+sampleSize);
-
-						sampling_ss_end = (short) superstep;
-						if(sampleSize>BETA) {
-							sampling_ss_extra += 1;
-						}
-
-						if(superstep>150){ //RR: what is a good value for this condition?
-							System.out.println("WARNING: Sampling did not execute correctly. Reverting to BGRAP.");
+					case 0:
+						System.out.println("MC0: CP");
+						setComputation(ConverterPropagate.class);
+						break;
+					case 1:
+						System.out.println("*MC1: CUE");
+						setComputation(ConverterUpdateEdges.class);
+						break;
+					case 2:
+						if (repartition != 0) {
 							NEEDS_SAMPLE = false;
-							sampling_ss_end = (short) superstep;
-							SAMPLING_ERROR = true;
-							setComputation(PotentialVerticesInitializer.class);
-						}else{
-							switch(SAMPLING_TYPE) {
-							case "InitializeSampleRD":
-								setComputation(InitializeSampleRD.class);
-								break;
-							case "InitializeSampleHD":
-								setComputation(InitializeSampleHD.class);
-								break;
-							case "InitializeSampleGD":
-								setComputation(InitializeSampleGD.class);
-								break;
-							default:
-								System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
-								NEEDS_SAMPLE=false;
-								sampling_ss_end = 2;
-								setComputation(PotentialVerticesInitializer.class);
-								break;
-							}
-						}
-					} else {
-						if (superstep == sampling_ss_end + 1) {
-							sampling_messages_end = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
-							//System.out.println("*samplingStep: "+ sampling_ss_end);
-							// System.out.println("after stp2 "+ getTotalNumEdges());
-							getContext().getCounter("Partitioning Initialization", AGG_INITIALIZED_VERTICES)
-							.increment(((IntWritable) getAggregatedValue(AGG_INITIALIZED_VERTICES)).get());
-							//System.out.println("*MC"+superstep+": CFP");
-							setComputation(BGRAP_eb.ComputeFirstPartition.class);											
-						} else if (superstep == sampling_ss_end + 2) {
-
-							getContext().getCounter("Partitioning Initialization", AGG_UPDATED_VERTICES)
-							.increment(((LongWritable) getAggregatedValue(AGG_UPDATED_VERTICES)).get()); //Hung
-							//System.out.println("*MC"+superstep+": CFM");
-							setComputation(BGRAP_eb.ComputeFirstMigration.class);											
+							setComputation(Repartitioner.class);
 						} else {
-							switch ((superstep-sampling_ss_end) % 2) {
-							case 0:
-								//System.out.println("*MC"+superstep+": CM");
-								setComputation(BGRAP_eb.ComputeMigration.class);
-								break;
-							case 1:
-								//System.out.println("*MC"+superstep+": CNP");
-								setComputation(BGRAP_eb.ComputeNewPartition.class);
-								break;
+							sampling_messages_start = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
+							NEEDS_SAMPLE = true;
+							if(BETA < getContext().getConfiguration().getInt(NUM_PARTITIONS, DEFAULT_NUM_PARTITIONS)) {
+								System.out.println("*WARNING: BETA is smaller than number of partitions wanted. Setting BETA to "+numberOfPartitions+".");
+								BETA = numberOfPartitions;
+							}
+							//Set sampling execution
+							System.out.println("*MC2: "+SAMPLING_TYPE);
+							switch(SAMPLING_TYPE) {
+								case "InitializeSampleRD":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									System.out.println(":SAMPLING TAU"+TAU);
+									setComputation(InitializeSampleRD.class);
+									break;
+								case "InitializeSampleHD":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									System.out.println(":SAMPLING TAU"+TAU);
+									setComputation(InitializeSampleHD.class);
+									break;
+								case "InitializeSampleGD":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									setComputation(InitializeSampleGD.class);
+									break;
+								default:
+									System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
+									NEEDS_SAMPLE=false;
+									sampling_ss_end = 2;
+									setComputation(PotentialVerticesInitializer.class);
+									break;
 							}
 						}
-					}
-					break;
+						break;
+					default:
+						if (NEEDS_SAMPLE) {
+							int sampleSize = ((IntWritable) getAggregatedValue(AGG_SAMPLE)).get();
+							System.out.println("*MC"+superstep+": "+SAMPLING_TYPE+" SampleSize="+sampleSize);
+
+							sampling_ss_end = (short) superstep;
+							if(sampleSize>BETA) {
+								sampling_ss_extra += 1;
+							}
+
+							if(superstep>150){ //RR: what is a good value for this condition?
+								System.out.println("WARNING: Sampling did not execute correctly. Reverting to BGRAP.");
+								NEEDS_SAMPLE = false;
+								sampling_ss_end = (short) superstep;
+								SAMPLING_ERROR = true;
+								setComputation(PotentialVerticesInitializer.class);
+							}else{
+								switch(SAMPLING_TYPE) {
+									case "InitializeSampleRD":
+										setComputation(InitializeSampleRD.class);
+										break;
+									case "InitializeSampleHD":
+										setComputation(InitializeSampleHD.class);
+										break;
+									case "InitializeSampleGD":
+										setComputation(InitializeSampleGD.class);
+										break;
+									default:
+										System.out.println("*WARNING: Type of algorithm not recognized. Executing BGRAP.");
+										NEEDS_SAMPLE=false;
+										sampling_ss_end = 2;
+										setComputation(PotentialVerticesInitializer.class);
+										break;
+								}
+							}
+						} else {
+							if (superstep == sampling_ss_end + 1) {
+								sampling_messages_end = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
+								//System.out.println("*samplingStep: "+ sampling_ss_end);
+								// System.out.println("after stp2 "+ getTotalNumEdges());
+								getContext().getCounter("Partitioning Initialization", AGG_INITIALIZED_VERTICES)
+										.increment(((IntWritable) getAggregatedValue(AGG_INITIALIZED_VERTICES)).get());
+								//System.out.println("*MC"+superstep+": CFP");
+								setComputation(BGRAP_eb.ComputeFirstPartition.class);
+							} else if (superstep == sampling_ss_end + 2) {
+
+								getContext().getCounter("Partitioning Initialization", AGG_UPDATED_VERTICES)
+										.increment(((LongWritable) getAggregatedValue(AGG_UPDATED_VERTICES)).get()); //Hung
+								//System.out.println("*MC"+superstep+": CFM");
+								setComputation(BGRAP_eb.ComputeFirstMigration.class);
+							} else {
+								switch ((superstep-sampling_ss_end) % 2) {
+									case 0:
+										//System.out.println("*MC"+superstep+": CM");
+										setComputation(BGRAP_eb.ComputeMigration.class);
+										break;
+									case 1:
+										//System.out.println("*MC"+superstep+": CNP");
+										setComputation(BGRAP_eb.ComputeNewPartition.class);
+										break;
+								}
+							}
+						}
+						break;
 				}
 				boolean hasConverged = false;
 				if (superstep > sampling_ss_end + 3) {
 					if ((superstep - sampling_ss_end) % 2 == 0) {
-						hasConverged = algorithmConverged(superstep); 
+						hasConverged = algorithmConverged(superstep);
 					}
 				}
-				printStats(superstep); 
-				updateStats(); 
+				printStats(superstep);
+				updateStats();
 
-				// LP iteration = 2 super-steps, LP process start after 3 super-steps 
+				// LP iteration = 2 super-steps, LP process start after 3 super-steps
 				if (hasConverged || superstep >= (maxIterations*2+sampling_ss_end)) {
 					lp_ss_end = (short) superstep;
 					lp_messages_end = getContext().getCounter("Giraph Stats", "Aggregate sent messages").getValue();
@@ -2209,31 +2207,31 @@ public class LPGPartitionner {
 				avgLP = (float) totalLPTime / (totalLPSupersteps / 2);
 			} else {
 				switch (SAMPLING_TYPE) {
-				case "InitializeSampleRD":
-					initializingTime = getSamplingInitTime();
-					samplingTime = getSamplingTime(2);
-					totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 1;
-					avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
-					break;
+					case "InitializeSampleRD":
+						initializingTime = getSamplingInitTime();
+						samplingTime = getSamplingTime(2);
+						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 1;
+						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
+						break;
 
-				case "InitializeSampleHD":
-					initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
-					+ getSamplingInitTime();
-					samplingTime = getSamplingTime(3);
-					totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
-					avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
-					break;
-				case "InitializeSampleGD":
-					initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
-					+ getSamplingInitTime();
-					samplingTime = getSamplingTime(3);
-					totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
-					avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
-					break;
-				default:
-					System.out.println("WARNING: Unrecognized sampling type. Running BGRAP timers.");
-					initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 PotentialVerticesInitializer (ms)").getValue();
-					break;
+					case "InitializeSampleHD":
+						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
+								+ getSamplingInitTime();
+						samplingTime = getSamplingTime(3);
+						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
+						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
+						break;
+					case "InitializeSampleGD":
+						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
+								+ getSamplingInitTime();
+						samplingTime = getSamplingTime(3);
+						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
+						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
+						break;
+					default:
+						System.out.println("WARNING: Unrecognized sampling type. Running BGRAP timers.");
+						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 PotentialVerticesInitializer (ms)").getValue();
+						break;
 				}
 
 				firstLPIteration = getContext().getCounter("Giraph Timers", "Superstep "+(sampling_ss_end+1)+" ComputeFirstPartition (ms)").getValue()
@@ -2320,7 +2318,7 @@ public class LPGPartitionner {
 		protected long getSamplingInitTime() {
 			long SITime=0;
 			for (int i = sampling_ss_end - sampling_ss_extra - 1; i <= sampling_ss_end; i++) {
-				SITime += getContext().getCounter("Giraph Timers", "Superstep " + i + " "+SAMPLING_TYPE+" (ms)").getValue(); 
+				SITime += getContext().getCounter("Giraph Timers", "Superstep " + i + " "+SAMPLING_TYPE+" (ms)").getValue();
 			}
 			return SITime;
 		}
