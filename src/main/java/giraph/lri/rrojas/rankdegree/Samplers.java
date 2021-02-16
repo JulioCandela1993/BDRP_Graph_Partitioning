@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
+import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
 import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.AbstractComputation;
 import org.apache.giraph.graph.Vertex;
@@ -660,7 +661,7 @@ public class Samplers extends LPGPartitionner {
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
 
-					/*
+
 					HashSet<LongWritable> friends = new HashSet<LongWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new LongWritable(edge.getTargetVertexId().get()));
@@ -668,7 +669,7 @@ public class Samplers extends LPGPartitionner {
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
 					for (SamplingMessage msg : messages) {
-						LongArrayListWritable tmp = (LongArrayListWritable)msg.getfriendlist();
+						LongArrayListWritable tmp = (LongArrayListWritable)msg.getFriendlist();
 						for (IntWritable id : tmp) {
 							if (friends.contains(id)) {
 								// Triangle found
@@ -682,7 +683,7 @@ public class Samplers extends LPGPartitionner {
 					MapWritable temp = new  MapWritable();
 					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
 					aggregate(AGG_CL_COEFFICIENT, temp);
-*/
+
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
