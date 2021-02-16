@@ -632,13 +632,14 @@ public class Samplers extends LPGPartitionner {
 						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
 					}
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid
+					/*sendMessageToAllEdges(vertex, new SamplingMessage(vid
 							, -1
-							, friends));
+							, friends));*/
 
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
-
+/*
 
 					HashSet<LongWritable> friends = new HashSet<LongWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
@@ -664,7 +665,7 @@ public class Samplers extends LPGPartitionner {
 					MapWritable temp = new  MapWritable();
 					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
 					aggregate(AGG_CL_COEFFICIENT, temp);
-
+*/
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
