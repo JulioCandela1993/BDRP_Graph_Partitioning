@@ -287,37 +287,22 @@ public class LPGPartitionner {
 		}
 	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	  public static class LongIdFriendsList extends MessageWrapper<IntWritable, 
-	  LongArrayListWritable> { 
-	    @Override
-	    public Class<IntWritable> getVertexIdClass() {
-	      return IntWritable.class;
-	    }
-	    @Override
-	    public Class<LongArrayListWritable> getMessageClass() {
-	      return LongArrayListWritable.class;
-	    }
-	  }
 
 	  public static class SendFriendsList extends SendFriends<IntWritable, 
-	    VertexValue, EdgeValue, LongIdFriendsList> {
+	    VertexValue, EdgeValue, SamplingMessage.LongIdFriendsList> {
 	  }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SS2: CLUSTERING COEFFICIENT //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-	  public static class ClusteringCoefficientComputation extends BasicComputation<IntWritable, VertexValue, EdgeValue, LongIdFriendsList>{
+	  public static class ClusteringCoefficientComputation extends BasicComputation<IntWritable, VertexValue, EdgeValue, SamplingMessage>{
 	  // AbstractComputation<IntWritable, VertexValue, EdgeValue, IntWritable, IntWritable>{ 
 	  // BasicComputation<LongWritable, DoubleWritable, NullWritable, LongIdFriendsList> {
 
 	  // Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages
 	    @Override
-	    public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<LongIdFriendsList> messages)
+	    public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages)
 	            throws IOException {
 
 	      // Add the friends of this vertex in a HashSet so that we can check 
@@ -326,13 +311,13 @@ public class LPGPartitionner {
 	      for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 	        friends.add(new LongWritable(edge.getTargetVertexId().get()));
 	      }
-	      LongIdFriendsList tmp = new LongIdFriendsList();
+	      SamplingMessage.LongIdFriendsList tmp = new SamplingMessage.LongIdFriendsList();
 
 	      int edges = vertex.getNumEdges();
 	      int triangles = 0;
-	      for (LongIdFriendsList msg : messages) {
-	      	tmp = msg;
-	        for (IntWritable id : msg.getMessage()) {
+	      for (SamplingMessage msg : messages) {
+	      	tmp = msg.getfriendlist();
+	        for (IntWritable id : tmp.getMessage()) {
 	          if (friends.contains(id)) {
 	            // Triangle found
 	            triangles++;
@@ -350,8 +335,10 @@ public class LPGPartitionner {
 	      temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
 	      aggregate(AGG_CL_COEFFICIENT, temp);
 	      
-	      // sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get(), -1)); //SEND MESSAGE TO KEEP ALIVE
-	      vertex.voteToHalt();
+	      sendMessageToAllEdges(vertex, new SamplingMessage(vertex.getId().get()
+				  							, -1
+		  									, new SamplingMessage.LongIdFriendsList())); //SEND MESSAGE TO KEEP ALIVE
+	      //vertex.voteToHalt();
 	    }
 	  }
 
@@ -946,7 +933,7 @@ public class LPGPartitionner {
 
 		/**
 		 * Update the partition Stat.
-		 * @param superstep
+		 * @paramsuperstep
 		 */
 		protected void updateStats() {
 			totalMigrations += ((LongWritable) getAggregatedValue(AGGREGATOR_MIGRATIONS)).get();

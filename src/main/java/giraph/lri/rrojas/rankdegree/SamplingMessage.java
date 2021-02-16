@@ -20,11 +20,37 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import giraph.ml.grafos.okapi.common.computation.SendFriends;
+import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
+import giraph.ml.grafos.okapi.common.data.MessageWrapper;
+import giraph.ml.grafos.okapi.spinner.EdgeValue;
+import giraph.ml.grafos.okapi.spinner.VertexValue;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
+
+
+
 
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
+	private LongIdFriendsList friendlist;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SS1: SEND FRIENDS LIST //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
+			LongArrayListWritable> {
+		@Override
+		public Class<IntWritable> getVertexIdClass() {
+			return IntWritable.class;
+		}
+		@Override
+		public Class<LongArrayListWritable> getMessageClass() {
+			return LongArrayListWritable.class;
+		}
+	}
 
 	public SamplingMessage() {
 	}
@@ -32,6 +58,12 @@ public class SamplingMessage implements Writable {
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
+	}
+
+	public SamplingMessage(int sourceId, int partition, LongIdFriendsList friendList) {
+		this.sourceId = sourceId;
+		this.partition = partition;
+		this.friendlist = friendList;
 	}
 
 	public int getSourceId() {
@@ -48,6 +80,14 @@ public class SamplingMessage implements Writable {
 
 	public void setPartition(int partition) {
 		this.partition = partition;
+	}
+
+	public LongIdFriendsList getfriendlist() {
+		return friendlist;
+	}
+
+	public void setfriendlist(LongIdFriendsList friendlist) {
+		this.friendlist = friendlist;
 	}
 
 	@Override
