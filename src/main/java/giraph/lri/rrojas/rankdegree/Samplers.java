@@ -645,13 +645,13 @@ public class Samplers extends LPGPartitionner {
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
 
-					ArrayList<Long> friends =  new ArrayList<Long>();
+					ArrayList<IntWritable> friends =  new ArrayList<IntWritable>();
 
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
-						friends.add(new Long(edge.getTargetVertexId().get()));
+						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 					}
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, (ArrayList<Long>)friends.clone()));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, friends));
 
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
@@ -665,15 +665,12 @@ public class Samplers extends LPGPartitionner {
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
 
-					ArrayList<Long> tmp = new ArrayList<Long>();
 
 					for (SamplingMessage msg : messages) {
-						tmp = msg.getFriendlist();
+						ArrayList<IntWritable> tmp = msg.getFriendlist();
 
-						if (tmp.isEmpty()){
-							System.out.println("Nice");
-						}
 
+					}
 						/*for (Long id : msg.getFriendlist()){
 							triangles++;
 						}
@@ -687,7 +684,7 @@ public class Samplers extends LPGPartitionner {
 									triangles++;
 						}*/
 
-					}
+
 					/*
 					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);

@@ -23,12 +23,13 @@ import java.util.ArrayList;
 
 import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
 import org.apache.giraph.utils.ArrayListWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
 
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private ArrayList<Long> friendlist;
+	private ArrayList<IntWritable> friendlist;
 
 	public SamplingMessage() {
 	}
@@ -36,10 +37,10 @@ public class SamplingMessage implements Writable {
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
-		this.friendlist = new ArrayList<Long>();
+		this.friendlist = new ArrayList<IntWritable>();
 	}
 
-	public SamplingMessage(int sourceId, int partition, ArrayList<Long> friendlist) {
+	public SamplingMessage(int sourceId, int partition, ArrayList<IntWritable> friendlist) {
 		this.sourceId = sourceId;
 		this.partition = partition;
 		this.friendlist = friendlist;
@@ -64,11 +65,11 @@ public class SamplingMessage implements Writable {
 	}
 
 
-	public ArrayList<Long> getFriendlist() {
+	public ArrayList<IntWritable> getFriendlist() {
 		return friendlist;
 	}
 
-	public void setFriendlist(ArrayList<Long> friendlist) {
+	public void setFriendlist(ArrayList<IntWritable> friendlist) {
 		this.friendlist = friendlist;
 	}
 
@@ -76,6 +77,7 @@ public class SamplingMessage implements Writable {
 	public void readFields(DataInput input) throws IOException {
 		sourceId = input.readInt();
 		partition = input.readInt();
+
 	}
 
 	@Override
