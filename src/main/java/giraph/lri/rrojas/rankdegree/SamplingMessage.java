@@ -33,7 +33,7 @@ public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
 	// JC: Add friendList as message
-	private LongIdFriendsList friendlist;
+	private ArrayList<IntWritable> friendlist;
 
 	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
 			LongArrayListWritable> {
@@ -48,17 +48,18 @@ public class SamplingMessage implements Writable {
 	}
 
 	public SamplingMessage() {
+		this.sourceId = -1;
+		this.partition = -1;
+		this.friendlist = new ArrayList<IntWritable>();
 	}
 
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
-		this.friendlist = new LongIdFriendsList();
-		this.friendlist.setSourceId(new IntWritable(-1));
-		this.friendlist.setMessage(new LongArrayListWritable());
+		this.friendlist = new ArrayList<IntWritable>();
 	}
 
-	public SamplingMessage(int sourceId, int numfriends, LongIdFriendsList friendlist) {
+	public SamplingMessage(int sourceId, int numfriends, ArrayList<IntWritable> friendlist) {
 		this.sourceId = sourceId;
 		this.partition = numfriends;
 		this.friendlist = friendlist;
@@ -83,11 +84,11 @@ public class SamplingMessage implements Writable {
 	}
 
 
-	public LongIdFriendsList getFriendlist() {
+	public ArrayList<IntWritable> getFriendlist() {
 		return friendlist;
 	}
 
-	public void setFriendlist(LongIdFriendsList friendlist) {
+	public void setFriendlist(ArrayList<IntWritable> friendlist) {
 		this.friendlist = friendlist;
 	}
 

@@ -627,19 +627,14 @@ public class Samplers extends LPGPartitionner {
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
 
-					LongArrayListWritable friends =  new LongArrayListWritable() ;
+					ArrayList<IntWritable> friends =  new ArrayList<IntWritable>() ;
 					int num_friends = 0;
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 						num_friends++;
 					}
 
-					SamplingMessage.LongIdFriendsList msg = new SamplingMessage.LongIdFriendsList();
-
-					msg.setSourceId(new IntWritable(vid));
-					msg.setMessage(friends);
-
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid,-1,msg));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid,-1,friends));
 
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
@@ -648,9 +643,9 @@ public class Samplers extends LPGPartitionner {
 					System.out.println("MC2: Clustering Coefficient");
 
 
-					HashSet<LongWritable> friends = new HashSet<LongWritable>();
+					HashSet<IntWritable> friends = new HashSet<IntWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
-						friends.add(new LongWritable(edge.getTargetVertexId().get()));
+						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 					}
 
 					int edges = vertex.getNumEdges();
@@ -658,12 +653,12 @@ public class Samplers extends LPGPartitionner {
 
 
 					for (SamplingMessage msg : messages) {
-						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
+						ArrayList<IntWritable>tmp = msg.getFriendlist();
 						if (tmp == null ){
 							System.out.println("No friends");
 						}else{
 							System.out.println("Some friends");
-							for (IntWritable id : tmp.getMessage()) {
+							for (IntWritable id : tmp) {
 								if (friends.contains(id)) {
 									// Triangle found
 									triangles++;
