@@ -650,9 +650,10 @@ public class Samplers extends LPGPartitionner {
 					System.out.println("MC1: SendFriendsList");
 
 					LongArrayListWritable friends =  new LongArrayListWritable() ;
-
+					int num_friends = 0;
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new IntWritable(edge.getTargetVertexId().get()));
+						num_friends++;
 					}
 
 					SamplingMessage.LongIdFriendsList msg = new SamplingMessage.LongIdFriendsList();
@@ -660,7 +661,7 @@ public class Samplers extends LPGPartitionner {
 					msg.setSourceId(new IntWritable(vid));
 					msg.setMessage(friends);
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, msg));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid,num_friends,msg));
 
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
@@ -680,7 +681,7 @@ public class Samplers extends LPGPartitionner {
 
 					for (SamplingMessage msg : messages) {
 						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
-						System.out.println(tmp.getSourceId());
+						//System.out.println(tmp.getSourceId());
 					}
 						/*
 						if (tmp.isEmpty()){
