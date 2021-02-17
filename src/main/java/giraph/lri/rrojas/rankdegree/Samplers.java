@@ -541,6 +541,7 @@ public class Samplers extends LPGPartitionner {
 					int vertex = (((IntWritable) entry.getKey()).get());
 					values.add(c_coef);
 					coefMap.put(new Long(vertex),c_coef);
+					total_coef+=c_coef;
 				}
 
 				Collections.sort(values, Collections.reverseOrder());
@@ -550,29 +551,9 @@ public class Samplers extends LPGPartitionner {
 				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
 
+				getContext().getCounter(PARTITION_COUNTER_GROUP, "Debug Coef")
+						.increment(new Double(total_coef*1000).longValue());
 
-/*
-
-				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
-				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
-
-				//get sigma seeds
-				int sigmaTemp = 0;
-				int sigmaPrev;
-				int nextBucket;
-				for (int i = maxDegree; i >= 0; i--) {
-					IntWritable degreeTemp = new IntWritable(i);
-					if(degreeDist.containsKey(degreeTemp)) {
-						nextBucket = ((IntWritable)degreeDist.get(degreeTemp)).get();
-						sigmaPrev = sigmaTemp;
-						sigmaTemp += nextBucket;
-						if(sigmaTemp >= SIGMA){
-							degreeSigma = i;
-							probSigma = ((float)(SIGMA - sigmaPrev) / nextBucket);
-							break;
-						}
-					}
-				}*/
 			}
 		}
 
