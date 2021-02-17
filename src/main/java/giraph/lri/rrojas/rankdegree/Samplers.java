@@ -668,7 +668,9 @@ public class Samplers extends LPGPartitionner {
 
 					for (SamplingMessage msg : messages) {
 						ArrayList<IntWritable> tmp = msg.getFriendlist();
-
+						for (Writable id : msg.getFriendlist()){
+							System.out.println("Llego aqui");
+						}
 
 					}
 						/*for (Long id : msg.getFriendlist()){
