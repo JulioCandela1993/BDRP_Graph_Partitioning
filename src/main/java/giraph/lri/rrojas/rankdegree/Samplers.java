@@ -659,10 +659,10 @@ public class Samplers extends LPGPartitionner {
 
 					msg.setSourceId(new IntWritable(vid));
 					msg.setMessage(friends);
-/*
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));*/
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));
+
+					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 
 				} else if(superstep == 3){
