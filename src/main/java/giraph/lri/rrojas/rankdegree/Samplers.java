@@ -495,7 +495,7 @@ public class Samplers extends LPGPartitionner {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//SS2: INITIALIZE SAMPLE CC : clustering coefficient ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static class InitializeSampleCC extends AbstractComputation<IntWritable, VertexValue, EdgeValue, SamplingMessage, SamplingMessage> {
+	public static class InitializeSampleCC extends AbstractComputation<IntWritable, VertexValue, EdgeValue, SamplingMessage_2, SamplingMessage_2> {
 		//AE:
 		protected int numberOfPartitions;
 		protected boolean directedGraph;
@@ -559,7 +559,7 @@ public class Samplers extends LPGPartitionner {
 
 
 		@Override
-		public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages) throws IOException {
+		public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage_2> messages) throws IOException {
 			int sampleSize = ((IntWritable) getAggregatedValue(AGG_SAMPLE)).get();
 			int superstep = (int) getSuperstep();
 			int vid = vertex.getId().get();
@@ -574,7 +574,7 @@ public class Samplers extends LPGPartitionner {
 				int potentiallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SS)).get();
 				int actuallySampled = ((IntWritable) getAggregatedValue(AGG_SAMPLE_SSR)).get();
 				if(potentiallySampled==actuallySampled && potentiallySampled!=0) {
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+					sendMessageToAllEdges(vertex, new SamplingMessage_2(vid, -1, new ArrayList<IntWritable>()));
 					System.out.println("*SS"+superstep+":Algorithm Reactivation");
 				}
 			}
@@ -601,7 +601,7 @@ public class Samplers extends LPGPartitionner {
 						aggregate(AGG_INITIALIZED_VERTICES, new IntWritable(1));
 						aggregate(AGG_FIRST_LOADED_EDGES, new LongWritable(numOutEdges));
 
-						SamplingMessage message = new SamplingMessage(vertex.getId().get(), partition);
+						SamplingMessage_2 message = new SamplingMessage_2(vertex.getId().get(), partition, new ArrayList<IntWritable>());
 						sendMessageToAllEdges(vertex, message);
 					}
 					NEEDS_SAMPLE = false;
@@ -634,7 +634,7 @@ public class Samplers extends LPGPartitionner {
 						num_friends++;
 					}
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid,-1,friends));
+					sendMessageToAllEdges(vertex, new SamplingMessage_2(vid,-1,friends));
 
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
@@ -652,7 +652,7 @@ public class Samplers extends LPGPartitionner {
 					int triangles = 0;
 
 
-					for (SamplingMessage msg : messages) {
+					for (SamplingMessage_2 msg : messages) {
 						ArrayList<IntWritable>tmp = msg.getFriendlist();
 						if (tmp == null ){
 							System.out.println("No friends");
@@ -680,7 +680,7 @@ public class Samplers extends LPGPartitionner {
 					/*int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
 					*/
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+					sendMessageToAllEdges(vertex, new SamplingMessage_2(vid, -1, new ArrayList<IntWritable>())); //SEND MESSAGE TO KEEP ALIVE
 				} else if(superstep == 4 || sampleSize == 0){
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 
@@ -690,40 +690,24 @@ public class Samplers extends LPGPartitionner {
 					if(minCC < coef_value){
 						vertex.getValue().setCurrentPartition((short)-2);
 						vertex.getValue().setNewPartition(newPartition());
-						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+						sendMessageToAllEdges(vertex, new SamplingMessage_2(vid, -1, new ArrayList<IntWritable>()));
 						aggregate(AGG_SAMPLE, new IntWritable(1));
 						//System.out.println("*isSeed,"+vid);
 					}
-/*
-					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					if(vertexDegree > degreeSigma){
-						vertex.getValue().setCurrentPartition((short)-2);
-						vertex.getValue().setNewPartition(newPartition());
-						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
-						aggregate(AGG_SAMPLE, new IntWritable(1));
-						//System.out.println("*SS"+superstep+":isSampled-"+vid);
-					} else if (vertexDegree == degreeSigma){
-						if(r.nextFloat() < probSigma){
-							vertex.getValue().setCurrentPartition((short)-2);
-							vertex.getValue().setNewPartition(newPartition());
-							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
-							aggregate(AGG_SAMPLE, new IntWritable(1));
-							//System.out.println("*SS"+superstep+":isSampled-"+vid);
-						}
-					}*/
+
 				}
 
 				//CORE ALGORITHM
 				else {
 					//READ MESSAGES
 					//System.out.println("*SS"+superstep+":Messages-"+vid);
-					ArrayList<SamplingMessage> answerNeighbor = new ArrayList<SamplingMessage>();
-					ArrayList<SamplingMessage> rankedNeighbors = new ArrayList<SamplingMessage>();
+					ArrayList<SamplingMessage_2> answerNeighbor = new ArrayList<SamplingMessage_2>();
+					ArrayList<SamplingMessage_2> rankedNeighbors = new ArrayList<SamplingMessage_2>();
 					boolean getsSampled = false;
-					forMessage : for (SamplingMessage m : messages) {
+					forMessage : for (SamplingMessage_2 m : messages) {
 						switch(m.getPartition()){
 							case -1: //Request vertex degree
-								answerNeighbor.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+								answerNeighbor.add(new SamplingMessage_2(m.getSourceId(),m.getPartition(),new ArrayList<IntWritable>()));
 								break;
 
 							case -2: //Notify vertex has been sampled
@@ -738,9 +722,9 @@ public class Samplers extends LPGPartitionner {
 
 							default: //Rank highest degree neighbors
 								if(rankedNeighbors.isEmpty()||rankedNeighbors.size()<TAU)
-									rankedNeighbors.add(new SamplingMessage(m.getSourceId(),m.getPartition()));
+									rankedNeighbors.add(new SamplingMessage_2(m.getSourceId(),m.getPartition(),new ArrayList<IntWritable>()));
 								else
-									rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage(m.getSourceId(),m.getPartition()));
+									rankedNeighbors = replaceMin(rankedNeighbors, new SamplingMessage_2(m.getSourceId(),m.getPartition(),new ArrayList<IntWritable>()));
 								break;
 						}
 					}
@@ -748,7 +732,7 @@ public class Samplers extends LPGPartitionner {
 					//ACTIONS ACCORDING TO CURRENT STATE AND MESSAGES
 					if(partition == -2){
 						if(!rankedNeighbors.isEmpty()){
-							SamplingMessage nm = new SamplingMessage(vid, -2);
+							SamplingMessage_2 nm = new SamplingMessage_2(vid, -2,new ArrayList<IntWritable>());
 							for(int rn = 0; rn < rankedNeighbors.size(); rn++) {
 								aggregate(AGG_SAMPLE_SS, new IntWritable(1));
 								sendMessage(new IntWritable(rankedNeighbors.get(rn).getSourceId()), nm);
@@ -758,7 +742,7 @@ public class Samplers extends LPGPartitionner {
 						if(getsSampled){
 							vertex.getValue().setCurrentPartition((short)-2);
 							vertex.getValue().setNewPartition(newPartition());
-							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+							sendMessageToAllEdges(vertex, new SamplingMessage_2(vid, -1,new ArrayList<IntWritable>()));
 							aggregate(AGG_SAMPLE, new IntWritable(1));
 							aggregate(vertexCountAggregatorNamesSampling[vertex.getValue().getNewPartition()], new LongWritable(1)); // Hung
 							aggregate(AGG_SAMPLE_SSR, new IntWritable(-1)); // we deduct the ones that got sampled to avoid reactivation
@@ -766,7 +750,7 @@ public class Samplers extends LPGPartitionner {
 						} else {
 							if(!answerNeighbor.isEmpty()){
 								int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-								SamplingMessage nm = new SamplingMessage(vid, vertexDegree);
+								SamplingMessage_2 nm = new SamplingMessage_2(vid, vertexDegree,new ArrayList<IntWritable>());
 								for(int an = 0; an < answerNeighbor.size(); an++) {
 									sendMessage(new IntWritable(answerNeighbor.get(an).getSourceId()), nm);
 								}
@@ -777,7 +761,7 @@ public class Samplers extends LPGPartitionner {
 			}
 		}
 
-		protected ArrayList<SamplingMessage> replaceMin(ArrayList<SamplingMessage> list, SamplingMessage message){
+		protected ArrayList<SamplingMessage_2> replaceMin(ArrayList<SamplingMessage_2> list, SamplingMessage_2 message){
 			int minValue = Integer.MAX_VALUE;
 			int minIndex = Integer.MAX_VALUE;
 			for (int i = 0; i < list.size() ; i++) {
