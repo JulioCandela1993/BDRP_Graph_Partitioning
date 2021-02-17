@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
+import giraph.ml.grafos.okapi.common.data.MessageWrapper;
 import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.AbstractComputation;
 import org.apache.giraph.graph.Vertex;
@@ -489,6 +490,8 @@ public class Samplers extends LPGPartitionner {
 		}
 	}
 
+
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//SS2: INITIALIZE SAMPLE CC : clustering coefficient ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -576,6 +579,7 @@ public class Samplers extends LPGPartitionner {
 			}
 		}
 
+
 		@Override
 		public void compute(Vertex<IntWritable, VertexValue, EdgeValue> vertex, Iterable<SamplingMessage> messages) throws IOException {
 			int sampleSize = ((IntWritable) getAggregatedValue(AGG_SAMPLE)).get();
@@ -645,13 +649,23 @@ public class Samplers extends LPGPartitionner {
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
 
-					ArrayList<IntWritable> friends =  new ArrayList<IntWritable>();
+					ArrayListWritable friends =  new ArrayListWritable() {
+						@Override
+						public void setClass() {
+							setClass(vertex.getId().getClass());
+						}
+					};
 
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
-						friends.add(new IntWritable(edge.getTargetVertexId().get()));
+						friends.add(WritableUtils.clone(edge.getTargetVertexId(), getConf()));
 					}
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, friends));
+					SamplingMessage.LongIdFriendsList msg = new SamplingMessage.LongIdFriendsList();
+
+					msg.setSourceId(vertex.getId());
+					msg.setMessage((LongArrayListWritable)friends);
+
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));
 
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
@@ -667,10 +681,7 @@ public class Samplers extends LPGPartitionner {
 
 
 					for (SamplingMessage msg : messages) {
-						ArrayList<IntWritable> tmp = msg.getFriendlist();
-						for (Writable id : msg.getFriendlist()){
-							System.out.println("Llego aqui");
-						}
+						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
 
 					}
 						/*for (Long id : msg.getFriendlist()){

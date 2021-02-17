@@ -22,14 +22,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import giraph.ml.grafos.okapi.common.data.LongArrayListWritable;
+import giraph.ml.grafos.okapi.common.data.MessageWrapper;
 import org.apache.giraph.utils.ArrayListWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
 
+
+
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
-	private ArrayList<IntWritable> friendlist;
+	private LongIdFriendsList friendlist;
+
+	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
+			LongArrayListWritable> {
+		@Override
+		public Class<IntWritable> getVertexIdClass() {
+			return IntWritable.class;
+		}
+		@Override
+		public Class<LongArrayListWritable> getMessageClass() {
+			return LongArrayListWritable.class;
+		}
+	}
 
 	public SamplingMessage() {
 	}
@@ -37,10 +52,10 @@ public class SamplingMessage implements Writable {
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
-		this.friendlist = new ArrayList<IntWritable>();
+		//this.friendlist = new LongIdFriendsList();
 	}
 
-	public SamplingMessage(int sourceId, int partition, ArrayList<IntWritable> friendlist) {
+	public SamplingMessage(int sourceId, int partition, LongIdFriendsList friendlist) {
 		this.sourceId = sourceId;
 		this.partition = partition;
 		this.friendlist = friendlist;
@@ -65,11 +80,11 @@ public class SamplingMessage implements Writable {
 	}
 
 
-	public ArrayList<IntWritable> getFriendlist() {
+	public LongIdFriendsList getFriendlist() {
 		return friendlist;
 	}
 
-	public void setFriendlist(ArrayList<IntWritable> friendlist) {
+	public void setFriendlist(LongIdFriendsList friendlist) {
 		this.friendlist = friendlist;
 	}
 
