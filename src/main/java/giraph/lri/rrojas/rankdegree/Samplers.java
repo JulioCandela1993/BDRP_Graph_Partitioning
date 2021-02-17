@@ -551,7 +551,7 @@ public class Samplers extends LPGPartitionner {
 				minCC = values.get(sigma_vertex);
 
 
-
+/*
 
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
@@ -572,7 +572,7 @@ public class Samplers extends LPGPartitionner {
 							break;
 						}
 					}
-				}
+				}*/
 			}
 		}
 
@@ -701,10 +701,10 @@ public class Samplers extends LPGPartitionner {
 					coeffDictionary(vid, clusteringCoefficient);
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
-					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
+					/*int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
+					*/
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
-
 				} else if(superstep == 4 || sampleSize == 0){
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 

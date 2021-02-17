@@ -1819,6 +1819,13 @@ public class LPGPartitionner {
 						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
 						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
 						break;
+					case "InitializeSampleCC":
+						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
+								+ getSamplingInitTime();
+						samplingTime = getSamplingTime(4);
+						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
+						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
+						break;
 					case "InitializeSampleGD":
 						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
 								+ getSamplingInitTime();
