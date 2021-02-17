@@ -52,7 +52,7 @@ public class SamplingMessage implements Writable {
 	public SamplingMessage(int sourceId, int partition) {
 		this.sourceId = sourceId;
 		this.partition = partition;
-		//this.friendlist = new LongIdFriendsList();
+		this.friendlist = new LongIdFriendsList();
 	}
 
 	public SamplingMessage(int sourceId, int partition, LongIdFriendsList friendlist) {
