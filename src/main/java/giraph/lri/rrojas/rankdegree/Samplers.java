@@ -684,7 +684,13 @@ public class Samplers extends LPGPartitionner {
 						if (tmp == null ){
 							System.out.println("No friends");
 						}else{
-							System.out.println(tmp.getSourceId());
+							System.out.println("Some friends");
+							for (IntWritable id : tmp.getMessage()) {
+								if (friends.contains(id)) {
+									// Triangle found
+									triangles++;
+								}
+							}
 						}
 
 
