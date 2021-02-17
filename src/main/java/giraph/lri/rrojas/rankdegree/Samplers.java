@@ -695,26 +695,15 @@ public class Samplers extends LPGPartitionner {
 
 
 					}
-						/*
-						if (tmp.isEmpty()){
-
-						}
-						else{
-							System.out.println(tmp.get(0));
-						}
-						for (IntWritable id : msg.getFriendlist()){
-									triangles++;
-						}*/
 
 
-					/*
 					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 					MapWritable temp = new  MapWritable();
 					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
 					aggregate(AGG_CL_COEFFICIENT, temp);
-					*/
+					
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
