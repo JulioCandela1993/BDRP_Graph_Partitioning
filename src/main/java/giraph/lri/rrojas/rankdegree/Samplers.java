@@ -530,7 +530,7 @@ public class Samplers extends LPGPartitionner {
 
 			//RR:
 			if(superstep == 4){
-
+/*
 				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 				List<Double> values = new  ArrayList<Double>();
 
@@ -550,7 +550,7 @@ public class Samplers extends LPGPartitionner {
 				sigma_vertex = (int)(totalVertexNumber*SIGMA);
 
 				System.out.println(sigma_vertex);
-
+*/
 				//minCC = values.get(sigma_vertex);
 
 
@@ -670,7 +670,7 @@ public class Samplers extends LPGPartitionner {
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
 
-
+/*
 					HashSet<LongWritable> friends = new HashSet<LongWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new LongWritable(edge.getTargetVertexId().get()));
@@ -683,7 +683,7 @@ public class Samplers extends LPGPartitionner {
 					for (SamplingMessage msg : messages) {
 						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
 
-					}
+					}*/
 						/*for (Long id : msg.getFriendlist()){
 							triangles++;
 						}
