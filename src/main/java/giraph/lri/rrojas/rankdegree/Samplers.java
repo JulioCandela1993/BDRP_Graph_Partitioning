@@ -649,7 +649,7 @@ public class Samplers extends LPGPartitionner {
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
 
-					/*ArrayListWritable friends =  new ArrayListWritable() {
+					ArrayListWritable friends =  new ArrayListWritable() {
 						@Override
 						public void setClass() {
 							setClass(vertex.getId().getClass());
@@ -662,7 +662,7 @@ public class Samplers extends LPGPartitionner {
 
 					SamplingMessage.LongIdFriendsList msg = new SamplingMessage.LongIdFriendsList();
 
-					msg.setSourceId(vertex.getId());
+					/*msg.setSourceId(vertex.getId());
 					msg.setMessage((LongArrayListWritable)friends);
 
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));*/
