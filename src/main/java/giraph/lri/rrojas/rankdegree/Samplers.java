@@ -680,11 +680,11 @@ public class Samplers extends LPGPartitionner {
 
 					for (SamplingMessage msg : messages) {
 						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
-
-					}
-						/*for (Long id : msg.getFriendlist()){
+						for (IntWritable id : msg.getFriendlist().getMessage()){
 							triangles++;
 						}
+					}
+						/*
 						if (tmp.isEmpty()){
 
 						}
