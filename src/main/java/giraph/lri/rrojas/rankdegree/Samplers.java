@@ -547,7 +547,7 @@ public class Samplers extends LPGPartitionner {
 
 
 
-				sigma_vertex = (int)(totalVertexNumber*SIGMA);
+				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
 
 
