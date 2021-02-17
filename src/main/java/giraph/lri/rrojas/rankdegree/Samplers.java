@@ -654,11 +654,11 @@ public class Samplers extends LPGPartitionner {
 
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
-					int friendsnum = 0;
+					//int friendsnum = 0;
 
 					for (SamplingMessage msg : messages) {
 						ArrayList<IntWritable>tmp = msg.getFriendlist();
-						friendsnum += msg.getPartition();
+						//friendsnum += msg.getPartition();
 						if (tmp == null ){
 							System.out.println("No friends");
 						}else{
@@ -679,7 +679,7 @@ public class Samplers extends LPGPartitionner {
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
-					coeffDictionary(vid, friendsnum);//clusteringCoefficient);
+					coeffDictionary(vid, clusteringCoefficient); //friendsnum);
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					/*int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
