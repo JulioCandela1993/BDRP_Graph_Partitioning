@@ -266,7 +266,7 @@ public class LPGPartitionner {
 	protected static MapWritable degreeDist = new MapWritable();
 	protected static MapWritable clustCoef = new MapWritable();
 	protected static HashMap<Integer,Float> degreeProb = new HashMap<Integer,Float>();
-	protected static HashMap<Long,Double> coefMap = new HashMap<Long,Double>();
+	// protected static HashMap<Long,Double> coefMap = new HashMap<Long,Double>();
 
 	protected static float adjustingFactorSeed=0.0f;
 	protected static float relaxingFactorPropagation=0.0f;
@@ -1595,6 +1595,9 @@ public class LPGPartitionner {
 			registerPersistentAggregator(AGG_UPPER_TOTAL_COMM_VOLUME, LongSumAggregator.class);
 			registerAggregator(AGG_EDGE_CUTS, LongSumAggregator.class);
 
+			// Added by Hung
+			registerPersistentAggregator(AGG_CL_COEFFICIENT, HashMapAggregator.class);
+
 			//RR:
 			SAMPLING_TYPE = getContext().getConfiguration().get(SAMPLING_TYPE_HANDLE, DEFAULT_SAMPLING_TYPE);
 			SAVE_DD = getContext().getConfiguration().get(SAVE_DD_HANDLE, "false");
@@ -1824,7 +1827,7 @@ public class LPGPartitionner {
 					case "InitializeSampleCC":
 						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
 								+ getSamplingInitTime();
-						samplingTime = getSamplingTime(4);
+						samplingTime = getSamplingTime(3);
 						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
 						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
 						break;
@@ -2226,6 +2229,13 @@ public class LPGPartitionner {
 						break;
 
 					case "InitializeSampleHD":
+						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
+								+ getSamplingInitTime();
+						samplingTime = getSamplingTime(3);
+						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
+						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
+						break;
+					case "InitializeSampleCC":
 						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
 								+ getSamplingInitTime();
 						samplingTime = getSamplingTime(3);

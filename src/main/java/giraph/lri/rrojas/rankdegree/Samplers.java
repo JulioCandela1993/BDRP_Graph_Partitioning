@@ -534,6 +534,9 @@ public class Samplers extends LPGPartitionner {
 
 				// JC:  GET LIMITS OF COEFICIENT FOR SIGMA %
 				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
+
+				
+
 				List<Double> values = new  ArrayList<Double>();
 
 				double total_coef = 0;
@@ -541,14 +544,16 @@ public class Samplers extends LPGPartitionner {
 					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
 					double c_coef = ((DoubleWritable) entry.getValue()).get();
 					int vertex = (((IntWritable) entry.getKey()).get());
+					
 					values.add(c_coef);
-					coefMap.put(new Long(vertex),c_coef);
+					// coefMap.put(new Long(vertex),c_coef);
 					total_coef+=c_coef;
 				}
 
 				Collections.sort(values, Collections.reverseOrder());
 
 
+				System.out.println("total_coef: " + total_coef);
 
 				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
@@ -675,7 +680,14 @@ public class Samplers extends LPGPartitionner {
 					}
 
 
-					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
+					double clusteringCoefficient = 0;
+					if (edges>1){
+						// avoid dividing by 0
+						clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
+					}
+					
+
+					System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
@@ -686,13 +698,18 @@ public class Samplers extends LPGPartitionner {
 					addDegreeDist(vertexDegree);
 					*/
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+
 				} else if(superstep == 4 || sampleSize == 0){
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					// JC:  SELECT INITIAL SEED BASED ON CC
-					double coef_value = 0.0f;
+					DoubleWritable coef_value = new DoubleWritable(0.0);
+
+					MapWritable coefMap = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
+
 					if(coefMap.containsKey(vid))
-						coef_value = coefMap.get(vid);
-					if(minCC < coef_value){
+						coef_value = (DoubleWritable) coefMap.get(vid);
+
+					if(coef_value.get() >= minCC){
 						vertex.getValue().setCurrentPartition((short)-2);
 						vertex.getValue().setNewPartition(newPartition());
 						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));

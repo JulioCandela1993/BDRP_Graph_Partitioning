@@ -97,13 +97,28 @@ public class SamplingMessage implements Writable {
 		sourceId = input.readInt();
 		partition = input.readInt();
 
+		//Read FriendList
+		friendlist.clear();
+	    int length = input.readInt();
+	    for (int x = 0; x < length; x++) {
+	        IntWritable tmp = new IntWritable();
+	        tmp.readFields(input);
+	        friendlist.add(tmp);
+	    }
 	}
 
 	@Override
 	public void write(DataOutput output) throws IOException {
 		output.writeInt(sourceId);
 		output.writeInt(partition);
+
+		// Write FriendList
+		output.writeInt(friendlist.size());
+	    for (IntWritable tmp : friendlist) {
+	        tmp.write(output);
+	    }
 	}
+
 
 	@Override
 	public boolean equals(Object o) {
