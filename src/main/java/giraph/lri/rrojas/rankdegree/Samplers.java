@@ -651,7 +651,7 @@ public class Samplers extends LPGPartitionner {
 						friends.add(new Long(edge.getTargetVertexId().get()));
 					}
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, friends));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, (ArrayList<Long>)friends.clone()));
 
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
@@ -668,7 +668,8 @@ public class Samplers extends LPGPartitionner {
 					ArrayList<Long> tmp = new ArrayList<Long>();
 
 					for (SamplingMessage msg : messages) {
-						tmp = (ArrayList<Long>)msg.getFriendlist();
+						tmp = msg.getFriendlist();
+
 						/*for (Long id : msg.getFriendlist()){
 							triangles++;
 						}
