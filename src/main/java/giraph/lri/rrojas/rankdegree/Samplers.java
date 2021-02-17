@@ -681,7 +681,11 @@ public class Samplers extends LPGPartitionner {
 
 					for (SamplingMessage msg : messages) {
 						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
-						//System.out.println(tmp.getSourceId());
+						if (msg.getPartition() == 0 ){
+							System.out.println("No friends");
+						}
+
+						System.out.println(tmp.getSourceId());
 					}
 						/*
 						if (tmp.isEmpty()){
