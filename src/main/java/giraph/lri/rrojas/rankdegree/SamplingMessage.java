@@ -32,6 +32,7 @@ import org.apache.hadoop.io.Writable;
 public class SamplingMessage implements Writable {
 	private int sourceId;
 	private int partition;
+	// JC: Add friendList as message
 	private LongIdFriendsList friendlist;
 
 	public static class LongIdFriendsList extends MessageWrapper<IntWritable,
@@ -55,9 +56,9 @@ public class SamplingMessage implements Writable {
 		this.friendlist = new LongIdFriendsList();
 	}
 
-	public SamplingMessage(int sourceId, int partition, LongIdFriendsList friendlist) {
+	public SamplingMessage(int sourceId, LongIdFriendsList friendlist) {
 		this.sourceId = sourceId;
-		this.partition = partition;
+		this.partition = -1;
 		this.friendlist = friendlist;
 	}
 

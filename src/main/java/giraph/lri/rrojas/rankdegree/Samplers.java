@@ -660,7 +660,7 @@ public class Samplers extends LPGPartitionner {
 					msg.setSourceId(new IntWritable(vid));
 					msg.setMessage(friends);
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, msg));
 
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
@@ -679,10 +679,10 @@ public class Samplers extends LPGPartitionner {
 
 
 					for (SamplingMessage msg : messages) {
-						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
-						for (IntWritable id : msg.getFriendlist().getMessage()){
-							triangles++;
-						}
+						LongArrayListWritable tmp = msg.getFriendlist().getMessage();
+						//for (IntWritable id : msg.getFriendlist().getMessage()){
+						//	triangles++;
+						//}
 					}
 						/*
 						if (tmp.isEmpty()){
