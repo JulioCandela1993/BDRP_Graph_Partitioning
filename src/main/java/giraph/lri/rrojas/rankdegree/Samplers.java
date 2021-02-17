@@ -670,8 +670,8 @@ public class Samplers extends LPGPartitionner {
 					for (SamplingMessage msg : messages) {
 						tmp = msg.getFriendlist();
 
-						if (tmp.size()>0){
-							System.out.println(tmp.size());
+						if (tmp.isEmpty()){
+							System.out.println("Nice");
 						}
 
 						/*for (Long id : msg.getFriendlist()){
