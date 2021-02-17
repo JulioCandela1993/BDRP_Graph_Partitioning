@@ -679,7 +679,7 @@ public class Samplers extends LPGPartitionner {
 
 
 					for (SamplingMessage msg : messages) {
-						//LongArrayListWritable tmp = msg.getFriendlist().getMessage();
+						SamplingMessage.LongIdFriendsList tmp = msg.getFriendlist();
 						/*for (IntWritable id : msg.getFriendlist().getMessage()){
 							triangles++;
 						}*/
