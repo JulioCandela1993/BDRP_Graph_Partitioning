@@ -530,7 +530,7 @@ public class Samplers extends LPGPartitionner {
 
 			//RR:
 			if(superstep == 4){
-/*
+
 				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 				List<Double> values = new  ArrayList<Double>();
 
@@ -550,7 +550,7 @@ public class Samplers extends LPGPartitionner {
 				sigma_vertex = (int)(totalVertexNumber*SIGMA);
 
 				System.out.println(sigma_vertex);
-*/
+
 				//minCC = values.get(sigma_vertex);
 
 
@@ -661,7 +661,7 @@ public class Samplers extends LPGPartitionner {
 					msg.setSourceId(new IntWritable(vid));
 					msg.setMessage(friends);
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid,num_friends,msg));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid,-1,msg));
 
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
@@ -700,10 +700,8 @@ public class Samplers extends LPGPartitionner {
 					double clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
-					MapWritable temp = new  MapWritable();
-					temp.put(new IntWritable(vid), new DoubleWritable(clusteringCoefficient));
-					aggregate(AGG_CL_COEFFICIENT, temp);
-					
+
+					coeffDictionary(vid, clusteringCoefficient);
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
@@ -838,6 +836,12 @@ public class Samplers extends LPGPartitionner {
 			MapWritable temp = new  MapWritable();
 			temp.put(new IntWritable(degree), new IntWritable(1));
 			aggregate(AGG_DEGREE_DIST, temp);
+		}
+
+		protected synchronized void coeffDictionary(int vertexid , double coefvalue) {
+			MapWritable temp = new  MapWritable();
+			temp.put(new IntWritable(vertexid), new DoubleWritable(coefvalue));
+			aggregate(AGG_CL_COEFFICIENT, temp);
 		}
 	}
 
@@ -1070,6 +1074,8 @@ public class Samplers extends LPGPartitionner {
 			temp.put(new IntWritable(degree), new IntWritable(1));
 			aggregate(AGG_DEGREE_DIST, temp);
 		}
+
+
 
 	}
 
