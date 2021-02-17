@@ -548,10 +548,7 @@ public class Samplers extends LPGPartitionner {
 
 
 				sigma_vertex = (int)(totalVertexNumber*SIGMA);
-
-				System.out.println(sigma_vertex);
-
-				//minCC = values.get(sigma_vertex);
+				minCC = values.get(sigma_vertex);
 
 
 
@@ -710,6 +707,18 @@ public class Samplers extends LPGPartitionner {
 
 				} else if(superstep == 4 || sampleSize == 0){
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
+
+					double coef_value = 0.0f;
+					if(coefMap.containsKey(vid))
+						coef_value = coefMap.get(vid);
+					if(minCC < coef_value){
+						vertex.getValue().setCurrentPartition((short)-2);
+						vertex.getValue().setNewPartition(newPartition());
+						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+						aggregate(AGG_SAMPLE, new IntWritable(1));
+						//System.out.println("*isSeed,"+vid);
+					}
+/*
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					if(vertexDegree > degreeSigma){
 						vertex.getValue().setCurrentPartition((short)-2);
@@ -725,7 +734,7 @@ public class Samplers extends LPGPartitionner {
 							aggregate(AGG_SAMPLE, new IntWritable(1));
 							//System.out.println("*SS"+superstep+":isSampled-"+vid);
 						}
-					}
+					}*/
 				}
 
 				//CORE ALGORITHM
