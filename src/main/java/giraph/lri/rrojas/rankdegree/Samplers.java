@@ -649,7 +649,7 @@ public class Samplers extends LPGPartitionner {
 				if(superstep == 2) {
 					System.out.println("MC1: SendFriendsList");
 
-					ArrayListWritable friends =  new ArrayListWritable() {
+					/*ArrayListWritable friends =  new ArrayListWritable() {
 						@Override
 						public void setClass() {
 							setClass(vertex.getId().getClass());
@@ -665,7 +665,10 @@ public class Samplers extends LPGPartitionner {
 					msg.setSourceId(vertex.getId());
 					msg.setMessage((LongArrayListWritable)friends);
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));*/
+
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+
 
 				} else if(superstep == 3){
 					System.out.println("MC2: Clustering Coefficient");
