@@ -663,7 +663,7 @@ public class Samplers extends LPGPartitionner {
 					SamplingMessage.LongIdFriendsList msg = new SamplingMessage.LongIdFriendsList();
 
 					msg.setSourceId(vertex.getId());
-					msg.setMessage((LongArrayListWritable)friends);
+					//msg.setMessage((LongArrayListWritable)friends);
 /*
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1, msg));*/
 
