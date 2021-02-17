@@ -538,9 +538,9 @@ public class Samplers extends LPGPartitionner {
 				for (Entry<Writable, Writable> entry : clustCoef.entrySet()) {
 					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
 					double c_coef = ((DoubleWritable) entry.getValue()).get();
-					Long vertex = ((LongWritable) entry.getKey()).get();
+					int vertex = (((IntWritable) entry.getKey()).get());
 					values.add(c_coef);
-					coefMap.put(vertex,c_coef);
+					coefMap.put(new Long(vertex),c_coef);
 				}
 
 				Collections.sort(values, Collections.reverseOrder());
