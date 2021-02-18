@@ -665,16 +665,16 @@ public class Samplers extends LPGPartitionner {
 
 					// JC:  GET FRIENDS OF VERTEX AND SEND THE LIST IN THE MESSAGE
 
-					/*final ArrayList<IntWritable> friends =  new ArrayList<IntWritable>() ;
+					final ArrayList<IntWritable> friends =  new ArrayList<IntWritable>() ;
 					int num_friends = 0;
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 						num_friends++;
-					}*/
+					}
 
-					//sendMessageToAllEdges(vertex, new SamplingMessage(vid,num_friends,friends));
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid,num_friends,friends));
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 
 				} else if(superstep == 3){
