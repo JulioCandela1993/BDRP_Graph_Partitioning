@@ -724,7 +724,7 @@ public class Samplers extends LPGPartitionner {
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
-					//coeffDictionary(vid, clusteringCoefficient); //friendsnum);*/
+					coeffDictionary(vid, clusteringCoefficient); //friendsnum);*/
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					//int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
