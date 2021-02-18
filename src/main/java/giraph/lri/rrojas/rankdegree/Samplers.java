@@ -582,7 +582,6 @@ public class Samplers extends LPGPartitionner {
 					System.out.println("COEF: " + c.coef);
 					if (counter>SIGMA) {
 						minCC = c.coef;
-
 						break;
 					}
 				}
@@ -762,10 +761,11 @@ public class Samplers extends LPGPartitionner {
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 				} else if(superstep == 4 || sampleSize == 0){
-					short coefvalue = vertex.getValue().getCurrentPartition();
+					int coefvalue = vertex.getValue().getCurrentPartition();
 					if(superstep == 4)
 						vertex.getValue().setCurrentPartition((short)-1);
-					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
+
+					/*int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					if(vertexDegree > degreeSigma){
 						vertex.getValue().setCurrentPartition((short)-2);
 						vertex.getValue().setNewPartition(newPartition());
@@ -780,25 +780,25 @@ public class Samplers extends LPGPartitionner {
 							aggregate(AGG_SAMPLE, new IntWritable(1));
 							//System.out.println("*SS"+superstep+":isSampled-"+vid);
 						}
-					}
+					}*/
 
 
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					// JC:  SELECT INITIAL SEED BASED ON CC
-					/*DoubleWritable coef_value = new DoubleWritable(0.0);
+					//DoubleWritable coef_value = new DoubleWritable(0.0);
 
-					MapWritable coefMap = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
+					//MapWritable coefMap = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 
-					if(coefMap.containsKey(vid))
-						coef_value = (DoubleWritable) coefMap.get(vid);
+					//if(coefMap.containsKey(vid))
+					//	coef_value = (DoubleWritable) coefMap.get(vid);
 
-					if(coef_value.get() >= minCC){
+					if(coefvalue >= minCC){
 						vertex.getValue().setCurrentPartition((short)-2);
 						vertex.getValue().setNewPartition(newPartition());
 						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 						aggregate(AGG_SAMPLE, new IntWritable(1));
 						//System.out.println("*isSeed,"+vid);
-					} */
+					}
 
 				}
 
