@@ -568,6 +568,28 @@ public class Samplers extends LPGPartitionner {
 
 				System.out.println("threshold: " + minCC);
 
+
+				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
+				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
+
+				//get sigma seeds
+				int sigmaTemp = 0;
+				int sigmaPrev;
+				int nextBucket;
+				for (int i = maxDegree; i >= 0; i--) {
+					IntWritable degreeTemp = new IntWritable(i);
+					if(degreeDist.containsKey(degreeTemp)) {
+						nextBucket = ((IntWritable)degreeDist.get(degreeTemp)).get();
+						sigmaPrev = sigmaTemp;
+						sigmaTemp += nextBucket;
+						if(sigmaTemp >= SIGMA){
+							degreeSigma = i;
+							probSigma = ((float)(SIGMA - sigmaPrev) / nextBucket);
+							break;
+						}
+					}
+				}
+
 			}
 		}
 
@@ -707,12 +729,35 @@ public class Samplers extends LPGPartitionner {
 					/*int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
 					*/
+
+					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
+					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+
 				} else if(superstep == 4 || sampleSize == 0){
+
+					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
+					if(vertexDegree > degreeSigma){
+						vertex.getValue().setCurrentPartition((short)-2);
+						vertex.getValue().setNewPartition(newPartition());
+						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+						aggregate(AGG_SAMPLE, new IntWritable(1));
+						//System.out.println("*SS"+superstep+":isSampled-"+vid);
+					} else if (vertexDegree == degreeSigma){
+						if(r.nextFloat() < probSigma){
+							vertex.getValue().setCurrentPartition((short)-2);
+							vertex.getValue().setNewPartition(newPartition());
+							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+							aggregate(AGG_SAMPLE, new IntWritable(1));
+							//System.out.println("*SS"+superstep+":isSampled-"+vid);
+						}
+					}
+
+
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					// JC:  SELECT INITIAL SEED BASED ON CC
-					DoubleWritable coef_value = new DoubleWritable(0.0);
+					/*DoubleWritable coef_value = new DoubleWritable(0.0);
 
 					MapWritable coefMap = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 
@@ -725,16 +770,8 @@ public class Samplers extends LPGPartitionner {
 						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 						aggregate(AGG_SAMPLE, new IntWritable(1));
 						//System.out.println("*isSeed,"+vid);
-					} 
-					// else if (coef_value.get() == minCC){
-					// 	if(r.nextFloat() < probSigma){
-					// 		vertex.getValue().setCurrentPartition((short)-2);
-					// 		vertex.getValue().setNewPartition(newPartition());
-					// 		sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
-					// 		aggregate(AGG_SAMPLE, new IntWritable(1));
-					// 		//System.out.println("*SS"+superstep+":isSampled-"+vid);
-					// 	}
-					// }
+					} */
+
 				}
 
 				//CORE ALGORITHM
