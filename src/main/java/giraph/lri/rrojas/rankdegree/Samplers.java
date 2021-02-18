@@ -549,8 +549,10 @@ public class Samplers extends LPGPartitionner {
 
 					@Override
 					public int compareTo(Object o) {
-						int comparefreq=((Coefficient)o).frequency;
-						return this.frequency-comparefreq;
+						double comparecoef=((Coefficient)o).coef;
+						if (this.coef < comparecoef) return -1;
+						if (this.coef > comparecoef) return 1;
+						return 0;
 					}
 				}
 
@@ -573,7 +575,7 @@ public class Samplers extends LPGPartitionner {
 				Collections.sort(values, Collections.reverseOrder());
 
 				for(Coefficient c : values){
-					System.out.println("total_coef: " + total_coef);
+					System.out.println("total_coef: " + c.frequency);
 				}
 
 
