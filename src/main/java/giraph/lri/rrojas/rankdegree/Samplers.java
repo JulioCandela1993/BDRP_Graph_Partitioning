@@ -560,21 +560,12 @@ public class Samplers extends LPGPartitionner {
 				System.out.println("max_coef: " + max_coef);
 				System.out.println("min_coef: " + min_coef);
 
+
 				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
 
+				System.out.println("threshold: " + minCC);
 
-				getContext().getCounter(PARTITION_COUNTER_GROUP, "Sigma Vertex")
-						.increment(new Long(sigma_vertex));
-
-				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC")
-						.increment(new Double(minCC*1000).longValue());
-
-				getContext().getCounter(PARTITION_COUNTER_GROUP, "max_coef")
-						.increment(new Double(max_coef*1000).longValue());
-
-				getContext().getCounter(PARTITION_COUNTER_GROUP, "min_coef")
-						.increment(new Double(min_coef*1000).longValue());
 			}
 		}
 
@@ -679,9 +670,9 @@ public class Samplers extends LPGPartitionner {
 						ArrayList<IntWritable>tmp = msg.getFriendlist();
 						//friendsnum += msg.getPartition();
 						if (tmp == null ){
-							System.out.println("No friends");
+							//System.out.println("No friends");
 						}else{
-							System.out.println("Some friends");
+							//System.out.println("Some friends");
 							for (IntWritable id : tmp) {
 								if (friends.contains(id)) {
 									// Triangle found
@@ -704,7 +695,7 @@ public class Samplers extends LPGPartitionner {
 					// int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					// clusteringCoefficient = clusteringCoefficient*vertexDegree;
 
-					System.out.println("clusteringCoefficient: " + clusteringCoefficient);
+					//System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
