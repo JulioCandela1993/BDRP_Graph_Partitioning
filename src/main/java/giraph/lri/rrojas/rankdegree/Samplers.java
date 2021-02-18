@@ -530,7 +530,7 @@ public class Samplers extends LPGPartitionner {
 
 			//RR:
 			if(superstep == 4){
-
+				System.out.println("SuperStep 4");
 
 				// JC:  GET LIMITS OF COEFICIENT FOR SIGMA %
 				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
@@ -541,6 +541,9 @@ public class Samplers extends LPGPartitionner {
 				for (Entry<Writable, Writable> entry : clustCoef.entrySet()) {
 					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
 					double c_coef = ((DoubleWritable) entry.getValue()).get();
+
+					System.out.println("clusteringCoefficient: " + c_coef);
+
 					int vertex = (((IntWritable) entry.getKey()).get());
 					
 					values.add(c_coef);
@@ -641,7 +644,7 @@ public class Samplers extends LPGPartitionner {
 			else {
 				//IF ALGORITHM IS INITIALIZING
 				if(superstep == 2) {
-					System.out.println("MC1: SendFriendsList");
+					//System.out.println("MC1: SendFriendsList");
 
 					// JC:  GET FRIENDS OF VERTEX AND SEND THE LIST IN THE MESSAGE
 
@@ -658,7 +661,7 @@ public class Samplers extends LPGPartitionner {
 
 
 				} else if(superstep == 3){
-					System.out.println("MC2: Clustering Coefficient");
+					//System.out.println("MC2: Clustering Coefficient");
 
 					// JC:  CALCULATE CLUSTERING COEFFICIENT
 					HashSet<IntWritable> friends = new HashSet<IntWritable>();
