@@ -20,6 +20,8 @@ import giraph.lri.rrojas.rankdegree.HashMapAggregator;
 import giraph.lri.rrojas.rankdegree.SamplingMessage;
 import giraph.ml.grafos.okapi.common.computation.SendFriends;
 
+import java.lang.Math; 
+
 @SuppressWarnings("unused")
 public class Samplers extends LPGPartitionner {
 
@@ -691,11 +693,11 @@ public class Samplers extends LPGPartitionner {
 						clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
 					}
 					
-					// TEST: Added by Hung: score = vertexDegree * CC
-					// int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					// clusteringCoefficient = clusteringCoefficient*vertexDegree;
+					// TEST: Added by Hung: score = vertexDegree + CC
+					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
+					clusteringCoefficient = clusteringCoefficient + Math.log10(vertexDegree);
 
-					//System.out.println("clusteringCoefficient: " + clusteringCoefficient);
+					System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
