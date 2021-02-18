@@ -712,7 +712,7 @@ public class Samplers extends LPGPartitionner {
 					
 					// TEST: Added by Hung: score = vertexDegree + CC
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
+					clusteringCoefficient = (clusteringCoefficient + Math.log(vertexDegree))*1000;
 
 					//System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
