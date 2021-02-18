@@ -561,6 +561,7 @@ public class Samplers extends LPGPartitionner {
 				System.out.println("max_coef: " + max_coef);
 				System.out.println("min_coef: " + min_coef);
 
+
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
@@ -720,7 +721,7 @@ public class Samplers extends LPGPartitionner {
 					// Assign Clustering Coefficient to vertex (reuse the Currentpartition state of the vertex)
 					vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
 
-					//coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
+					coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
 
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
