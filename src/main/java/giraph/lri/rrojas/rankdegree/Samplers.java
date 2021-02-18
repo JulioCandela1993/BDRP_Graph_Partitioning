@@ -536,7 +536,7 @@ public class Samplers extends LPGPartitionner {
 
 
 				// JC:  GET LIMITS OF COEFICIENT FOR SIGMA %
-				/*clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
+				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 
 				List<Double> values = new  ArrayList<Double>();
 
@@ -545,15 +545,13 @@ public class Samplers extends LPGPartitionner {
 				double min_coef = 10000;
 				for (Entry<Writable, Writable> entry : clustCoef.entrySet()) {
 					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
-					double c_coef = ((DoubleWritable) entry.getValue()).get();
-
+					int frequency = ((IntWritable)entry.getValue()).get();
+					double c_coef = (((IntWritable) entry.getKey()).get());
 					max_coef = Math.max(max_coef,c_coef);
 					min_coef = Math.min(min_coef,c_coef);
-					int vertex = (((IntWritable) entry.getKey()).get());
-					
-					values.add(c_coef);
-					// coefMap.put(new Long(vertex),c_coef);
-					total_coef+=c_coef;
+
+
+					total_coef+=c_coef*frequency;
 				}
 
 				Collections.sort(values, Collections.reverseOrder());
@@ -562,13 +560,6 @@ public class Samplers extends LPGPartitionner {
 				System.out.println("total_coef: " + total_coef);
 				System.out.println("max_coef: " + max_coef);
 				System.out.println("min_coef: " + min_coef);
-
-
-				sigma_vertex = (int)(SIGMA);
-				minCC = values.get(sigma_vertex);
-
-				System.out.println("threshold: " + minCC);
-				*/
 
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
@@ -722,14 +713,12 @@ public class Samplers extends LPGPartitionner {
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
 
-					System.out.println("clusteringCoefficient: " + clusteringCoefficient);
+					//System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
 					// Assign Clustering Coefficient to vertex (reuse the Currentpartition state of the vertex)
 					vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
-
-					System.out.println("Partition: " + vertex.getValue().getCurrentPartition());
 
 					//coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
 
@@ -742,7 +731,7 @@ public class Samplers extends LPGPartitionner {
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 				} else if(superstep == 4 || sampleSize == 0){
-
+					short coefvalue = vertex.getValue().getCurrentPartition();
 					if(superstep == 4)
 						vertex.getValue().setCurrentPartition((short)-1);
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
