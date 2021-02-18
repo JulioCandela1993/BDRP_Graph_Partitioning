@@ -574,15 +574,22 @@ public class Samplers extends LPGPartitionner {
 
 				Collections.sort(values, Collections.reverseOrder());
 
+
+				int counter = 0;
 				for(Coefficient c : values){
-					System.out.println("freq: " + c.frequency.toString() );
-					System.out.println("coef: " +  c.coef.toString());
+					counter += c.frequency;
+					System.out.println("FREQ: " + c.frequency);
+					System.out.println("COEF: " + c.coef);
+					if (counter>SIGMA) {
+						minCC = c.coef;
+
+						break;
+					}
 				}
 
 
 				System.out.println("total_coef: " + total_coef);
-				System.out.println("max_coef: " + max_coef);
-				System.out.println("min_coef: " + min_coef);
+				System.out.println("minCC: " + minCC);
 
 
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
