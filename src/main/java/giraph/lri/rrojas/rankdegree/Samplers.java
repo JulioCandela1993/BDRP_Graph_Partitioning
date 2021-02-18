@@ -512,6 +512,7 @@ public class Samplers extends LPGPartitionner {
 
 		protected int sigma_vertex;
 		protected double minCC;
+		protected MapWritable clustCoef = new MapWritable();
 
 		@Override
 		public void preSuperstep() {
