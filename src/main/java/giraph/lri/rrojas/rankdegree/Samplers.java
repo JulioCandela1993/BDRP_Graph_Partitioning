@@ -681,7 +681,7 @@ public class Samplers extends LPGPartitionner {
 					//System.out.println("MC2: Clustering Coefficient");
 
 					// JC:  CALCULATE CLUSTERING COEFFICIENT
-					/*HashSet<IntWritable> friends = new HashSet<IntWritable>();
+					HashSet<IntWritable> friends = new HashSet<IntWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 					}
@@ -726,7 +726,7 @@ public class Samplers extends LPGPartitionner {
 					coeffDictionary(vid, clusteringCoefficient); //friendsnum);*/
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
-					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
+					//int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
