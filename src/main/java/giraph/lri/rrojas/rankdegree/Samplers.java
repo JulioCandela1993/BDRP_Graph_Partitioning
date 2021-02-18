@@ -556,12 +556,20 @@ public class Samplers extends LPGPartitionner {
 				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
 
+				double minCC_prev = values.get(sigma_vertex-100);
+				double minCC_post = values.get(sigma_vertex+100);
+
 				getContext().getCounter(PARTITION_COUNTER_GROUP, "Sigma Vertex")
 						.increment(new Long(sigma_vertex));
 
 				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC")
 						.increment(new Double(minCC*1000).longValue());
 
+				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC Prev")
+						.increment(new Double(minCC_prev*1000).longValue());
+
+				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC Post")
+						.increment(new Double(minCC_post*1000).longValue());
 			}
 		}
 
