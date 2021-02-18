@@ -538,7 +538,23 @@ public class Samplers extends LPGPartitionner {
 				// JC:  GET LIMITS OF COEFICIENT FOR SIGMA %
 				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 
-				List<Double> values = new  ArrayList<Double>();
+				class Coefficient implements Comparable{
+					Double coef;
+					Integer frequency;
+
+					public Coefficient(double coef, int frequency){
+						this.coef = coef;
+						this.frequency = frequency;
+					}
+
+					@Override
+					public int compareTo(Object o) {
+						int comparefreq=((Coefficient)o).frequency;
+						return this.frequency-comparefreq;
+					}
+				}
+
+				ArrayList<Coefficient> values = new  ArrayList<Coefficient>();
 
 				double total_coef = 0;
 				double max_coef = 0;
@@ -550,11 +566,12 @@ public class Samplers extends LPGPartitionner {
 					max_coef = Math.max(max_coef,c_coef);
 					min_coef = Math.min(min_coef,c_coef);
 
-
+					values.add(new Coefficient(c_coef,frequency));
 					total_coef+=c_coef*frequency;
 				}
 
 				Collections.sort(values, Collections.reverseOrder());
+				
 
 
 				System.out.println("total_coef: " + total_coef);
