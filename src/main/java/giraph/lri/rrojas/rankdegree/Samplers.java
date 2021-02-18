@@ -556,8 +556,11 @@ public class Samplers extends LPGPartitionner {
 				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
 
-				getContext().getCounter(PARTITION_COUNTER_GROUP, "Debug Coef")
-						.increment(new Double(total_coef*1000).longValue());
+				getContext().getCounter(PARTITION_COUNTER_GROUP, "Sigma Vertex")
+						.increment(new Long(sigma_vertex));
+
+				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC")
+						.increment(new Double(minCC*1000).longValue());
 
 			}
 		}
