@@ -727,9 +727,11 @@ public class Samplers extends LPGPartitionner {
 					// vertex.setValue(clCoefficient);
 
 					// Assign Clustering Coefficient to vertex (reuse the Currentpartition state of the vertex)
-					vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
+					//vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
 
-					coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
+					System.out.println("Partition: " + vertex.getValue().getCurrentPartition());
+
+					//coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
 
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
