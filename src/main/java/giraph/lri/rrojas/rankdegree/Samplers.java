@@ -720,13 +720,16 @@ public class Samplers extends LPGPartitionner {
 					
 					// TEST: Added by Hung: score = vertexDegree + CC
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					clusteringCoefficient = clusteringCoefficient + Math.log10(vertexDegree);
+					clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
 
 					System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
-					//coeffDictionary(vid, clusteringCoefficient); //friendsnum);*/
+					// Assign Clustering Coefficient to vertex (reuse the Currentpartition state of the vertex)
+					vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
+
+					coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
 
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
@@ -885,9 +888,9 @@ public class Samplers extends LPGPartitionner {
 			aggregate(AGG_DEGREE_DIST, temp);
 		}
 
-		protected synchronized void coeffDictionary(int vertexid , double coefvalue) {
+		protected synchronized void coeffDictionary(short coefvalue) {
 			MapWritable temp = new  MapWritable();
-			temp.put(new IntWritable(vertexid), new DoubleWritable(coefvalue));
+			temp.put(new IntWritable(coefvalue), new IntWritable(1));
 			aggregate(AGG_CL_COEFFICIENT, temp);
 		}
 	}
