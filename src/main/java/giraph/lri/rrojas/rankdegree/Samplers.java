@@ -530,7 +530,7 @@ public class Samplers extends LPGPartitionner {
 
 			//RR:
 			if(superstep == 4){
-				System.out.println("SuperStep 4");
+
 
 				// JC:  GET LIMITS OF COEFICIENT FOR SIGMA %
 				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
@@ -559,8 +559,8 @@ public class Samplers extends LPGPartitionner {
 				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
 
-				double minCC_prev = values.get(sigma_vertex-100000);
-				double minCC_post = values.get(sigma_vertex+100000);
+				double minCC_prev = values.get(sigma_vertex-10000);
+				double minCC_post = values.get(sigma_vertex+10000);
 
 				getContext().getCounter(PARTITION_COUNTER_GROUP, "Sigma Vertex")
 						.increment(new Long(sigma_vertex));
