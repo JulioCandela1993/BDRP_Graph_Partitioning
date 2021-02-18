@@ -535,8 +535,6 @@ public class Samplers extends LPGPartitionner {
 				// JC:  GET LIMITS OF COEFICIENT FOR SIGMA %
 				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 
-				
-
 				List<Double> values = new  ArrayList<Double>();
 
 				double total_coef = 0;
@@ -686,6 +684,9 @@ public class Samplers extends LPGPartitionner {
 						clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
 					}
 					
+					// TEST: Added by Hung: score = vertexDegree * CC
+					// int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
+					// clusteringCoefficient = clusteringCoefficient*vertexDegree;
 
 					System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
@@ -715,8 +716,16 @@ public class Samplers extends LPGPartitionner {
 						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 						aggregate(AGG_SAMPLE, new IntWritable(1));
 						//System.out.println("*isSeed,"+vid);
-					}
-
+					} 
+					// else if (coef_value.get() == minCC){
+					// 	if(r.nextFloat() < probSigma){
+					// 		vertex.getValue().setCurrentPartition((short)-2);
+					// 		vertex.getValue().setNewPartition(newPartition());
+					// 		sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+					// 		aggregate(AGG_SAMPLE, new IntWritable(1));
+					// 		//System.out.println("*SS"+superstep+":isSampled-"+vid);
+					// 	}
+					// }
 				}
 
 				//CORE ALGORITHM
