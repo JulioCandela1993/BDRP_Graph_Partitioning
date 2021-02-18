@@ -538,12 +538,14 @@ public class Samplers extends LPGPartitionner {
 				List<Double> values = new  ArrayList<Double>();
 
 				double total_coef = 0;
+				double max_coef = 0;
+				double min_coef = 10000;
 				for (Entry<Writable, Writable> entry : clustCoef.entrySet()) {
 					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
 					double c_coef = ((DoubleWritable) entry.getValue()).get();
 
-					System.out.println("clusteringCoefficient: " + c_coef);
-
+					max_coef = Math.max(max_coef,c_coef);
+					min_coef = Math.min(min_coef,c_coef);
 					int vertex = (((IntWritable) entry.getKey()).get());
 					
 					values.add(c_coef);
@@ -555,12 +557,12 @@ public class Samplers extends LPGPartitionner {
 
 
 				System.out.println("total_coef: " + total_coef);
+				System.out.println("max_coef: " + max_coef);
+				System.out.println("min_coef: " + min_coef);
 
 				sigma_vertex = (int)(SIGMA);
 				minCC = values.get(sigma_vertex);
 
-				double minCC_prev = values.get(sigma_vertex-10000);
-				double minCC_post = values.get(sigma_vertex+10000);
 
 				getContext().getCounter(PARTITION_COUNTER_GROUP, "Sigma Vertex")
 						.increment(new Long(sigma_vertex));
@@ -568,11 +570,11 @@ public class Samplers extends LPGPartitionner {
 				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC")
 						.increment(new Double(minCC*1000).longValue());
 
-				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC Prev")
-						.increment(new Double(minCC_prev*1000).longValue());
+				getContext().getCounter(PARTITION_COUNTER_GROUP, "max_coef")
+						.increment(new Double(max_coef*1000).longValue());
 
-				getContext().getCounter(PARTITION_COUNTER_GROUP, "Min CC Post")
-						.increment(new Double(minCC_post*1000).longValue());
+				getContext().getCounter(PARTITION_COUNTER_GROUP, "min_coef")
+						.increment(new Double(min_coef*1000).longValue());
 			}
 		}
 
