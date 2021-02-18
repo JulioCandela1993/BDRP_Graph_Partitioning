@@ -727,7 +727,7 @@ public class Samplers extends LPGPartitionner {
 					// vertex.setValue(clCoefficient);
 
 					// Assign Clustering Coefficient to vertex (reuse the Currentpartition state of the vertex)
-					//vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
+					vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
 
 					System.out.println("Partition: " + vertex.getValue().getCurrentPartition());
 
@@ -743,6 +743,8 @@ public class Samplers extends LPGPartitionner {
 
 				} else if(superstep == 4 || sampleSize == 0){
 
+					if(superstep == 4)
+						vertex.getValue().setCurrentPartition((short)-1);
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
 					if(vertexDegree > degreeSigma){
 						vertex.getValue().setCurrentPartition((short)-2);
