@@ -571,7 +571,10 @@ public class Samplers extends LPGPartitionner {
 				}
 
 				Collections.sort(values, Collections.reverseOrder());
-				
+
+				for(Coefficient c : values){
+					System.out.println("total_coef: " + total_coef);
+				}
 
 
 				System.out.println("total_coef: " + total_coef);
