@@ -535,7 +535,7 @@ public class Samplers extends LPGPartitionner {
 
 
 				// JC:  GET LIMITS OF COEFICIENT FOR SIGMA %
-				clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
+				/*clustCoef = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
 
 				List<Double> values = new  ArrayList<Double>();
 
@@ -567,7 +567,7 @@ public class Samplers extends LPGPartitionner {
 				minCC = values.get(sigma_vertex);
 
 				System.out.println("threshold: " + minCC);
-
+				*/
 
 				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
@@ -665,23 +665,23 @@ public class Samplers extends LPGPartitionner {
 
 					// JC:  GET FRIENDS OF VERTEX AND SEND THE LIST IN THE MESSAGE
 
-					final ArrayList<IntWritable> friends =  new ArrayList<IntWritable>() ;
+					/*final ArrayList<IntWritable> friends =  new ArrayList<IntWritable>() ;
 					int num_friends = 0;
 					for (Edge<IntWritable,EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 						num_friends++;
-					}
+					}*/
 
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid,num_friends,friends));
+					//sendMessageToAllEdges(vertex, new SamplingMessage(vid,num_friends,friends));
 
-					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 
 				} else if(superstep == 3){
 					//System.out.println("MC2: Clustering Coefficient");
 
 					// JC:  CALCULATE CLUSTERING COEFFICIENT
-					HashSet<IntWritable> friends = new HashSet<IntWritable>();
+					/*HashSet<IntWritable> friends = new HashSet<IntWritable>();
 					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
 						friends.add(new IntWritable(edge.getTargetVertexId().get()));
 					}
@@ -723,13 +723,10 @@ public class Samplers extends LPGPartitionner {
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
 					// vertex.setValue(clCoefficient);
 
-					coeffDictionary(vid, clusteringCoefficient); //friendsnum);
+					coeffDictionary(vid, clusteringCoefficient); //friendsnum);*/
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
-					/*int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
-					addDegreeDist(vertexDegree);
-					*/
-
+					int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
 					addDegreeDist(vertexDegree);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
