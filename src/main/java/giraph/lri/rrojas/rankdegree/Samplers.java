@@ -578,8 +578,6 @@ public class Samplers extends LPGPartitionner {
 				int counter = 0;
 				for(Coefficient c : values){
 					counter += c.frequency;
-					System.out.println("FREQ: " + c.frequency);
-					System.out.println("COEF: " + c.coef);
 					if (counter>SIGMA) {
 						minCC = c.coef;
 						break;
@@ -587,11 +585,11 @@ public class Samplers extends LPGPartitionner {
 				}
 
 
-				System.out.println("total_coef: " + total_coef);
-				System.out.println("minCC: " + minCC);
+				//System.out.println("total_coef: " + total_coef);
+				//System.out.println("minCC: " + minCC);
 
 
-				degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
+				/*degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
 				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
 
 				//get sigma seeds
@@ -610,9 +608,7 @@ public class Samplers extends LPGPartitionner {
 							break;
 						}
 					}
-				}
-
-			} else if (superstep == 5){
+				}*/
 
 			}
 		}
@@ -755,10 +751,10 @@ public class Samplers extends LPGPartitionner {
 
 					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
 					//int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
-					addDegreeDist(vertexDegree);
-					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
-
+					//addDegreeDist(vertexDegree);
 					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
+
+					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 				} else if(superstep == 4 || sampleSize == 0){
 					int coefvalue = vertex.getValue().getCurrentPartition();
