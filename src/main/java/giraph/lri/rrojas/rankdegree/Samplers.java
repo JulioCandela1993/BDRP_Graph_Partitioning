@@ -589,27 +589,6 @@ public class Samplers extends LPGPartitionner {
 				//System.out.println("minCC: " + minCC);
 
 
-				/*degreeDist = (MapWritable) getAggregatedValue(AGG_DEGREE_DIST);
-				int maxDegree = ((IntWritable) getAggregatedValue(AGG_MAX_DEGREE)).get();
-
-				//get sigma seeds
-				int sigmaTemp = 0;
-				int sigmaPrev;
-				int nextBucket;
-				for (int i = maxDegree; i >= 0; i--) {
-					IntWritable degreeTemp = new IntWritable(i);
-					if(degreeDist.containsKey(degreeTemp)) {
-						nextBucket = ((IntWritable)degreeDist.get(degreeTemp)).get();
-						sigmaPrev = sigmaTemp;
-						sigmaTemp += nextBucket;
-						if(sigmaTemp >= SIGMA){
-							degreeSigma = i;
-							probSigma = ((float)(SIGMA - sigmaPrev) / nextBucket);
-							break;
-						}
-					}
-				}*/
-
 			}
 		}
 
@@ -694,8 +673,6 @@ public class Samplers extends LPGPartitionner {
 
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid,num_friends,friends));
 
-					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
-
 
 				} else if(superstep == 3){
 					//System.out.println("MC2: Clustering Coefficient");
@@ -737,7 +714,7 @@ public class Samplers extends LPGPartitionner {
 					
 					// TEST: Added by Hung: score = vertexDegree + CC
 					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					clusteringCoefficient = (clusteringCoefficient + Math.log(vertexDegree))*1000;
+					clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
 
 					//System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
@@ -749,34 +726,12 @@ public class Samplers extends LPGPartitionner {
 					coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
 
 
-					//System.out.println("*SS"+superstep+":FillingDegreeFrequency-"+vid);
-					//int vertexDegree = vertex.getValue().getRealOutDegree() + vertex.getValue().getRealInDegree();
-					//addDegreeDist(vertexDegree);
-					//sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
-
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 				} else if(superstep == 4 || sampleSize == 0){
 					int coefvalue = vertex.getValue().getCurrentPartition();
 					if(superstep == 4)
 						vertex.getValue().setCurrentPartition((short)-1);
-
-					/*int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					if(vertexDegree > degreeSigma){
-						vertex.getValue().setCurrentPartition((short)-2);
-						vertex.getValue().setNewPartition(newPartition());
-						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
-						aggregate(AGG_SAMPLE, new IntWritable(1));
-						//System.out.println("*SS"+superstep+":isSampled-"+vid);
-					} else if (vertexDegree == degreeSigma){
-						if(r.nextFloat() < probSigma){
-							vertex.getValue().setCurrentPartition((short)-2);
-							vertex.getValue().setNewPartition(newPartition());
-							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
-							aggregate(AGG_SAMPLE, new IntWritable(1));
-							//System.out.println("*SS"+superstep+":isSampled-"+vid);
-						}
-					}*/
 
 
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
