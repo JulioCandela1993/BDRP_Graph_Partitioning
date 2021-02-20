@@ -716,7 +716,7 @@ public class Samplers extends LPGPartitionner {
 					
 					// Hung: score = vertexDegree + CC
 					//clusteringCoefficient = (vertexDegree + clusteringCoefficient)*1000; // to cast to Short later
-					clusteringCoefficient = ((1+clusteringCoefficient)*vertexDegree)*1000;
+					clusteringCoefficient = ((clusteringCoefficient))*1000;
 					// clusteringCoefficient = (vertexDegree)*1000; // to cast to Short later
 
 					// clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
