@@ -587,7 +587,7 @@ public class Samplers extends LPGPartitionner {
 
 
 				//System.out.println("total_coef: " + total_coef);
-				//System.out.println("minCC: " + minCC);
+				System.out.println("minCC: " + minCC);
 
 
 			}
