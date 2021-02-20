@@ -561,6 +561,7 @@ public class Samplers extends LPGPartitionner {
 				double total_coef = 0;
 				double max_coef = 0;
 				double min_coef = 10000;
+				
 				for (Entry<Writable, Writable> entry : clustCoef.entrySet()) {
 					//System.out.println("SS"+superstep+": Key:"+entry.getKey()+": Value:"+entry.getValue());
 					int frequency = ((IntWritable)entry.getValue()).get();
@@ -713,8 +714,8 @@ public class Samplers extends LPGPartitionner {
 					}
 					
 					// TEST: Added by Hung: score = vertexDegree + CC
-					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
+					// int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
+					// clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
 
 					//System.out.println("clusteringCoefficient: " + clusteringCoefficient);
 					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
