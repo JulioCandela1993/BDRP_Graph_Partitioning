@@ -2097,6 +2097,14 @@ public class LPGPartitionner {
 									System.out.println(":SAMPLING TAU"+TAU);
 									setComputation(InitializeSampleHD.class);
 									break;
+
+								case "InitializeSampleCC":
+									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
+									System.out.println(":SAMPLING SIGMA"+SIGMA);
+									System.out.println(":SAMPLING TAU"+TAU);
+									setComputation(InitializeSampleCC.class);
+									break;
+
 								case "InitializeSampleGD":
 									System.out.println("*SS"+superstep+":SAMPLING BETA"+BETA);
 									System.out.println(":SAMPLING SIGMA"+SIGMA);
@@ -2135,6 +2143,10 @@ public class LPGPartitionner {
 									case "InitializeSampleHD":
 										setComputation(InitializeSampleHD.class);
 										break;
+									case "InitializeSampleCC":
+										setComputation(InitializeSampleCC.class);
+										break;
+
 									case "InitializeSampleGD":
 										setComputation(InitializeSampleGD.class);
 										break;
@@ -2242,6 +2254,7 @@ public class LPGPartitionner {
 						totalSamplingSupersteps = sampling_ss_end - sampling_ss_extra - 2;
 						avgSampling = (float) samplingTime / (totalSamplingSupersteps/3);
 						break;
+
 					case "InitializeSampleGD":
 						initializingTime = getContext().getCounter("Giraph Timers", "Superstep 2 "+SAMPLING_TYPE+" (ms)").getValue() +
 								+ getSamplingInitTime();
