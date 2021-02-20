@@ -577,14 +577,19 @@ public class Samplers extends LPGPartitionner {
 
 
 				int counter = 0;
+				int counterPrev = 0;
+				int nextBucket = 0;
+				
 				for(Coefficient c : values){
-					counter += c.frequency;
-					if (counter>SIGMA) {
+					nextBucket = c.frequency;
+					counterPrev = counter;
+					counter += nextBucket;
+					if (counter >= SIGMA) {
 						minCC = c.coef;
+						probSigma = ((float)(SIGMA - counterPrev) / nextBucket);
 						break;
 					}
 				}
-
 
 				//System.out.println("total_coef: " + total_coef);
 				System.out.println("minCC: " + minCC);
@@ -679,55 +684,50 @@ public class Samplers extends LPGPartitionner {
 					//System.out.println("MC2: Clustering Coefficient");
 
 					// JC:  CALCULATE CLUSTERING COEFFICIENT
-					HashSet<IntWritable> friends = new HashSet<IntWritable>();
-					for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
-						friends.add(new IntWritable(edge.getTargetVertexId().get()));
-					}
 
 					int edges = vertex.getNumEdges();
 					int triangles = 0;
-					//int friendsnum = 0;
-
-					for (SamplingMessage msg : messages) {
-						ArrayList<IntWritable>tmp = msg.getFriendlist();
-						//friendsnum += msg.getPartition();
-						if (tmp == null ){
-							//System.out.println("No friends");
-						}else{
-							//System.out.println("Some friends");
-							for (IntWritable id : tmp) {
-								if (friends.contains(id)) {
-									// Triangle found
-									triangles++;
+					double clusteringCoefficient = 0;
+					int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
+					
+					if (edges>1){ // Ignore if this vertex has only 1 edge
+						HashSet<IntWritable> friends = new HashSet<IntWritable>();
+						for (Edge<IntWritable, EdgeValue> edge : vertex.getEdges()) {
+							friends.add(new IntWritable(edge.getTargetVertexId().get()));
+						}
+						for (SamplingMessage msg : messages) {
+							ArrayList<IntWritable>tmp = msg.getFriendlist();
+							//friendsnum += msg.getPartition();
+							if (tmp == null ){
+								//System.out.println("No friends");
+							}else{
+								//System.out.println("Some friends");
+								for (IntWritable id : tmp) {
+									if (friends.contains(id)) {
+										// Triangle found
+										triangles++;
+									}
 								}
 							}
+
 						}
-
-
-					}
-
-
-					double clusteringCoefficient = 0;
-					if (edges>1){
-						// avoid dividing by 0
 						clusteringCoefficient = ((double)triangles) / ((double)edges*(edges-1));
 					}
 					
-					// TEST: Added by Hung: score = vertexDegree + CC
-					//int vertexDegree = vertex.getValue().getRealInDegree() + vertex.getValue().getRealOutDegree();
-					//clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
-					clusteringCoefficient = (clusteringCoefficient)*1000;
+					// Hung: score = vertexDegree + CC
+					clusteringCoefficient = (vertexDegree + clusteringCoefficient)*1000; // to cast to Short later
 
-					//System.out.println("clusteringCoefficient: " + clusteringCoefficient);
-					// DoubleWritable clCoefficient = new DoubleWritable(clusteringCoefficient);
-					// vertex.setValue(clCoefficient);
+					// clusteringCoefficient = (vertexDegree)*1000; // to cast to Short later
 
-					// Assign Clustering Coefficient to vertex (reuse the Currentpartition state of the vertex)
+					// clusteringCoefficient = (clusteringCoefficient + Math.log10(vertexDegree))*1000;
+					// clusteringCoefficient = (clusteringCoefficient)*1000;
+
+					/* Assign Clustering Coefficient to vertex (reuse the Currentpartition state of the vertex)
+					   Use 'CurrentPartition' to store clusteringCoefficient until superstep 4
+					*/
+
 					vertex.getValue().setCurrentPartition((short)clusteringCoefficient);
-
-					coeffDictionary((short)clusteringCoefficient); //friendsnum);*/
-
-
+					coeffDictionary((short)clusteringCoefficient);
 					sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1)); //SEND MESSAGE TO KEEP ALIVE
 
 				} else if(superstep == 4 || sampleSize == 0){
@@ -738,19 +738,20 @@ public class Samplers extends LPGPartitionner {
 
 					//System.out.println("*SS"+superstep+":InitializingVertices-"+vid);
 					// JC:  SELECT INITIAL SEED BASED ON CC
-					//DoubleWritable coef_value = new DoubleWritable(0.0);
 
-					//MapWritable coefMap = (MapWritable) getAggregatedValue(AGG_CL_COEFFICIENT);
-
-					//if(coefMap.containsKey(vid))
-					//	coef_value = (DoubleWritable) coefMap.get(vid);
-
-					if(coefvalue >= minCC){
+					if(coefvalue > minCC){
 						vertex.getValue().setCurrentPartition((short)-2);
 						vertex.getValue().setNewPartition(newPartition());
 						sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
 						aggregate(AGG_SAMPLE, new IntWritable(1));
 						//System.out.println("*isSeed,"+vid);
+					} else if (coefvalue == minCC){
+						if(r.nextFloat() < probSigma){
+							vertex.getValue().setCurrentPartition((short)-2);
+							vertex.getValue().setNewPartition(newPartition());
+							sendMessageToAllEdges(vertex, new SamplingMessage(vid, -1));
+							aggregate(AGG_SAMPLE, new IntWritable(1));
+						}
 					}
 
 				}
