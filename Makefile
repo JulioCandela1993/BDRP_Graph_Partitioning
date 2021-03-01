@@ -13,9 +13,9 @@ partitions := 8
 #graph := graph500-scale23-ef16
 graph := Twitter
 #graph := sk-2005
-w := 1
+w := 8
 main := 'giraph.lri.rrojas.rankdegree.LPGPartitionner$$ConverterPropagate'
-masterCompute := 'giraph.lri.rrojas.rankdegree.LPGPartitionner$$RDEBMasterCompute'
+masterCompute := 'giraph.lri.rrojas.rankdegree.LPGPartitionner$$RDVBMasterCompute'
 vif := giraph.format.personalized.BGRAPVertexInputFormat
 vof := giraph.format.personalized.BGRAP_IdWithPartitionOuputFormat
 vifo := giraph.lri.rrojas.rankdegree.RR_BGRAP_InputFormat
@@ -65,7 +65,7 @@ run:
 	giraph $(HADOOP_HOME)/lib/$(code) $(main) -w $(w) -vif $(vif) -vip $(ip) -vof $(vof) -op $(op) -ca giraph.masterComputeClass=$(masterCompute) -ca giraph.edgeValueClass=giraph.ml.grafos.okapi.spinner.EdgeValue -ca giraph.vertexValueClass=giraph.ml.grafos.okapi.spinner.VertexValue -ca giraph.outEdgesClass=giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut -ca giraph.inputOutEdgesClass=giraph.ml.grafos.okapi.spinner.ShortBooleanHashMapsEdgesInOut -ca giraph.numComputeThreads=1,giraph.numInputThreads=1,giraph.numOutputThreads=1 -ca giraph.SplitMasterWorker=false -ca spinner.numberOfPartitions=$(partitions) -ca graph.directed=true -ca bgrap.SAMPLING_TYPE=$(sampling) -ca bgrap.GRAPH='$(graph)' -ca bgrap.DATE='$(date)' -ca rankdegree.TAU='$(tau)' -ca rankdegree.SIGMA='$(sigma)' -ca rankdegree.BETA='$(beta)' -ca rankdegree.SAVE_DD='$(save_dd)' 
 
 run_optimized:
-	sudo $(HADOOP_HOME)/bin/hadoop jar $(GIRAPH_HOME)/giraph-examples-1.2.0.jar org.apache.giraph.GiraphRunner $(main) -w $(w) -vif $(vifo) -vip $(ip) -vof $(vofo) -op $(op) -ca giraph.masterComputeClass=$(masterCompute) -ca giraph.edgeValueClass=giraph.ml.grafos.okapi.spinner.EdgeValue -ca giraph.vertexValueClass=giraph.ml.grafos.okapi.spinner.VertexValue -ca giraph.outEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.inputOutEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.numComputeThreads=1,giraph.numInputThreads=1,giraph.numOutputThreads=1 -ca giraph.SplitMasterWorker=false -ca spinner.numberOfPartitions=$(partitions) -ca graph.directed=true -ca bgrap.SAMPLING_TYPE=$(sampling) -ca bgrap.GRAPH='$(graph)' -ca bgrap.DATE='$(date)' -ca rankdegree.TAU='$(tau)' -ca rankdegree.SIGMA='$(sigma)' -ca rankdegree.BETA='$(beta)' -ca rankdegree.SAVE_DD='$(save_dd)'
+	sudo $(HADOOP_HOME)/bin/hadoop jar $(GIRAPH_HOME)/giraph-examples-1.2.0.jar org.apache.giraph.GiraphRunner $(main) -w $(w) -vif $(vifo) -vip $(ip) -vof $(vofo) -op $(op) -ca giraph.masterComputeClass=$(masterCompute) -ca giraph.edgeValueClass=giraph.ml.grafos.okapi.spinner.EdgeValue -ca giraph.vertexValueClass=giraph.ml.grafos.okapi.spinner.VertexValue -ca giraph.outEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.inputOutEdgesClass=giraph.lri.rrojas.rankdegree.ShortBooleanHashMapsEdgesInOut -ca giraph.numComputeThreads=8,giraph.numInputThreads=8,giraph.numOutputThreads=1 -ca giraph.SplitMasterWorker=false -ca spinner.numberOfPartitions=$(partitions) -ca graph.directed=true -ca bgrap.SAMPLING_TYPE=$(sampling) -ca bgrap.GRAPH='$(graph)' -ca bgrap.DATE='$(date)' -ca rankdegree.TAU='$(tau)' -ca rankdegree.SIGMA='$(sigma)' -ca rankdegree.BETA='$(beta)' -ca rankdegree.SAVE_DD='$(save_dd)' -ca giraph.logLevel=debug
 
 
 
