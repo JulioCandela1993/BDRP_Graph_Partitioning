@@ -28,7 +28,7 @@ do
                                 do
                                         for partition in "${partitions[@]}"
                                         do
-                                                for i in {1..2}
+                                                for i in {1..5}
                                                 do
                                                         make run_optimized sampling=$sampling graph=$graph partitions=$partition beta=$beta sigma=$sigma tau=$tau save_dd=$save_dd
 							wait $!
